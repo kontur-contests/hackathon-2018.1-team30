@@ -1,20 +1,17 @@
-import { CollisionType, Engine, Input, Vector } from 'excalibur';
-import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
-import DirectionActor from './DirectionActor';
-import { GameConnections } from '../GameConnections';
-import { Directions } from '../models/Player';
+import { CollisionType, Engine, Input, Vector } from "excalibur";
+import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
+import DirectionActor from "./DirectionActor";
+import { GunFire } from "./GunFire";
+import { GameConnections } from "../GameConnections";
+import { Directions } from "../models/Player";
 
 export default class Player extends DirectionActor {
+  gunFire: GunFire;
   private static readonly speed = 5;
 
   private static readonly keyPressInterval = 75;
 
   private static loggingTimer = 0;
-
-  constructor(x: number, y: number) {
-    super(x, y, spriteSheet.width, spriteSheet.height);
-    this.collisionType = CollisionType.Passive;
-  }
 
   private static getDirections = (key: Input.Keys) => {
     switch (key) {
@@ -30,6 +27,12 @@ export default class Player extends DirectionActor {
         return Vector.Zero;
     }
   };
+
+  constructor(x: number, y: number) {
+    super(x, y, spriteSheet.width, spriteSheet.height);
+    this.collisionType = CollisionType.Passive;
+    this.gunFire = new GunFire();
+  }
 
   private takeDirection = (key?: Input.Keys) => {
     switch (key) {
@@ -48,6 +51,7 @@ export default class Player extends DirectionActor {
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
+    this.add(this.gunFire);
     this.registerDrawing({
       idle: {
         up: spriteSheet.idle.up(),
@@ -70,8 +74,15 @@ export default class Player extends DirectionActor {
         left: spriteSheet.walk.left(engine, 150)
       }
     });
-    engine.input.keyboard.on('press', this.handleKeyPress);
-    engine.input.keyboard.on('release', this.handleKeyRelease);
+    engine.input.keyboard.on("press", this.handleKeyPress);
+    engine.input.keyboard.on("release", this.handleKeyRelease);
+
+    engine.input.pointers.primary.on("down", () => {
+      this.gunFire.isEnabled = true;
+    });
+    engine.input.pointers.primary.on("up", () => {
+      this.gunFire.isEnabled = false;
+    });
   }
 
   public update(engine: Engine, delta: number) {
@@ -81,7 +92,9 @@ export default class Player extends DirectionActor {
 
   private handleKeyPress = (event?: Input.KeyEvent) => {
     clearInterval(Player.loggingTimer);
-    const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
+    const direction = Player.getDirections(
+      (event && event.key) || Input.Keys.Semicolon
+    );
     this.direction.addEqual(direction);
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
@@ -90,8 +103,9 @@ export default class Player extends DirectionActor {
   };
 
   private handleKeyRelease = (event?: Input.KeyEvent) => {
-    clearInterval(Player.loggingTimer);
-    const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
+    const direction = Player.getDirections(
+      (event && event.key) || Input.Keys.Semicolon
+    );
     this.direction.subEqual(direction);
     GameConnections.move(this.takeDirection(event && event.key));
   };
