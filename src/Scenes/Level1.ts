@@ -25,7 +25,6 @@ export class Level1 extends Scene {
     this.add(tileMap);
 
     GameService.connection.on("playerJoin", (user: IPlayer) => {
-      console.log(user);
       if (user) {
         const interationPlayer = new InteractionPlayer(
           user.position.x,
@@ -42,11 +41,8 @@ export class Level1 extends Scene {
       }
     });
 
-    GameService.connection.on("players", (players: IPlayer[]) => {
-      console.log(players);
-      const otherPlayers = players.filter(
-        p => GameService.currentUser && p.id !== GameService.currentUser.user.id
-      );
+    GameService.connection.on('players', (players: IPlayer[]) => {
+      const otherPlayers = players.filter(p => GameService.currentUser && p.id !== GameService.currentUser.user.id)
       otherPlayers.forEach(user => {
         if (!GameService.userInGame(user.id)) {
           const actor = new Player(user.position.x, user.position.y);
@@ -60,7 +56,6 @@ export class Level1 extends Scene {
     });
 
     GameService.connection.on("playerState", (player: IPlayer) => {
-      console.log(player);
       const actor = GameService.getActor(player.id);
       if (actor) {
         actor.actions.moveTo(player.position.x, player.position.y, 1000);
