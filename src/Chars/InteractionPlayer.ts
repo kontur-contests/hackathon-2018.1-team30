@@ -3,7 +3,6 @@ import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
-import { Directions } from "../models/Player";
 import { Aim } from "./Aim";
 
 export default class InteractionPlayer extends DirectionActor {
@@ -81,7 +80,7 @@ export default class InteractionPlayer extends DirectionActor {
     super.update(engine, delta);
     this.sendingDelta += delta;
 
-    if (this.sendingDelta > 100) {
+    if (this.sendingDelta > 50) {
       const nextPosition = this.pos.add(
         this.direction.scale(InteractionPlayer.speed)
       );
