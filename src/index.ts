@@ -4,15 +4,14 @@ import { Resources } from "./Resources";
 import * as signalR from "@aspnet/signalr";
 import { GameService } from "./GameService";
 
-var sound = new Sound("/assets/be8a7cc0fe85da.mp3");
 const game = new Game();
-const loader = new Loader([sound]);
+const loader = new Loader();
 
 loader.addResources(Resources.values());
 
 game.start(loader).then(() => {
     console.log("Started");
-    sound.play();
-    sound.setLoop(true);
+    Resources.MainTheme.play();
+    Resources.MainTheme.setLoop(true);
     GameService.start();
 });

@@ -1,4 +1,4 @@
-import { ILoadable, Texture, Resource } from "excalibur";
+import { ILoadable, Texture, Resource, Sound } from "excalibur";
 import TiledResource from "@excaliburjs/excalibur-tiled";
 
 declare const process: any;
@@ -18,6 +18,8 @@ export class Resources {
   public static Blood2 = new Texture(prefix + "/assets/sprites/blood_2.png");
   public static Boom = new Texture(prefix + "/assets/sprites/explosion.png");
   public static Poop = new Texture(prefix + "/assets/sprites/CitsJlB.png");
+  public static MainTheme = new Sound("/assets/be8a7cc0fe85da.mp3");
+  public static Chicken = new Sound("/assets/chicken.mp3");
   // public static GroundTiles = new Texture("/assets/ground_tiles.png");
 
   public static values(): ILoadable[] {

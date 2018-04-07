@@ -7,6 +7,7 @@ import { Aim } from './Aim';
 import Fowl from './Fowl';
 import { HealthLine } from '../Chars/HealthLine';
 import PoopFowl from './PoopFowl';
+import { Resources } from '../Resources';
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 7;
@@ -32,8 +33,11 @@ export default class InteractionPlayer extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
-    this.on('precollision', function(ev) {
+    this.on('precollision', function (ev) {
       if (ev && ev.other instanceof Fowl) {
+        if (!Resources.Chicken.isPlaying()) {
+          Resources.Chicken.play();
+        }
         ev.other.kill();
         GameService.killFowl(ev.other);
       }
