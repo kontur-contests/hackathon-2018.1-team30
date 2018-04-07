@@ -40,12 +40,23 @@ export class Level1 extends Scene {
       );
     });
 
+    const joinPlayer = (player: IPlayer) => {
+      if (!GameService.userInGame(player.id)) {
+        const actor = new Player(player.position.x, player.position.y);
+        this.add(actor);
+        GameService.saveOtherPlayer({
+          user: player,
+          actor
+        });
+      }
+    };
+
     GameService.connection.on("playerJoin", (player: IPlayer) =>
-      this.joinPlayer(player)
+      joinPlayer(player)
     );
 
     GameService.connection.on("players", (players: IPlayer[]) =>
-      players.forEach(this.joinPlayer)
+      players.forEach(joinPlayer)
     );
 
     GameService.connection.on("playerState", (info: IPlayer) => {
@@ -97,16 +108,5 @@ export class Level1 extends Scene {
       }
       GameService.killFowl(fowl);
     });
-  }
-
-  private joinPlayer(player: IPlayer): void {
-    if (!GameService.userInGame(player.id)) {
-      const actor = new Player(player.position.x, player.position.y);
-      this.add(actor);
-      GameService.saveOtherPlayer({
-        user: player,
-        actor
-      });
-    }
   }
 }
