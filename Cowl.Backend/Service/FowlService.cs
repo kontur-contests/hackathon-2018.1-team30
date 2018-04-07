@@ -10,7 +10,10 @@ namespace Cowl.Backend.Service
     {
         public FowlService()
         {
-            var connection = new HubConnectionBuilder.
+            var connection = new HubConnectionBuilder()
+                .WithUrl("/game")
+                .WithConsoleLogger()
+                .Build();
         }
 
         public async Task GenerateFowl()
