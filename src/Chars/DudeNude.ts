@@ -15,13 +15,13 @@ export class DudeNude extends Actor {
   }
 
   public onInitialize(engine: Engine) {
-    const spriteSheet = new SpriteSheet({
-      columns: SpriteInfo.cols,
-      rows: SpriteInfo.rows,
-      spHeight: height,
-      spWidth: width,
-      image: Resources.DudeNude
-    });
+    const spriteSheet = new SpriteSheet(
+      Resources.DudeNude,
+      SpriteInfo.cols,
+      SpriteInfo.rows,
+      width,
+      height
+    );
 
     const castAnimation = spriteSheet.getAnimationBetween(
       engine,
