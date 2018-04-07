@@ -3,7 +3,6 @@ import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
-import { Directions } from "../models/Player";
 import { Aim } from "./Aim";
 
 export default class InteractionPlayer extends DirectionActor {
