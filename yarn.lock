@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@aspnet/signalr@^1.0.0-preview1-update1":
+  version "1.0.0-preview1-update1"
+  resolved "https://registry.yarnpkg.com/@aspnet/signalr/-/signalr-1.0.0-preview1-update1.tgz#f8f4b15674f668bc4bacc9f35eebe70f15912c6b"
+
+"@excaliburjs/excalibur-tiled@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@excaliburjs/excalibur-tiled/-/excalibur-tiled-2.2.0.tgz#fae4493c3a3baa6a8ff709264934e5e549a77649"
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
