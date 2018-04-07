@@ -58,10 +58,10 @@ export class Level1 extends Scene {
       });
     });
 
-    GameService.connection.on("playerState", (player: IPlayer) => {
-      const actor = GameService.getActor(player.id);
-      if (actor) {
-        actor.pos = new Vector(player.position.x, player.position.y);
+    GameService.connection.on("playerState", (info: IPlayer) => {
+      const player = GameService.getActor(info.id) as Player;
+      if (player) {
+        player.nextPosition = new Vector(info.position.x, info.position.y);
       }
     });
 

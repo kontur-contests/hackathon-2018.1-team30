@@ -1,4 +1,4 @@
-import { CollisionType, Engine, Color } from "excalibur";
+import { CollisionType, Engine, Vector } from "excalibur";
 import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
@@ -11,6 +11,8 @@ export default class Player extends DirectionActor {
     this.collisionType = CollisionType.Passive;
     this.gunFire = new GunFire();
   }
+
+  public nextPosition: Vector = Vector.Zero;
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
@@ -27,23 +29,24 @@ export default class Player extends DirectionActor {
         down_right: spriteSheet.idle.down_left()
       },
       walk: {
-        up: spriteSheet.walk.up(engine, 150),
-        up_right: spriteSheet.walk.up(engine, 150),
-        up_left: spriteSheet.walk.up(engine, 150),
-        down: spriteSheet.walk.down(engine, 150),
-        down_right: spriteSheet.walk.down(engine, 150),
-        down_left: spriteSheet.walk.down(engine, 150),
-        right: spriteSheet.walk.right(engine, 150),
-        left: spriteSheet.walk.left(engine, 150)
+        up: spriteSheet.walk.up(engine, 75),
+        up_right: spriteSheet.walk.up(engine, 75),
+        up_left: spriteSheet.walk.up(engine, 75),
+        down: spriteSheet.walk.down(engine, 75),
+        down_right: spriteSheet.walk.down(engine, 75),
+        down_left: spriteSheet.walk.down(engine, 75),
+        right: spriteSheet.walk.right(engine, 75),
+        left: spriteSheet.walk.left(engine, 75)
       }
     });
   }
 
-  public onUpdate() {
-    if (this.gunFire.isEnabled) {
-      this.gunFire.color = Color.Green;
-    } else {
-      this.gunFire.color = Color.Transparent;
+  public update(engine: Engine, delta: number) {
+    super.update(engine, delta);
+    const positionDifferent = this.nextPosition.sub(this.pos);
+    if (!positionDifferent.equals(Vector.Zero)) {
+      this.pos = this.nextPosition;
     }
+    this.direction = positionDifferent;
   }
 }
