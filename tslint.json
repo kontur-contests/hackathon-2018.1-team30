@@ -4,7 +4,9 @@
   "jsRules": {},
   "rules": {
     "object-literal-sort-keys": false,
-    "indent": ["spaces", 2]
+    "indent": ["spaces", 2],
+    "no-console": false,
+    "ordered-imports": false
   },
   "rulesDirectory": []
 }
