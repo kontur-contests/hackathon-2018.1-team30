@@ -1,3 +1,5 @@
+import { Actor } from "excalibur";
+
 interface IActions {
     move: () => void;
     attack: () => void;
@@ -12,6 +14,11 @@ export interface IPlayer {
     id: string;
     name: string;
     position: IPosition;
+}
+
+export interface IUser {
+    me: IPlayer;
+    actor: Actor;
 }
 
 export enum Directions {
