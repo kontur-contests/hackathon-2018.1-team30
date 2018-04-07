@@ -25,7 +25,11 @@ export default {
     rows,
     idle: {
         down: () => spriteSheet.getSprite(getIndex(2)),
+        down_left: () => spriteSheet.getSprite(getIndex(2)),
+        down_right: () => spriteSheet.getSprite(getIndex(2)),
         up: () => spriteSheet.getSprite(getIndex(0)),
+        up_left: () => spriteSheet.getSprite(getIndex(0)),
+        up_right: () => spriteSheet.getSprite(getIndex(0)),
         left: () => spriteSheet.getSprite(getIndex(1)),
         right: () => spriteSheet.getSprite(getIndex(3))
     },
