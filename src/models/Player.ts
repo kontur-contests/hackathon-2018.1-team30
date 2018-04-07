@@ -13,3 +13,15 @@ export interface IPlayer {
     name: string;
     position: IPosition;
 }
+
+export enum Directions {
+    None,
+    Up,
+    Right,
+    Down,
+    Left,
+    UpRight,
+    UpLeft,
+    DownRigth,
+    DownLeft
+}
