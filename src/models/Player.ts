@@ -9,7 +9,7 @@ interface IPosition {
 }
 
 export interface IPlayer {
-    id: any;
+    id: string;
     name: string;
     position: IPosition;
 }

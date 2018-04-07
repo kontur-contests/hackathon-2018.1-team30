@@ -38,14 +38,22 @@ export class Level1 extends Scene {
     GameConnections.connection.on("playerJoin", (player: IPlayer) => {
       console.log(player);
       if (player) {
-        const x = player.position.x;
-        const y = player.position.y;
-        const newPlayer = new Player(x, y);
+        const newPlayer = new Player(player.position.x, player.position.y);
         this.add(newPlayer);
         this.camera.addStrategy(
           new SuperCamera(newPlayer, tileMapSize, 0.3, 0.9)
         );
       }
     });
+
+    GameConnections.connection.on('players', (players: IPlayer[]) => {
+      players.forEach(p => {
+        if (GameConnections.me && p.id !== GameConnections.me.id) {
+          const newPlayer = new Player(p.position.x, p.position.y);
+          this.add(newPlayer);
+        }
+      });
+    });
+
   }
 }
