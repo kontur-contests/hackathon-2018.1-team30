@@ -31,11 +31,11 @@ namespace Cowl.Backend.Hubs
 
             _logger.LogDebug("playerJoin" + player);
 
-            await Clients.Others.SendAsync("playerJoin", player);
+            
             await Clients.Caller.SendAsync("me", player);
             await Clients.Caller.SendAsync("players", _gameService.GetMap().Players);
             await Clients.Caller.SendAsync("fowls", _gameService.GetMap().Fowls);
-
+            await Clients.Others.SendAsync("playerJoin", player);
 
             _gameService.Join(player);
         }
