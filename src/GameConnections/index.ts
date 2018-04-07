@@ -1,13 +1,11 @@
 import signalR = require('@aspnet/signalr');
-import { IPlayer, Directions } from '../models/Player';
+import { IPlayer, Directions, IUser } from '../models/Player';
 
 const url = 'http://10.33.94.6:4844/game';
 
 const connection = new signalR.HubConnection(url);
-const me: IPlayer | null = null;
-const players: IPlayer[] = [];
-
-connection.start();
+let currentUser: IUser | null = null;
+let otherPlayers: Set<IUser> = new Set([]);
 
 connection.onclose(() => {
   console.log('Пичаль');
@@ -15,16 +13,25 @@ connection.onclose(() => {
 });
 
 export class GameConnections {
-  public static savePlayer(player: IPlayer) {
-    player = player;
+
+  public static start() {
+    connection.start();
   }
 
-  static get me(): IPlayer | null {
-    return me;
+  public static saveUser(user: IUser) {
+    currentUser = user;
   }
 
-  static get players(): IPlayer[] {
-    return players;
+  public static saveOtherPlayer(otherPlayer: IUser) {
+    otherPlayers.add(otherPlayer);
+  }
+
+  static get currentUser(): IUser | null {
+    return currentUser;
+  }
+
+  static get otherPlayers(): IUser[] {
+    return Array.from(otherPlayers);
   }
 
   public static join(): void {
