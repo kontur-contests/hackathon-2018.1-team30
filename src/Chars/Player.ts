@@ -1,13 +1,20 @@
 import { CollisionType, Engine, Input, Vector } from 'excalibur';
 import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
 import DirectionActor from './DirectionActor';
+import { GameConnections } from '../GameConnections';
+import { Directions } from '../models/Player';
 
 export default class Player extends DirectionActor {
   private static readonly speed = 5;
 
-  private static readonly keyPressInterval = 1000;
+  private static readonly keyPressInterval = 75;
 
   private static loggingTimer = 0;
+
+  constructor(x: number, y: number) {
+    super(x, y, spriteSheet.width, spriteSheet.height);
+    this.collisionType = CollisionType.Passive;
+  }
 
   private static getDirections = (key: Input.Keys) => {
     switch (key) {
@@ -24,10 +31,20 @@ export default class Player extends DirectionActor {
     }
   };
 
-  constructor(x: number, y: number) {
-    super(x, y, spriteSheet.width, spriteSheet.height);
-    this.collisionType = CollisionType.Passive;
-  }
+  private moveTo = (key?: Input.Keys) => {
+    switch (key) {
+      case Input.Keys.A:
+        return this.actions.moveTo(this.x - 30, this.y, 175);
+      case Input.Keys.W:
+        return this.actions.moveTo(this.x, this.y - 30, 175);
+      case Input.Keys.D:
+        return this.actions.moveTo(this.x + 30, this.y, 175);
+      case Input.Keys.S:
+        return this.actions.moveTo(this.x, this.y + 30, 175);
+      default:
+        return null;
+    }
+  };
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
@@ -59,20 +76,23 @@ export default class Player extends DirectionActor {
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
-    this.pos.addEqual(this.direction.scale(Player.speed));
+    // this.pos.addEqual(this.direction.scale(Player.speed));
   }
 
   private handleKeyPress = (event?: Input.KeyEvent) => {
     clearInterval(Player.loggingTimer);
     const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
-    console.log(`${this.x}, ${this.y}`);
+    this.moveTo(event && event.key);
+    this.direction.addEqual(direction);
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
+      this.moveTo(event && event.key);
+      GameConnections.move(Directions.Down);
     }, Player.keyPressInterval);
-    this.direction.addEqual(direction);
   };
 
   private handleKeyRelease = (event?: Input.KeyEvent) => {
+    clearInterval(Player.loggingTimer);
     const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.subEqual(direction);
   };
