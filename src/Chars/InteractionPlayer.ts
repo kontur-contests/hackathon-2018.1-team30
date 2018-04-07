@@ -35,7 +35,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.gunFire = new GunFire(true);
+    this.gunFire = new GunFire();
     this.aim = new Aim();
     this.add(this.gunFire);
     this.add(this.aim);
@@ -77,18 +77,18 @@ export default class InteractionPlayer extends DirectionActor {
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
-    this.sendingDelta += delta;
-    this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
-
-    if (this.sendingDelta > 15) {
-      if (!this.lastSentPosition.sub(this.pos).equals(Vector.Zero)) {
-        GameService.move(0, this.pos);
-      }
-      if (this.gunFire && this.gunFire.isEnabled && this.aim) {
-        GameService.fire(this.aim.pos);
-      }
-      this.sendingDelta = 0;
+    const mousePos = engine.input.pointers.primary.lastScreenPos;
+    if (!mousePos) {
+      return;
     }
+    if (this.aim) {
+      this.aim.target = mousePos;
+    }
+    if (this.gunFire && this.aim) {
+      this.gunFire.target = this.aim.pos;
+    }
+    this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
+    this.sendDataIfNeeded(delta);
   }
 
   private handleKeyPress = (event?: Input.KeyEvent) => {
@@ -106,4 +106,18 @@ export default class InteractionPlayer extends DirectionActor {
     );
     this.direction.subEqual(direction);
   };
+
+  private sendDataIfNeeded(delta: number) {
+    this.sendingDelta += delta;
+    if (this.sendingDelta > 15) {
+      if (!this.lastSentPosition.sub(this.pos).equals(Vector.Zero)) {
+        GameService.move(0, this.pos);
+      }
+      if (this.gunFire && this.aim && this.gunFire.isEnabled) {
+        console.log("lol");
+        GameService.fire(this.aim.pos);
+      }
+      this.sendingDelta = 0;
+    }
+  }
 }

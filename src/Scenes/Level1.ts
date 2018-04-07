@@ -82,11 +82,7 @@ export class Level1 extends Scene {
             clearTimeout(actor.gunFire.timeout);
             actor.gunFire.timeout = null;
           }
-          actor.gunFire.activate(new Vector(vector.x, vector.y));
-
-          actor.gunFire.timeout = setTimeout(() => {
-            actor.gunFire.deactivate();
-          }, 100);
+          actor.gunFire.target = new Vector(vector.x, vector.y);
         }
       }
     );
