@@ -26,17 +26,17 @@ export class Level1 extends Scene {
     this.add(tileMap);
 
     GameService.connection.on("me", (user: IPlayer) => {
-      const interationPlayer = new InteractionPlayer(
+      const interactionPlayer = new InteractionPlayer(
         user.position.x,
         user.position.y
       );
       GameService.saveUser({
         user,
-        actor: interationPlayer
+        actor: interactionPlayer
       });
-      this.add(interationPlayer);
+      this.add(interactionPlayer);
       this.camera.addStrategy(
-        new SuperCamera(interationPlayer, tileMapSize, 0.3, 0.9)
+        new SuperCamera(interactionPlayer, tileMapSize, 0.3, 0.9)
       );
     });
 
@@ -49,7 +49,7 @@ export class Level1 extends Scene {
           actor
         });
       }
-    }
+    };
 
     const joinFowl = (fowl: IPlayer) => {
       if (!GameService.fowlInGame(fowl.id)) {
@@ -60,13 +60,19 @@ export class Level1 extends Scene {
           actor
         });
       }
-    }
+    };
 
-    GameService.connection.on("playerJoin", (player: IPlayer) => joinPlayer(player));
-    GameService.connection.on("players", (players: IPlayer[]) => players.forEach(joinPlayer));
+    GameService.connection.on("playerJoin", (player: IPlayer) =>
+      joinPlayer(player)
+    );
+    GameService.connection.on("players", (players: IPlayer[]) =>
+      players.forEach(joinPlayer)
+    );
 
     GameService.connection.on("fowlJoin", (fowl: IPlayer) => joinFowl(fowl));
-    GameService.connection.on("fowls", (fowls: IPlayer[]) => fowls.forEach(joinFowl));
+    GameService.connection.on("fowls", (fowls: IPlayer[]) =>
+      fowls.forEach(joinFowl)
+    );
 
     GameService.connection.on("playerState", (info: IPlayer) => {
       const player = GameService.getActor(info.id) as Player;
@@ -85,18 +91,10 @@ export class Level1 extends Scene {
 
     GameService.connection.on(
       "playerAttack",
-      (player: IPlayer, vector: { x: number; y: number }) => {
-        const actor = GameService.getActor(player.id) as Player;
-        if (actor) {
-          if (actor.gunFire.timeout) {
-            clearTimeout(actor.gunFire.timeout);
-            actor.gunFire.timeout = null;
-          }
-          actor.gunFire.activate(new Vector(vector.x, vector.y));
-
-          actor.gunFire.timeout = setTimeout(() => {
-            actor.gunFire.deactivate();
-          }, 100);
+      (info: IPlayer, vector: { x: number; y: number }) => {
+        const player = GameService.getActor(info.id) as Player;
+        if (player) {
+          player.setFireTarget = new Vector(vector.x, vector.y);
         }
       }
     );

@@ -1,9 +1,9 @@
-import { CollisionType, Engine, Input, Vector } from 'excalibur';
-import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
-import DirectionActor from './DirectionActor';
-import { GunFire } from './GunFire';
-import { GameService } from '../GameService';
-import { Aim } from './Aim';
+import { CollisionType, Engine, Input, Vector } from "excalibur";
+import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
+import DirectionActor from "./DirectionActor";
+import { GunFire } from "./GunFire";
+import { GameService } from "../GameService";
+import { Aim } from "./Aim";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
@@ -33,9 +33,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.gunFire = new GunFire(true);
     this.aim = new Aim();
-    this.add(this.gunFire);
     this.add(this.aim);
     this.registerDrawing({
       idle: {
@@ -59,14 +57,20 @@ export default class InteractionPlayer extends DirectionActor {
         left: spriteSheet.walk.left(engine, 150)
       }
     });
-    engine.input.keyboard.on('press', this.handleKeyPress);
-    engine.input.keyboard.on('release', this.handleKeyRelease);
+    engine.input.keyboard.on("press", this.handleKeyPress);
+    engine.input.keyboard.on("release", this.handleKeyRelease);
 
-    engine.input.pointers.primary.on('down', () => {
-      this.gunFire != null && (this.gunFire.isEnabled = true);
+    engine.input.pointers.primary.on("down", () => {
+      if (this.gunFire == null) {
+        this.gunFire = new GunFire();
+        this.add(this.gunFire);
+      }
     });
-    engine.input.pointers.primary.on('up', () => {
-      this.gunFire != null && (this.gunFire.isEnabled = false);
+    engine.input.pointers.primary.on("up", () => {
+      if (this.gunFire != null) {
+        this.remove(this.gunFire);
+        this.gunFire = null;
+      }
     });
   }
 
@@ -75,27 +79,44 @@ export default class InteractionPlayer extends DirectionActor {
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
-    this.sendingDelta += delta;
+    const mousePos = engine.input.pointers.primary.lastWorldPos;
+    if (!mousePos) {
+      return;
+    }
+    if (this.aim) {
+      this.aim.target = mousePos;
+    }
+    if (this.gunFire && this.aim) {
+      this.gunFire.target = this.aim.pos;
+    }
     this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
+    this.sendDataIfNeeded(delta);
+  }
 
+  private handleKeyPress = (event?: Input.KeyEvent) => {
+    const direction = InteractionPlayer.getDirections(
+      (event && event.key) || Input.Keys.Semicolon
+    );
+    this.direction.addEqual(direction);
+  };
+
+  private handleKeyRelease = (event?: Input.KeyEvent) => {
+    const direction = InteractionPlayer.getDirections(
+      (event && event.key) || Input.Keys.Semicolon
+    );
+    this.direction.subEqual(direction);
+  };
+
+  private sendDataIfNeeded(delta: number) {
+    this.sendingDelta += delta;
     if (this.sendingDelta > 15) {
       if (!this.lastSentPosition.sub(this.pos).equals(Vector.Zero)) {
         GameService.move(0, this.pos);
       }
-      if (this.gunFire && this.gunFire.isEnabled && this.aim) {
+      if (this.gunFire && this.aim) {
         GameService.fire(this.aim.pos);
       }
       this.sendingDelta = 0;
     }
   }
-
-  private handleKeyPress = (event?: Input.KeyEvent) => {
-    const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
-    this.direction.addEqual(direction);
-  };
-
-  private handleKeyRelease = (event?: Input.KeyEvent) => {
-    const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
-    this.direction.subEqual(direction);
-  };
 }
