@@ -4,6 +4,7 @@ import { Actor } from "Actor";
 import { Vector } from "Algebra";
 import InteractionPlayer from "../Chars/InteractionPlayer";
 import Fowl from "../Chars/Fowl";
+import PoopFowl from "../Chars/PoopFowl";
 
 const url = "http://10.33.94.6:4844/game";
 
@@ -97,7 +98,7 @@ export class GameService {
     }
   }
 
-  public static killFowl(fowl: Fowl): void {
+  public static killFowl(fowl: Fowl | PoopFowl): void {
     if (this.fowls && fowl) {
       const user = Object.keys(this.fowls)
         .map(x => this.fowls[x])

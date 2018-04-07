@@ -84,11 +84,10 @@ export class Level1 extends Scene {
       GameService.kickUser(player);
     });
 
-    GameService.connection.on('fowlKill', (fowl: string) => {
-      const actor = GameService.getActor(fowl);
+    GameService.connection.on('fowlKill', (fowl: IPlayer) => {
+      const actor = GameService.getActor(fowl.id);
       if (actor) {
         actor.kill();
-        GameService.removeFowl(fowl);
       }
     });
   }

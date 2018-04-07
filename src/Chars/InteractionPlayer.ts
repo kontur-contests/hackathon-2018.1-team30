@@ -1,4 +1,4 @@
-import { CollisionType, Engine, Input, Vector, UIActor, Color } from 'excalibur';
+import { CollisionType, Engine, Input, Vector } from 'excalibur';
 import spriteSheet from '../SpriteSheets/SlawwanSpriteSheet';
 import DirectionActor from './DirectionActor';
 import { GunFire } from './GunFire';
@@ -6,9 +6,10 @@ import { GameService } from '../GameService';
 import { Aim } from './Aim';
 import Fowl from './Fowl';
 import { HealthLine } from '../Chars/HealthLine';
+import PoopFowl from './PoopFowl';
 
 export default class InteractionPlayer extends DirectionActor {
-  private static readonly speed = 5;
+  private static readonly speed = 7;
 
   private static getDirections = (key: Input.Keys) => {
     switch (key) {
@@ -36,12 +37,15 @@ export default class InteractionPlayer extends DirectionActor {
         ev.other.kill();
         GameService.killFowl(ev.other);
       }
+      if (ev && ev.other instanceof PoopFowl) {
+        ev.other.explode();
+        GameService.killFowl(ev.other);
+      }
     });
   }
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.scale = new Vector(0.7, 0.7);
     this.aim = new Aim();
     this.add(this.aim);
     this.registerDrawing({
