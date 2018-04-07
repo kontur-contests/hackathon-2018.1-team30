@@ -12,7 +12,7 @@ import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 import SuperCamera from "../SuperCamera";
 import { GameService } from "../GameService";
-import { IPlayer } from "../models/Player";
+import { IPlayer, IGameObject, GameObjectType } from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
 import Fowl from "../Chars/Fowl";
 
@@ -40,8 +40,9 @@ export class Level1 extends Scene {
       );
     });
 
-    const joinPlayer = (player: IPlayer) => {
-      if (!GameService.userInGame(player.id)) {
+    const joinPlayer = (player: IGameObject) => {
+      console.log(player);
+      if (player && player.type === GameObjectType.Player && !GameService.userInGame(player.id!)) {
         const actor = new Player(player.position.x, player.position.y);
         this.add(actor);
         GameService.saveOtherPlayer({
@@ -49,30 +50,18 @@ export class Level1 extends Scene {
           actor
         });
       }
-    };
-
-    const joinFowl = (fowl: IPlayer) => {
-      if (!GameService.fowlInGame(fowl.id)) {
-        const actor = new Fowl(fowl.position.x, fowl.position.y);
+      if (player && player.type === GameObjectType.Fowl && !GameService.fowlInGame(player.id)) {
+        const actor = new Fowl(player.position.x, player.position.y);
         this.add(actor);
         GameService.addFowl({
-          user: fowl,
+          user: player,
           actor
         });
       }
     };
 
-    GameService.connection.on("playerJoin", (player: IPlayer) =>
-      joinPlayer(player)
-    );
-    GameService.connection.on("players", (players: IPlayer[]) =>
-      players.forEach(joinPlayer)
-    );
-
-    GameService.connection.on("fowlJoin", (fowl: IPlayer) => joinFowl(fowl));
-    GameService.connection.on("fowls", (fowls: IPlayer[]) =>
-      fowls.forEach(joinFowl)
-    );
+    GameService.connection.on('gameObjectJoin', (player: IGameObject) => joinPlayer(player));
+    GameService.connection.on('gameObjects', (players: IGameObject[]) => players.forEach(joinPlayer));
 
     GameService.connection.on("playerState", (info: IPlayer) => {
       const player = GameService.getActor(info.id) as Player;
@@ -89,13 +78,10 @@ export class Level1 extends Scene {
       // }
     });
 
-    GameService.connection.on(
-      "playerAttack",
-      (info: IPlayer, vector: { x: number; y: number }) => {
-        const player = GameService.getActor(info.id) as Player;
-        if (player) {
-          player.setFireTarget = new Vector(vector.x, vector.y);
-        }
+    GameService.connection.on('gameObjectAttack', (info: IGameObject, vector: { x: number; y: number }) => {
+      const player = GameService.getActor(info.id) as Player;
+      if (player) {
+        player.setFireTarget = new Vector(vector.x, vector.y);
       }
     );
 

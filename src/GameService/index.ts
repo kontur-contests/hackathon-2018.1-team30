@@ -1,5 +1,5 @@
 import * as signalR from "@aspnet/signalr";
-import { IPlayer, IUser } from "../models/Player";
+import { IPlayer, IUser, IGameObject, IFowl } from "../models/Player";
 import { Actor } from "Actor";
 import { Vector } from "Algebra";
 import InteractionPlayer from "../Chars/InteractionPlayer";
@@ -84,12 +84,12 @@ export class GameService {
     return connection;
   }
 
-  public static fire(vector: Vector) {
-    connection.invoke("attackPlayer", vector);
+  public static fire(id: string, vector: Vector) {
+    connection.invoke("attackGameObject", id, vector);
   }
 
-  public static move(num: number, nextPosition: Vector): void {
-    connection.invoke("movePlayer", num, nextPosition);
+  public static move(id: string, nextPosition: Vector): void {
+    connection.invoke("moveGameObject", id, nextPosition);
   }
 
   public static kickUser(player: IPlayer): void {
