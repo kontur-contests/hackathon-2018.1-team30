@@ -12,7 +12,7 @@ export default class Player extends DirectionActor {
     this.gunFire = new GunFire();
   }
 
-  private nextPosition: Vector = Vector.Zero;
+  public nextPosition: Vector = Vector.Zero;
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
@@ -29,27 +29,24 @@ export default class Player extends DirectionActor {
         down_right: spriteSheet.idle.down_left()
       },
       walk: {
-        up: spriteSheet.walk.up(engine, 150),
-        up_right: spriteSheet.walk.up(engine, 150),
-        up_left: spriteSheet.walk.up(engine, 150),
-        down: spriteSheet.walk.down(engine, 150),
-        down_right: spriteSheet.walk.down(engine, 150),
-        down_left: spriteSheet.walk.down(engine, 150),
-        right: spriteSheet.walk.right(engine, 150),
-        left: spriteSheet.walk.left(engine, 150)
+        up: spriteSheet.walk.up(engine, 75),
+        up_right: spriteSheet.walk.up(engine, 75),
+        up_left: spriteSheet.walk.up(engine, 75),
+        down: spriteSheet.walk.down(engine, 75),
+        down_right: spriteSheet.walk.down(engine, 75),
+        down_left: spriteSheet.walk.down(engine, 75),
+        right: spriteSheet.walk.right(engine, 75),
+        left: spriteSheet.walk.left(engine, 75)
       }
     });
   }
 
   public update(engine: Engine, delta: number) {
-    const positionDifferent = this.pos.sub(this.nextPosition);
+    super.update(engine, delta);
+    const positionDifferent = this.nextPosition.sub(this.pos);
     if (!positionDifferent.equals(Vector.Zero)) {
-      this.direction = this.pos.sub(this.nextPosition);
-      this.actions.moveBy(this.nextPosition.x, this.nextPosition.y, 25);
+      this.pos = this.nextPosition;
     }
-  }
-
-  public changePosition(nextPosition: Vector) {
-    this.nextPosition = nextPosition;
+    this.direction = positionDifferent;
   }
 }

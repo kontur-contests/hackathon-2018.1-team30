@@ -7,7 +7,6 @@ import { Aim } from "./Aim";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
-  private static readonly keyPressInterval = 75;
 
   private static loggingTimer = 0;
 
@@ -74,25 +73,19 @@ export default class InteractionPlayer extends DirectionActor {
   }
 
   private sendingDelta: number = 0;
-  private num: number = 0;
+  private lastSentPosition: Vector = Vector.Zero;
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
     this.sendingDelta += delta;
+    this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
 
-    if (this.sendingDelta > 25) {
-      if (!this.direction.equals(Vector.Zero)) {
-        const nextPosition = this.pos.add(
-          this.direction.scale(InteractionPlayer.speed)
-        );
-        GameService.move(this.num, nextPosition);
-        this.pos = nextPosition;
-        this.num++;
+    if (this.sendingDelta > 15) {
+      if (!this.lastSentPosition.sub(this.pos).equals(Vector.Zero)) {
+        GameService.move(0, this.pos);
       }
-      if (this.gunFire && this.gunFire.isEnabled) {
-        if (this.aim) {
-          GameService.fire(this.aim.pos);
-        }
+      if (this.gunFire && this.gunFire.isEnabled && this.aim) {
+        GameService.fire(this.aim.pos);
       }
       this.sendingDelta = 0;
     }
