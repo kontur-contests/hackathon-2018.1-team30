@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 const MAX_AIM_DISTANCE = 200;
 export class GunFire extends ex.Actor {
-  constructor() {
+  constructor(public isInterection: boolean = false) {
     super(0, 0, 200, 10, ex.Color.Rose);
     this.anchor = new ex.Vector(0, this.anchor.y);
   }
@@ -14,6 +14,9 @@ export class GunFire extends ex.Actor {
       this.color = ex.Color.Red;
     } else {
       this.color = ex.Color.Transparent;
+    }
+    if (!this.isInterection) {
+      return;
     }
     const mousePos = engine.input.pointers.primary.lastWorldPos;
     if (!mousePos) {
