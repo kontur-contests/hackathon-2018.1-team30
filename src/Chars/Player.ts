@@ -85,7 +85,7 @@ export default class Player extends DirectionActor {
     this.direction.addEqual(direction);
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
-      GameConnections.move(this.takeDirection());
+      GameConnections.move(this.takeDirection(event && event.key));
     }, Player.keyPressInterval);
   };
 
