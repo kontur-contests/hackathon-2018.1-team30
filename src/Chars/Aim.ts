@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Resources } from "../Resources";
 
-const MAX_AIM_DISTANCE = 200;
+const MAX_AIM_DISTANCE = 500;
 
 export class Aim extends ex.Actor {
   public target: ex.Vector = ex.Vector.Zero;

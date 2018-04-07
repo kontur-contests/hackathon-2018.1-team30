@@ -10,8 +10,8 @@ const loader = new Loader();
 loader.addResources(Resources.values());
 
 game.start(loader).then(() => {
-    console.log("Started");
-    Resources.MainTheme.play();
-    Resources.MainTheme.setLoop(true);
-    GameService.start();
+  console.log("Started");
+  Resources.MainTheme.play();
+  Resources.MainTheme.setLoop(true);
+  GameService.start();
 });

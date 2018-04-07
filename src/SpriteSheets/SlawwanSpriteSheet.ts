@@ -30,8 +30,8 @@ export default {
     up: () => spriteSheet.getSprite(getIndex(0)),
     up_left: () => spriteSheet.getSprite(getIndex(7)),
     up_right: () => spriteSheet.getSprite(getIndex(5)),
-    left: () => spriteSheet.getSprite(getIndex(3)),
-    right: () => spriteSheet.getSprite(getIndex(4))
+    left: () => spriteSheet.getSprite(getIndex(2)),
+    right: () => spriteSheet.getSprite(getIndex(3))
   },
   walk: {
     left: (engine: Engine, speed: number = 75) =>

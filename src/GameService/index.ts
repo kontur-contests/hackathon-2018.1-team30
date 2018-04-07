@@ -98,7 +98,7 @@ export class GameService {
     }
   }
 
-  public static killFowl(fowl: Fowl | PoopFowl): void {
+  public static killFowl(fowl: Actor): void {
     if (this.fowls && fowl) {
       const user = Object.keys(this.fowls)
         .map(x => this.fowls[x])

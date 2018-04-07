@@ -1,4 +1,4 @@
-import * as ex from 'excalibur';
+import * as ex from "excalibur";
 
 export class HealthLine extends ex.Actor {
   width: number;

@@ -1,6 +1,10 @@
 import { Engine, Color, Actor, Random, Vector, CollisionType } from "excalibur";
 import poopSpriteSheet from "../SpriteSheets/PoopSpritesSheet";
 import Boom from "./Boom";
+import { PreCollisionEvent } from "Events";
+import { GameService } from "../GameService";
+import DirectionActor from "./DirectionActor";
+import GunFire from "./GunFire";
 
 export default class PoopFowl extends Actor {
   private boom: Boom | null = null;
@@ -17,10 +21,19 @@ export default class PoopFowl extends Actor {
     this.addDrawing("death", poopSpriteSheet.dead(engine));
 
     this.setDrawing("down");
-    this.on("prekill", () => {});
+    this.on("precollision", (event?: PreCollisionEvent) => {
+      if (
+        event &&
+        (event.other instanceof DirectionActor ||
+          event.other instanceof GunFire)
+      ) {
+        GameService.killFowl(event.other);
+        this.kill();
+      }
+    });
   }
 
-  public explode() {
+  public kill() {
     if (this.boom == null) {
       this.setDrawing("death");
       this.boom = new Boom(0, 0, () => {
@@ -31,7 +44,7 @@ export default class PoopFowl extends Actor {
 
       this.boom.scale = new Vector(5, 5);
       this.add(this.boom);
-      setTimeout(() => this.kill(), 900);
+      setTimeout(() => super.kill(), 900);
     }
   }
 }

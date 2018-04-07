@@ -6,6 +6,7 @@ export class Game extends Engine {
     super({
       displayMode: DisplayMode.FullScreen
     });
+    //this.isDebug = true;
   }
 
   public start(loader: Loader) {
