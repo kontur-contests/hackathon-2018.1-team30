@@ -3,7 +3,13 @@ interface IActions {
     attack: () => void;
 }
 
+interface IPosition {
+    x: number,
+    y: number;
+}
+
 export interface IPlayer {
-    Id: any;
-    Name: string;
+    id: any;
+    name: string;
+    position: IPosition;
 }

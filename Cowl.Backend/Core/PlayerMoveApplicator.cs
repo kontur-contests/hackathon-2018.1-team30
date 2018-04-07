@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Drawing;
+using System.Linq;
 using Cowl.Backend.DataModel;
 
 namespace Cowl.Backend.Core
@@ -17,7 +19,15 @@ namespace Cowl.Backend.Core
             }
 
             var direction = GetVector(action.Direction);
-            player.Position += direction * Step;
+            var target = player.Position + direction * Step;
+            player.Position = Normalize(map.Size, target, player.Size);
+        }
+
+        private static ObjectPosition Normalize(Size mapSize, ObjectPosition point, Size size)
+        {
+            var x = Math.Min(Math.Max(0, point.X), mapSize.Width - size.Width);
+            var y = Math.Min(Math.Max(0, point.Y), mapSize.Height - size.Height);
+            return new ObjectPosition(x, y);
         }
 
         private static Vector GetVector(MoveDirection direction)
