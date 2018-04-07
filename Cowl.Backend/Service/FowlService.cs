@@ -15,7 +15,10 @@ namespace Cowl.Backend.Service
                 .WithConsoleLogger()
                 .Build();
 
-            connection.On("playerAttach")
+            connection.On("playerAttack", () =>
+            {
+
+            })
         }
 
        
