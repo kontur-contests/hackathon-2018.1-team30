@@ -9,8 +9,9 @@ namespace Cowl.Backend.DataModel
     public class Map
     {
         public List<GameObject> GameObjects { get; set; }
-        
+
+        public List<Player> Players { get; set; }
+
         public Size Size { get; set; }
-        
     }
 }

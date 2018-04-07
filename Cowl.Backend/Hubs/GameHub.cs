@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using Cowl.Backend.Core;
 using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
 using Cowl.Backend.Service;
@@ -11,10 +12,12 @@ namespace Cowl.Backend.Hubs
     public class GameHub : Hub
     {
         private readonly GameService _gameService;
+        private readonly ActionApplicator _actionApplicator;
 
-        public GameHub(GameService gameService)
+        public GameHub(GameService gameService, ActionApplicator actionApplicator)
         {
             _gameService = gameService;
+            _actionApplicator = actionApplicator;
         }
 
         public override async Task OnConnectedAsync()
@@ -27,20 +30,20 @@ namespace Cowl.Backend.Hubs
             var y = random.Next(0, 800);
 
 
-            var player = new Player { Id = id, Name = name, Position = new Point(x, y) };
+            var player = new Player {Id = id, Name = name, Position = new Point(x, y)};
 
             await _gameService.Join(player);
-            await Clients.All.SendAsync("join", player);
+            await Clients.All.SendAsync("playerJoin", player);
         }
 
-        public async Task MovePlayer(Guid playerId, int flags)
+
+        public async Task MovePlayer(PlayerMove playerMove)
         {
-            var direction = (MoveDirection)flags;
+            _actionApplicator.Apply(_gameService.GetMap(), playerMove);
 
-            var player = await _gameService.GetPlayer(playerId);
-            player.Move(direction);
+            var player = _gameService.GetPlayer(playerMove.PlayerId);
 
-            await Clients.All.SendAsync("state", player);
+            await Clients.All.SendAsync("playerState", player);
         }
     }
 }

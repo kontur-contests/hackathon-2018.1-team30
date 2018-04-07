@@ -4,6 +4,6 @@
     {
         Block = 0,
         Player = 1,
-        Cowl = 2
+        Fowl = 2
     }
 }

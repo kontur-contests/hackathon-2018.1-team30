@@ -12,8 +12,12 @@ namespace Cowl.Backend.Service
     {
         private readonly Dictionary<Guid, Player> _players;
 
+        private readonly Map _map;
+
         public GameService()
         {
+            _map = new Map();
+
             _players = new Dictionary<Guid, Player>();
         }
 
@@ -23,15 +27,17 @@ namespace Cowl.Backend.Service
             if (_players.Count >= 4)
                 throw new Exception("too many players");
 
-            _players.Add(player.Id, player);
+            _map.Players.Add(player);
         }
 
-        public async Task<Player> GetPlayer(Guid id)
+        public Map GetMap()
         {
-            if (_players.ContainsKey(id))
-                return _players[id];
+            return _map;
+        }
 
-            throw new Exception("");
+        public Player GetPlayer(Guid playerId)
+        {
+            return _map.Players.First(p => p.Id == playerId);
         }
     }
 }
