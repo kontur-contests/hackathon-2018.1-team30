@@ -35,29 +35,33 @@ export class Level1 extends Scene {
     // this.add(new Actor(-10, -10, 10, 10, Color.Red));
     // this.add(audi);
 
-    GameConnections.connection.on("playerJoin", (player: IPlayer) => {
-      console.log(player);
-      if (player) {
-        const newPlayer = new Player(player.position.x, player.position.y);
+    GameConnections.connection.on("playerJoin", (user: IPlayer) => {
+      console.log(user);
+      if (user) {
+        const actor = new Player(user.position.x, user.position.y);
         GameConnections.saveUser({
-          me: player,
-          actor: newPlayer
+          user,
+          actor
         })
-        this.add(newPlayer);
+        this.add(actor);
         this.camera.addStrategy(
-          new SuperCamera(newPlayer, tileMapSize, 0.3, 0.9)
+          new SuperCamera(actor, tileMapSize, 0.3, 0.9)
         );
       }
     });
 
     GameConnections.connection.on('players', (players: IPlayer[]) => {
       console.log(players);
-      players.forEach(p => {
-        const isMe = GameConnections.currentUser && p.id === GameConnections.currentUser.me.id;
-        const playerInGame = GameConnections.players.some(p => p.id === p.id);
-        if (!isMe && !playerInGame) {
-          const newPlayer = new Player(p.position.x, p.position.y);
-          this.add(newPlayer);
+      const otherPlayers = players.filter(p => GameConnections.currentUser && p.id !== GameConnections.currentUser.user.id)
+      otherPlayers.forEach(user => {
+        const playerInGame = GameConnections.otherPlayers.some(p => p.user.id === p.user.id);
+        if (!playerInGame) {
+          const actor = new Player(user.position.x, user.position.y);
+          this.add(actor);
+          GameConnections.saveOtherPlayer({
+            user,
+            actor
+          })
         }
       });
     });

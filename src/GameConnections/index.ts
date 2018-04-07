@@ -5,7 +5,7 @@ const url = 'http://10.33.94.6:4844/game';
 
 const connection = new signalR.HubConnection(url);
 let currentUser: IUser | null = null;
-const players: IPlayer[] = [];
+let otherPlayers: Set<IUser> = new Set([]);
 
 connection.onclose(() => {
   console.log('Пичаль');
@@ -22,12 +22,16 @@ export class GameConnections {
     currentUser = user;
   }
 
+  public static saveOtherPlayer(otherPlayer: IUser) {
+    otherPlayers.add(otherPlayer);
+  }
+
   static get currentUser(): IUser | null {
     return currentUser;
   }
 
-  static get players(): IPlayer[] {
-    return players;
+  static get otherPlayers(): IUser[] {
+    return Array.from(otherPlayers);
   }
 
   public static join(): void {

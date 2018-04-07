@@ -17,7 +17,7 @@ export interface IPlayer {
 }
 
 export interface IUser {
-    me: IPlayer;
+    user: IPlayer;
     actor: Actor;
 }
 
