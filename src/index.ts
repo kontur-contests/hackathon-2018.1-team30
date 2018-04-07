@@ -13,5 +13,6 @@ loader.addResources(Resources.values());
 game.start(loader).then(() => {
     console.log("Started");
     sound.play();
+    sound.setLoop(true);
     GameService.start();
 });
