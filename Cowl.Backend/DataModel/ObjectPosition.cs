@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Cowl.Backend.DataModel
+﻿namespace Cowl.Backend.DataModel
 {
     public class ObjectPosition
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-
         public ObjectPosition()
         {
         }
@@ -19,5 +11,8 @@ namespace Cowl.Backend.DataModel
             X = x;
             Y = y;
         }
+
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 }
