@@ -9,7 +9,6 @@ import {
 } from "excalibur";
 import Player from "../Chars/Player";
 import { Resources } from "../Resources";
-import { spriteSheet } from "../SpriteSheets/DudeNudeSpriteSheet";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
