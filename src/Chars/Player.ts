@@ -1,7 +1,7 @@
-import { CollisionType, Engine, Vector, UIActor, Color } from 'excalibur';
-import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
-import DirectionActor from './DirectionActor';
-import { GunFire } from './GunFire';
+import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
+import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
+import DirectionActor from "./DirectionActor";
+import { GunFire } from "./GunFire";
 
 export default class Player extends DirectionActor {
   private fireTarget: Vector | null = null;

@@ -5,6 +5,8 @@ import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import Fowl from "./Fowl";
+import PoopFowl from "./PoopFowl";
+import Boom from "./Boom";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
@@ -33,6 +35,10 @@ export default class InteractionPlayer extends DirectionActor {
     this.on("precollision", function(ev) {
       if (ev && ev.other instanceof Fowl) {
         ev.other.kill();
+        GameService.killFowl(ev.other);
+      }
+      if (ev && ev.other instanceof PoopFowl) {
+        ev.other.explode();
         GameService.killFowl(ev.other);
       }
     });
