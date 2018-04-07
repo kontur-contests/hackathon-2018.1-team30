@@ -1,19 +1,8 @@
-import {Actor, CollisionType, Color, Engine, Input, Vector} from 'excalibur';
+import {CollisionType, Engine, Input, Vector} from 'excalibur';
 import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
+import DirectionActor from "./DirectionActor";
 
-enum State {
-    Idle = "idle",
-    Walk = "walk"
-}
-
-enum Directions {
-    Up = "up",
-    Down = "down",
-    Left = "left",
-    Right = "right"
-}
-
-export default class Player extends Actor {
+export default class Player extends DirectionActor {
 
     private static readonly speed = 5;
     
@@ -32,10 +21,6 @@ export default class Player extends Actor {
         }
     };
 
-    private direction: Vector = Vector.Zero.clone();
-    private drawDirection: Directions = Directions.Down;
-    private drawState: State = State.Idle;
-    
     constructor(x: number, y: number) {
         super(x, y, spriteSheet.width, spriteSheet.height);
         this.collisionType = CollisionType.Passive;
@@ -43,43 +28,36 @@ export default class Player extends Actor {
     
     public onInitialize(engine: Engine) {
         super.onInitialize(engine);
-        this.addDrawing("idle_down", spriteSheet.idle.down());
-        this.addDrawing("idle_up", spriteSheet.idle.up());
-        this.addDrawing("idle_left", spriteSheet.idle.left());
-        this.addDrawing("idle_right", spriteSheet.idle.right());
-        this.addDrawing("walk_left", spriteSheet.walk.left(engine, 150));
-        this.addDrawing("walk_up", spriteSheet.walk.up(engine, 150));
-        this.addDrawing("walk_right", spriteSheet.walk.right(engine, 150));
-        this.addDrawing("walk_down", spriteSheet.walk.down(engine, 150));
-
+        this.registerDrawing({
+            idle: {
+                up: spriteSheet.idle.up(),
+                down: spriteSheet.idle.down(),
+                right:spriteSheet.idle.right(),
+                left:spriteSheet.idle.left(),
+                up_left: spriteSheet.idle.up_left(),
+                up_right: spriteSheet.idle.up_right(),
+                down_left: spriteSheet.idle.down_left(),
+                down_right: spriteSheet.idle.down_left(),
+            },
+            walk: {
+                up: spriteSheet.walk.up(engine, 150),
+                up_right: spriteSheet.walk.up(engine, 150),
+                up_left: spriteSheet.walk.up(engine, 150),
+                down:spriteSheet.walk.down(engine, 150),
+                down_right:spriteSheet.walk.down(engine, 150),
+                down_left:spriteSheet.walk.down(engine, 150),
+                right: spriteSheet.walk.right(engine, 150),
+                left: spriteSheet.walk.left(engine, 150),
+            }
+        });
         engine.input.keyboard.on("press", this.handleKeyPress);
         engine.input.keyboard.on("release", this.handleKeyRelease);
     }
 
     public update(engine: Engine, delta: number) {
         super.update(engine, delta);
-        if(this.direction.equals(Vector.Zero)){
-            this.drawState = State.Idle;
-        } else {
-            this.drawState = State.Walk;
-            if(this.direction.equals(Vector.Right)){
-                this.drawDirection = Directions.Right;
-            } else if (this.direction.equals(Vector.Left)) {
-                this.drawDirection = Directions.Left;
-            } else if(this.direction.y < 0){
-                this.drawDirection = Directions.Up;
-            } else {
-                this.drawDirection = Directions.Down;
-            }
-
-            this.pos.addEqual(this.direction.scale(Player.speed));
-        }
-        this.updateDrawState();
+        this.pos.addEqual(this.direction.scale(Player.speed));
     }
-
-    private updateDrawState = () => {
-        this.setDrawing(`${this.drawState}_${this.drawDirection}`)
-    };
     
     private handleKeyPress = (event?: Input.KeyEvent) => {
         const direction = Player.getDirections(event && event.key || Input.Keys.Semicolon);
