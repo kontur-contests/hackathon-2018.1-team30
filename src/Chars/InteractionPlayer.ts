@@ -33,22 +33,20 @@ export default class InteractionPlayer extends DirectionActor {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
     this.on("precollision", function(ev) {
-      if (ev) {
-        if (ev.other instanceof Fowl) {
-          ev.other.setDrawing("death");
-          setTimeout(() => {
-            ev.other.kill();
-          }, 400);
-        } else if (ev.other instanceof PoopFowl) {
-          const lol = ev.other as PoopFowl;
-          lol.explode();
-        }
+      if (ev && ev.other instanceof Fowl) {
+        ev.other.kill();
+        GameService.killFowl(ev.other);
+      }
+      if (ev && ev.other instanceof PoopFowl) {
+        ev.other.explode();
+        GameService.killFowl(ev.other);
       }
     });
   }
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
+    this.scale = new Vector(0.7, 0.7);
     this.aim = new Aim();
     this.add(this.aim);
     this.registerDrawing({
@@ -84,6 +82,7 @@ export default class InteractionPlayer extends DirectionActor {
         this.gunFire.collisionType = CollisionType.Active;
       }
     });
+
     engine.input.pointers.primary.on("up", () => {
       if (this.gunFire != null) {
         this.remove(this.gunFire);

@@ -1,4 +1,4 @@
-import { CollisionType, Engine, Vector } from "excalibur";
+import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
 import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
@@ -39,6 +39,15 @@ export default class Player extends DirectionActor {
         left: spriteSheet.walk.left(engine, 75)
       }
     });
+
+    const healthLine = new UIActor(0, -40, 0, 10);
+    const currentHealth = new UIActor(0, -40, 0, 10);
+    healthLine.color = Color.Orange;
+    currentHealth.color = Color.Red;
+    currentHealth.setWidth(80);
+    healthLine.setWidth(100);
+    this.add(healthLine);
+    this.add(currentHealth);
   }
 
   public update(engine: Engine, delta: number) {

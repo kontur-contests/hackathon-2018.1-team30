@@ -7,6 +7,7 @@ namespace Cowl.Backend.DataModel.GameObjects
     {
         public override GameObjectType Type => GameObjectType.Player;
         public string Name { get; set; }
+        public int Points { get; set; }
 
         public override string ToString()
         {

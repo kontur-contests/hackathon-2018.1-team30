@@ -1,7 +1,5 @@
 import { CollisionType, Engine, Color, Actor, Random, Vector } from "excalibur";
 import checkenSpriteSheet from "../SpriteSheets/ChickensSpritesheet";
-import DirectionActor from "./DirectionActor";
-import { GunFire } from "./GunFire";
 import { bloodAnimation } from "../SpriteSheets/BloodSpriteSheet";
 
 export default class Fowl extends Actor {
@@ -22,5 +20,12 @@ export default class Fowl extends Actor {
       ["up", "down", "left", "right"][new Random().integer(0, 3)]
     );
     this.scale = new Vector(2, 2);
+  }
+
+  public kill() {
+    this.setDrawing("death");
+    setTimeout(() => {
+      super.kill();
+    }, 400);
   }
 }

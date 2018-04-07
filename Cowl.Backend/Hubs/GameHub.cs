@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
@@ -69,13 +70,19 @@ namespace Cowl.Backend.Hubs
             fowl.Position = GetRandomPosition();
             fowl.Id = Guid.NewGuid().ToString();
 
-            _gameService.GetMap().Fowls.Add(fowl);
+            _gameService.GetMap().Fowls.Add(fowl.Id, fowl);
             await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
         }
 
-        public async Task KillFowl(string number)
+        public async Task KillFowl(string fowlId)
         {
-            await Clients.All.SendAsync("fowlKill", number).ConfigureAwait(false);
+            await Clients.All.SendAsync("fowlKill", fowlId).ConfigureAwait(false);
+            _gameService.GetMap().Fowls.Remove(fowlId);
+
+            var player = _gameService.GetPlayer(Context.ConnectionId);
+            player.Points++;
+
+            await Clients.Others.SendAsync("playerState", player);
         }
     }
 }
