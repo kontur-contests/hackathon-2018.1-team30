@@ -16,10 +16,8 @@ namespace Cowl.Console
             var p2 = JoinLeaveCase(5000);
             var p3 = JoinLeaveCase(2500);
             var p4 = JoinLeaveCase(4000);
-            var p5 = JoinLeaveCase(5000);
 
-            await Task.WhenAll(p1, p2, p3, p4, p5);
-            System.Console.ReadLine();
+            await Task.WhenAll(p1, p2, p3, p4);
         }
 
         private static async Task JoinLeaveCase(int delay)

@@ -35,9 +35,6 @@ namespace Cowl.Backend.Service
 
         public async Task Leave(IClientProxy clientProxy)
         {
-            if (_players.Count >= 4)
-                throw new Exception("too many players");
-
             _players.Remove(clientProxy);
         }
     }
