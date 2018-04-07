@@ -11,6 +11,7 @@ namespace Cowl.Backend.Service
     public class GameService
     {
         private readonly Map _map;
+        public bool isStarted { get; set; }
 
         public GameService()
         {

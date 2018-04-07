@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Cowl.Backend.Core;
@@ -59,10 +60,6 @@ namespace Cowl.Backend.Hubs
         {
             var player = _gameService.GetPlayer(Context.ConnectionId);
 
-#pragma warning disable 4014
-            SpawFowl();
-#pragma warning restore 4014
-
             await Clients.All.SendAsync("playerAttack", player, objectPosition);
         }
 
@@ -76,17 +73,14 @@ namespace Cowl.Backend.Hubs
             return new ObjectPosition(x, y);
         }
 
-        public async Task SpawFowl()
+        public async Task SpawnFowl()
         {
-            while (true)
-            {
-                var fowl = new Fowl();
-                fowl.Position = GetRandomPosition();
-                fowl.Id = Guid.NewGuid().ToString();
-                
-                await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
-                await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
-            }
+            var fowl = new Fowl();
+            fowl.Position = GetRandomPosition();
+            fowl.Id = Guid.NewGuid().ToString();
+
+            await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
+            Console.WriteLine("SpawnFowl: " + fowl);
         }
 
         public async Task KillFowl(string number)

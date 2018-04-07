@@ -97,4 +97,8 @@ export class GameService {
       delete this.fowls[fowl.id];
     }
   }
+
+  public static spawnFowl(fowl: IPlayer): void {
+    connection.invoke("spawnFowl");
+  }
 }
