@@ -2,7 +2,7 @@ import { CollisionType, Engine, Input, Vector } from "excalibur";
 import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
-import { GameConnections } from "../GameConnections";
+import { GameService } from "../GameService";
 import { Directions } from "../models/Player";
 import {Aim} from "./Aim";
 
@@ -98,7 +98,7 @@ export default class InteractionPlayer extends DirectionActor {
         this.direction.addEqual(direction);
         InteractionPlayer.loggingTimer = setInterval(() => {
             console.log(`${this.x}, ${this.y}`);
-            GameConnections.move(this.takeDirection(event && event.key));
+            GameService.move(this.takeDirection(event && event.key));
         }, InteractionPlayer.keyPressInterval);
     };
 
@@ -106,6 +106,6 @@ export default class InteractionPlayer extends DirectionActor {
         clearInterval(InteractionPlayer.loggingTimer);
         const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
         this.direction.subEqual(direction);
-        GameConnections.move(this.takeDirection(event && event.key));
+        GameService.move(this.takeDirection(event && event.key));
     };
 }
