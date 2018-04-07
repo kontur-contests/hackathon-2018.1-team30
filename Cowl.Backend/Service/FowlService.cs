@@ -14,10 +14,10 @@ namespace Cowl.Backend.Service
                 .WithUrl("/game")
                 .WithConsoleLogger()
                 .Build();
+
+            connection.On("playerAttach")
         }
 
-        public async Task GenerateFowl()
-        {
-        }
+       
     }
 }
