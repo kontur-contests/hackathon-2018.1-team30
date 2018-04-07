@@ -1,8 +1,11 @@
-import * as ex from "excalibur";
+import * as ex from 'excalibur';
 
 export class HealthLine extends ex.Actor {
   width: number;
   value: number;
+
+  public healthLine = new ex.UIActor(0, 0, 0, 15);
+  public currentHealth = new ex.UIActor(0, 0, 0, 15);
 
   constructor(x: number, y: number, w: number, v: number) {
     super(x, y);
@@ -13,13 +16,17 @@ export class HealthLine extends ex.Actor {
 
   public onInitialize(engine: ex.Engine) {
     super.onInitialize(engine);
-    const healthLine = new ex.UIActor(0, 0, 0, 15);
-    const currentHealth = new ex.UIActor(0, 0, 0, 15);
-    healthLine.color = ex.Color.Orange;
-    currentHealth.color = ex.Color.Red;
-    currentHealth.setWidth(this.value);
-    healthLine.setWidth(this.width);
-    this.add(healthLine);
-    this.add(currentHealth);
+
+    this.healthLine.color = ex.Color.Orange;
+    this.currentHealth.color = ex.Color.Red;
+    this.healthLine.setWidth(this.width);
+    this.currentHealth.setWidth(Math.random() * this.value);
+    this.add(this.healthLine);
+    this.add(this.currentHealth);
+  }
+
+  public onChangeHP(factor: number) {
+    this.value = this.value - factor;
+    this.currentHealth.setWidth(this.value);
   }
 }
