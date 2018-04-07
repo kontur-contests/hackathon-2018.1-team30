@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
 using Microsoft.AspNetCore.SignalR;
 
@@ -8,32 +10,30 @@ namespace Cowl.Backend.Service
 {
     public class GameService
     {
-        private readonly Dictionary<IClientProxy, Player> _players;
+        private readonly Map _map;
 
         public GameService()
         {
-            _players = new Dictionary<IClientProxy, Player>();
+            _map = new Map {GameObjects = new List<GameObject>(), Players = new List<Player>()};
         }
 
-        public async Task Join(IClientProxy clientProxy, Player player)
+
+        public async Task Join(Player player)
         {
-            if (_players.Count >= 4)
+            if (_map.Players.Count >= 4)
                 throw new Exception("too many players");
 
-            _players.Add(clientProxy, player);
+            _map.Players.Add(player);
         }
 
-        public async Task<Player> GetPlayer(IClientProxy clientProxy)
+        public Map GetMap()
         {
-            if (_players.ContainsKey(clientProxy))
-                return _players[clientProxy];
-
-            throw new Exception("");
+            return _map;
         }
 
-        public async Task Leave(IClientProxy clientProxy)
+        public Player GetPlayer(Guid playerId)
         {
-            _players.Remove(clientProxy);
+            return _map.Players.First(p => p.Id == playerId);
         }
     }
 }

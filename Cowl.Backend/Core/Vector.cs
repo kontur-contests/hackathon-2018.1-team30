@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Cowl.Backend.DataModel;
 
 namespace Cowl.Backend.Core
 {
@@ -18,9 +19,9 @@ namespace Cowl.Backend.Core
             return new Vector(vector.X * multiplyer, vector.Y * multiplyer);
         }
 
-        public static Point operator +(Point point, Vector vector)
+        public static ObjectPosition operator +(ObjectPosition position, Vector vector)
         {
-            return new Point(point.X + vector.X, point.Y + vector.Y);
+            return new ObjectPosition(position.X + vector.X, position.Y + vector.Y);
         }
     }
 }

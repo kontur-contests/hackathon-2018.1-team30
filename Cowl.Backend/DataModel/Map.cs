@@ -10,7 +10,7 @@ namespace Cowl.Backend.DataModel
     {
         public List<GameObject> GameObjects { get; set; }
 
-        public Player[] Players { get; set; }
+        public List<Player> Players { get; set; }
 
         public Size Size { get; set; }
     }

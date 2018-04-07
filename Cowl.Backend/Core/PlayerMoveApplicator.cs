@@ -7,7 +7,20 @@ namespace Cowl.Backend.Core
     {
         private const int Step = 5;
 
-        public Vector GetVector(MoveDirection direction)
+        public void Apply(Map map, PlayerMove action)
+        {
+            var player = map.Players.SingleOrDefault(x => x.Id == action.PlayerId);
+
+            if (player == null)
+            {
+                return;
+            }
+
+            var direction = GetVector(action.Direction);
+            player.Position += direction * Step;
+        }
+
+        private static Vector GetVector(MoveDirection direction)
         {
             var x = 0;
             var y = 0;
@@ -25,19 +38,6 @@ namespace Cowl.Backend.Core
                 x--;
 
             return new Vector(x, y);
-        }
-
-        public void Apply(Map map, PlayerMove action)
-        {
-            var player = map.Players.SingleOrDefault(x => x.Id == action.PlayerId);
-
-            if (player == null)
-            {
-                return;
-            }
-
-            var direction = GetVector(action.Direction);
-            player.Position += direction * Step;
         }
     }
 }
