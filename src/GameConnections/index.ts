@@ -12,10 +12,6 @@ connection.onclose(() => {
     // connection.start();
 });
 
-connection.on('join', (player: IPlayer) => {
-    console.log(player);
-});
-
 export class GameConnections {
 
     public static join(): void {

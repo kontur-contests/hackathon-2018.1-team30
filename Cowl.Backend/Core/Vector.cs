@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Cowl.Backend.DataModel;
+﻿using Cowl.Backend.DataModel;
 
 namespace Cowl.Backend.Core
 {
