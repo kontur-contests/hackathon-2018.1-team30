@@ -1,5 +1,5 @@
 import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
-import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
+import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 
@@ -30,11 +30,11 @@ export default class Player extends DirectionActor {
       },
       walk: {
         up: spriteSheet.walk.up(engine, 75),
-        up_right: spriteSheet.walk.up(engine, 75),
-        up_left: spriteSheet.walk.up(engine, 75),
+        up_right: spriteSheet.walk.up_right(engine, 75),
+        up_left: spriteSheet.walk.up_left(engine, 75),
         down: spriteSheet.walk.down(engine, 75),
-        down_right: spriteSheet.walk.down(engine, 75),
-        down_left: spriteSheet.walk.down(engine, 75),
+        down_right: spriteSheet.walk.down_right(engine, 75),
+        down_left: spriteSheet.walk.down_left(engine, 75),
         right: spriteSheet.walk.right(engine, 75),
         left: spriteSheet.walk.left(engine, 75)
       }

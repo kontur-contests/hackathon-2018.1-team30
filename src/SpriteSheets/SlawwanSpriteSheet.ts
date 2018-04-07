@@ -56,11 +56,26 @@ export default {
         speed
       ),
     down: (engine: Engine, speed: number = 75) =>
-      spriteSheet.getSprite(getIndex(4)),
+      spriteSheet.getAnimationBetween(
+        engine,
+        getIndex(4),
+        getIndex(4, 2),
+        speed
+      ),
     up_left: (engine: Engine, speed: number = 75) =>
-      spriteSheet.getSprite(getIndex(7)),
+      spriteSheet.getAnimationBetween(
+        engine,
+        getIndex(7),
+        getIndex(7, 2),
+        speed
+      ),
     up_right: (engine: Engine, speed: number = 75) =>
-      spriteSheet.getSprite(getIndex(5)),
+      spriteSheet.getAnimationBetween(
+        engine,
+        getIndex(5),
+        getIndex(5, 2),
+        speed
+      ),
     down_left: (engine: Engine, speed: number = 75) =>
       spriteSheet.getAnimationBetween(
         engine,
@@ -69,6 +84,11 @@ export default {
         speed
       ),
     down_right: (engine: Engine, speed: number = 75) =>
-      spriteSheet.getSprite(getIndex(6))
+      spriteSheet.getAnimationBetween(
+        engine,
+        getIndex(6),
+        getIndex(6, 2),
+        speed
+      )
   }
 };
