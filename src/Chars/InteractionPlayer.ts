@@ -6,10 +6,9 @@ import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import Fowl from "./Fowl";
 import PoopFowl from "./PoopFowl";
-import Boom from "./Boom";
 
 export default class InteractionPlayer extends DirectionActor {
-  private static readonly speed = 5;
+  private static readonly speed = 7;
 
   private static getDirections = (key: Input.Keys) => {
     switch (key) {
@@ -46,7 +45,6 @@ export default class InteractionPlayer extends DirectionActor {
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.scale = new Vector(0.7, 0.7);
     this.aim = new Aim();
     this.add(this.aim);
     this.registerDrawing({
