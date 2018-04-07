@@ -11,15 +11,13 @@ namespace Cowl.Backend.Service
     public class GameService
     {
         private readonly Map _map;
-        public bool isStarted { get; set; }
 
         public GameService()
         {
             _map = new Map {GameObjects = new List<GameObject>(), Players = new List<Player>()};
         }
-
-
-        public async Task Join(Player player)
+        
+        public void Join(Player player)
         {
             _map.Players.Add(player);
         }
