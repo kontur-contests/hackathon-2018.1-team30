@@ -17,7 +17,6 @@ namespace Cowl.Backend.Hubs
             _gameService = gameService;
         }
 
-
         public override async Task OnConnectedAsync()
         {
             var id = Guid.NewGuid();

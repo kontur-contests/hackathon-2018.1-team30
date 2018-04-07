@@ -9,13 +9,14 @@ import {
 } from "excalibur";
 import Player from "../Chars/Player";
 import { Resources } from "../Resources";
-import { spriteSheet } from "../SpriteSheets/DudeNudeSpriteSheet";
+import SuperCamera from "../SuperCamera";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
     const audi = new Player(0, 0);
 
-    this.camera.strategy.elasticToActor(audi, 0.3, 0.9);
+        this.camera.addStrategy(new SuperCamera(audi, 0.3, 0.9));
+        //this.camera.strategy.elasticToActor(audi, 0.3, -0.9);
     this.add(new Actor(10, 10, 10, 10, Color.Red));
     this.add(new Actor(-10, 10, 10, 10, Color.Red));
     this.add(new Actor(10, -10, 10, 10, Color.Red));
