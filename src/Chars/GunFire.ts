@@ -33,7 +33,7 @@ export class GunFire extends ex.Actor {
   }
 
   public activate(vector: ex.Vector) {
-    this.setWidth(MAX_AIM_DISTANCE);
+    this.setWidth(vector.distance());
     this.rotation = vector.toAngle();
     this.isEnabled = true;
   }
