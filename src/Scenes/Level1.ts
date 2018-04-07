@@ -12,9 +12,10 @@ import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 import SuperCamera from "../SuperCamera";
 import { GameService } from "../GameService";
-import { IPlayer, IGameObject, GameObjectType } from "../models/Player";
+import { IPlayer, IGameObject, GameObjectType, IPosition } from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
 import Fowl from "../Chars/Fowl";
+import PoopFowl from "../Chars/PoopFowl";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
@@ -57,15 +58,23 @@ export class Level1 extends Scene {
           actor
         });
       }
+      if (player && player.type === GameObjectType.Shit && !GameService.fowlInGame(player.id)) {
+        const actor = new PoopFowl(player.position.x, player.position.y);
+        this.add(actor);
+        GameService.addFowl({
+          user: player,
+          actor
+        });
+      }
     };
 
     GameService.connection.on('gameObjectJoin', (player: IGameObject) => joinPlayer(player));
     GameService.connection.on('gameObjects', (players: IGameObject[]) => players.forEach(joinPlayer));
 
-    GameService.connection.on("playerState", (info: IPlayer) => {
-      const player = GameService.getActor(info.id) as Player;
+    GameService.connection.on("gameObjectMove", (id: string, position: IPosition) => {
+      const player = GameService.getActor(id) as Player;
       if (player) {
-        player.nextPosition = new Vector(info.position.x, info.position.y);
+        player.nextPosition = new Vector(position.x, position.y);
       }
     });
 

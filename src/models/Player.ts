@@ -5,7 +5,7 @@ interface IActions {
   attack: () => void;
 }
 
-interface IPosition {
+export interface IPosition {
   x: number;
   y: number;
 }
