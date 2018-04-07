@@ -1,34 +1,8 @@
-import { CollisionType, Engine, Input, Vector } from 'excalibur';
+import { CollisionType, Engine} from 'excalibur';
 import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
 import DirectionActor from './DirectionActor';
-import { GunFire } from './GunFire';
-import { GameService } from '../GameService';
-import { Directions } from '../models/Player';
 
 export default class Player extends DirectionActor {
-  private static readonly speed = 5;
-
-  private static readonly keyPressInterval = 100;
-
-  private static loggingTimer = 0;
-
-  private static pressedKeys = Directions;
-
-  private static getDirections = (key: Input.Keys) => {
-    switch (key) {
-      case Input.Keys.A:
-        return Vector.Left;
-      case Input.Keys.W:
-        return Vector.Up;
-      case Input.Keys.D:
-        return Vector.Right;
-      case Input.Keys.S:
-        return Vector.Down;
-      default:
-        return Vector.Zero;
-    }
-  };
-
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Passive;

@@ -94,9 +94,7 @@ export default class InteractionPlayer extends DirectionActor {
 
     private handleKeyPress = (event?: Input.KeyEvent) => {
         clearInterval(InteractionPlayer.loggingTimer);
-        const direction = InteractionPlayer.getDirections(
-            (event && event.key) || Input.Keys.Semicolon
-        );
+        const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
         this.direction.addEqual(direction);
         InteractionPlayer.loggingTimer = setInterval(() => {
             console.log(`${this.x}, ${this.y}`);
@@ -105,9 +103,8 @@ export default class InteractionPlayer extends DirectionActor {
     };
 
     private handleKeyRelease = (event?: Input.KeyEvent) => {
-        const direction = InteractionPlayer.getDirections(
-            (event && event.key) || Input.Keys.Semicolon
-        );
+        clearInterval(InteractionPlayer.loggingTimer);
+        const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
         this.direction.subEqual(direction);
         GameConnections.move(this.takeDirection(event && event.key));
     };
