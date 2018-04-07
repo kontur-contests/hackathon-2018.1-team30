@@ -7,7 +7,7 @@ import { bloodAnimation } from "../SpriteSheets/BloodSpriteSheet";
 export default class Fowl extends Actor {
   constructor(x: number, y: number) {
     super(x, y, checkenSpriteSheet.width, checkenSpriteSheet.height);
-    this.collisionType = CollisionType.Active;
+    this.collisionType = CollisionType.Passive;
   }
 
   public onInitialize(engine: Engine) {

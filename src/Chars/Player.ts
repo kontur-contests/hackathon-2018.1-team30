@@ -13,9 +13,6 @@ export default class Player extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
-    this.on("precollision", function(ev) {
-      console.log(ev);
-    });
   }
 
   public onInitialize(engine: Engine) {
