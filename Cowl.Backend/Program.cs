@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Cowl.Backend
 {
@@ -12,7 +13,13 @@ namespace Cowl.Backend
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                   .UseStartup<Startup>()
-                   .Build();
+                .UseStartup<Startup>()
+                .ConfigureLogging(conf =>
+                    {
+                        conf.AddConsole();
+                        conf.AddDebug();
+                    }
+                )
+                .Build();
     }
 }

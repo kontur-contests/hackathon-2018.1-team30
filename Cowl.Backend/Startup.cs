@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Cowl.Backend
 {
@@ -19,7 +20,8 @@ namespace Cowl.Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddSignalR();
+            services.AddSignalR(configure => { });
+            services.AddLogging(builder => builder.AddConsole());
 
             services.AddSingleton<GameService>();
         }
@@ -34,7 +36,6 @@ namespace Cowl.Backend
 
             app.UseCors(conf => conf.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
             app.UseSignalR(configure => { configure.MapHub<GameHub>("/game"); });
-          
         }
     }
 }
