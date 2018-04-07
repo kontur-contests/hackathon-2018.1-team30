@@ -1,10 +1,16 @@
 import { Loader } from "excalibur";
 import { Game } from "./Game";
 import { Resources } from "./Resources";
+import * as signalR from "@aspnet/signalr";
+import { IPlayer } from "./models/Player";
+import { GameConnections } from "./GameConnections";
 
 const game = new Game();
-
 const loader = new Loader();
 loader.addResources(Resources.values());
 
-game.start(loader);
+game.start(loader).then(() => {
+    console.log("Started");
+
+    GameConnections.join();
+});
