@@ -13,6 +13,7 @@ export class Resources {
   );
   public static Level1 = new TiledResource(prefix + "/assets/levels/1.json");
   public static Aim = new Texture(prefix + "/assets/sprites/aim.png");
+  public static Slawwan = new Texture(prefix + "/assets/sprites/slava.png");
   public static Blood1 = new Texture(prefix + "/assets/sprites/blood_1.png");
   // public static GroundTiles = new Texture("/assets/ground_tiles.png");
 
