@@ -1,11 +1,9 @@
 import { CollisionType, Engine, Input, Vector } from "excalibur";
 import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
-import { GunFire } from "./GunFire";
+import GunFire from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
-import Fowl from "./Fowl";
-import PoopFowl from "./PoopFowl";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 7;
@@ -30,17 +28,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
-    this.collisionType = CollisionType.Active;
-    this.on("precollision", function(ev) {
-      if (ev && ev.other instanceof Fowl) {
-        ev.other.kill();
-        GameService.killFowl(ev.other);
-      }
-      if (ev && ev.other instanceof PoopFowl) {
-        ev.other.explode();
-        GameService.killFowl(ev.other);
-      }
-    });
+    this.collisionType = CollisionType.Passive;
   }
 
   public onInitialize(engine: Engine) {
@@ -74,16 +62,14 @@ export default class InteractionPlayer extends DirectionActor {
 
     engine.input.pointers.primary.on("down", () => {
       if (this.gunFire == null) {
-        this.gunFire = new GunFire();
-        this.add(this.gunFire);
-
-        this.gunFire.collisionType = CollisionType.Active;
+        this.gunFire = new GunFire(() => this.pos);
+        engine.currentScene.add(this.gunFire);
       }
     });
 
     engine.input.pointers.primary.on("up", () => {
       if (this.gunFire != null) {
-        this.remove(this.gunFire);
+        this.gunFire.kill();
         this.gunFire = null;
       }
     });

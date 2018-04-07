@@ -1,7 +1,7 @@
 import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
 import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
-import { GunFire } from "./GunFire";
+import GunFire from "./GunFire";
 
 export default class Player extends DirectionActor {
   private fireTarget: Vector | null = null;
@@ -59,7 +59,7 @@ export default class Player extends DirectionActor {
     if (this.fireTarget) {
       this.direction = positionDifferent;
       if (this.gunFire == null) {
-        this.gunFire = new GunFire();
+        this.gunFire = new GunFire(() => Vector.Zero);
         this.add(this.gunFire);
       }
       this.gunFire.target = this.fireTarget;

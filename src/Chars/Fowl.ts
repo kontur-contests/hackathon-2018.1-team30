@@ -1,6 +1,17 @@
-import { CollisionType, Engine, Color, Actor, Random, Vector } from "excalibur";
+import {
+  CollisionType,
+  Engine,
+  Color,
+  Actor,
+  Random,
+  Vector,
+  Events
+} from "excalibur";
 import checkenSpriteSheet from "../SpriteSheets/ChickensSpritesheet";
 import { bloodAnimation } from "../SpriteSheets/BloodSpriteSheet";
+import { GameService } from "../GameService";
+import DirectionActor from "./DirectionActor";
+import GunFire from "./GunFire";
 
 export default class Fowl extends Actor {
   constructor(x: number, y: number) {
@@ -20,6 +31,16 @@ export default class Fowl extends Actor {
       ["up", "down", "left", "right"][new Random().integer(0, 3)]
     );
     this.scale = new Vector(2, 2);
+    this.on("precollision", (event?: Events.PreCollisionEvent) => {
+      if (
+        event &&
+        (event.other instanceof DirectionActor ||
+          event.other instanceof GunFire)
+      ) {
+        GameService.killFowl(event.other);
+        this.kill();
+      }
+    });
   }
 
   public kill() {

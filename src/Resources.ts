@@ -17,6 +17,9 @@ export class Resources {
   public static Blood1 = new Texture(prefix + "/assets/sprites/blood_1.png");
   public static Poop = new Texture(prefix + "/assets/sprites/CitsJlB.png");
   public static Boom = new Texture(prefix + "/assets/sprites/explosion.png");
+  public static Laser = new Texture(
+    prefix + "/assets/sprites/Laser_Red_Thick_512.png"
+  );
   // public static GroundTiles = new Texture("/assets/ground_tiles.png");
 
   public static values(): ILoadable[] {
