@@ -51,9 +51,22 @@ export class Level1 extends Scene {
       }
     }
 
-    GameService.connection.on("playerJoin", (player: IPlayer) => joinPlayer(player));
+    const joinFowl = (fowl: IPlayer) => {
+      if (!GameService.fowlInGame(fowl.id)) {
+        const actor = new Fowl(fowl.position.x, fowl.position.y);
+        this.add(actor);
+        GameService.addFowl({
+          user: fowl,
+          actor
+        });
+      }
+    }
 
+    GameService.connection.on("playerJoin", (player: IPlayer) => joinPlayer(player));
     GameService.connection.on("players", (players: IPlayer[]) => players.forEach(joinPlayer));
+
+    GameService.connection.on("fowlJoin", (fowl: IPlayer) => joinFowl(fowl));
+    GameService.connection.on("fowls", (fowls: IPlayer[]) => fowls.forEach(joinFowl));
 
     GameService.connection.on("playerState", (info: IPlayer) => {
       const player = GameService.getActor(info.id) as Player;
@@ -94,15 +107,6 @@ export class Level1 extends Scene {
         actor.kill();
       }
       GameService.kickUser(player);
-    });
-
-    GameService.connection.on("fowlJoin", (fowl: IPlayer) => {
-      const actor = new Fowl(fowl.position.x, fowl.position.y);
-      this.add(actor);
-      GameService.addFowl({
-        user: fowl,
-        actor
-      });
     });
 
     GameService.connection.on("killFowl", (fowl: IPlayer) => {
