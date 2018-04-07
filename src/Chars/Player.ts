@@ -46,6 +46,21 @@ export default class Player extends DirectionActor {
     }
   };
 
+  private takeDirection = (key?: Input.Keys) => {
+    switch (key) {
+      case Input.Keys.A:
+        return Directions.Left;
+      case Input.Keys.W:
+        return Directions.Up;
+      case Input.Keys.D:
+        return Directions.Right;
+      case Input.Keys.S:
+        return Directions.Down;
+      default:
+        return Directions.None;
+    }
+  };
+
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
     this.registerDrawing({
@@ -87,7 +102,7 @@ export default class Player extends DirectionActor {
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
       this.moveTo(event && event.key);
-      GameConnections.move(Directions.Down);
+      GameConnections.move(this.takeDirection());
     }, Player.keyPressInterval);
   };
 
