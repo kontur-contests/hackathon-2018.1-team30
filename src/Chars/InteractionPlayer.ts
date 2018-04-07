@@ -35,6 +35,7 @@ export default class InteractionPlayer extends DirectionActor {
         ev.other.setDrawing("death");
         setTimeout(() => {
           ev.other.kill();
+          GameService.killFowl(ev.other);
         }, 400);
       }
     });

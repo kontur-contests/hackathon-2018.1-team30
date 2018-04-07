@@ -3,6 +3,7 @@ import { IPlayer, IUser } from "../models/Player";
 import { Actor } from "Actor";
 import { Vector } from "Algebra";
 import InteractionPlayer from "../Chars/InteractionPlayer";
+import Fowl from "../Chars/Fowl";
 
 const url = "http://10.33.94.6:4844/game";
 
@@ -96,9 +97,10 @@ export class GameService {
     }
   }
 
-  public static killFowl(fowl: IPlayer): void {
+  public static killFowl(fowl: Fowl): void {
     if (this.fowls && fowl) {
       delete this.fowls[fowl.id];
+      connection.invoke("killFowl", fowl.id);
     }
   }
 
