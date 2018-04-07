@@ -41,7 +41,6 @@ export class Level1 extends Scene {
     });
 
     const joinPlayer = (player: IGameObject) => {
-      console.log(player);
       if (player && player.type === GameObjectType.Player && !GameService.userInGame(player.id!)) {
         const actor = new Player(player.position.x, player.position.y);
         this.add(actor);
@@ -83,7 +82,7 @@ export class Level1 extends Scene {
       if (player) {
         player.setFireTarget = new Vector(vector.x, vector.y);
       }
-    );
+    });
 
     GameService.connection.on("playerLeave", (player: IPlayer) => {
       const actor = GameService.getActor(player.id);
