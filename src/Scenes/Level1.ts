@@ -74,6 +74,7 @@ export class Level1 extends Scene {
       //     actor.actions.moveTo(player.position.x, player.position.y, 1000);
       // }
     });
+
     GameService.connection.on(
       "playerAttack",
       (player: IPlayer, vector: { x: number; y: number }) => {
@@ -91,5 +92,9 @@ export class Level1 extends Scene {
         }
       }
     );
+
+    GameService.connection.on("playerLeave", (player: IPlayer) => {
+      GameService.kickUser(player);
+    });
   }
 }

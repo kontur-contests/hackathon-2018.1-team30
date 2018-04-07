@@ -4,7 +4,8 @@ import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 
 export default class Player extends DirectionActor {
-  gunFire: GunFire;
+  public gunFire: GunFire;
+
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Passive;

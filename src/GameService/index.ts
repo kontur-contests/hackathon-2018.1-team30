@@ -66,4 +66,11 @@ export class GameService {
   public static fire(vector: Vector) {
     connection.invoke("attackPlayer", vector);
   }
+
+  public static kickUser(player: IPlayer): void {
+    if (this.otherPlayers && player) {
+      delete this.otherPlayers[+player.id];
+    }
+  }
+
 }
