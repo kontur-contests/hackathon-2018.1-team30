@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Cowl.Backend.Core;
@@ -7,6 +6,7 @@ using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
 using Cowl.Backend.Service;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace Cowl.Backend.Hubs
 {
@@ -30,6 +30,8 @@ namespace Cowl.Backend.Hubs
 
 
             var player = new Player {Id = id, Name = name, Position = new ObjectPosition {X = x, Y = y}};
+
+            Console.WriteLine(player);
 
             await _gameService.Join(player);
             await Clients.Caller.SendAsync("playerJoin", player);
