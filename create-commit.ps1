@@ -14,4 +14,4 @@ git commit -m "removed test"
 
 }
 
-git push
+git pusha

@@ -25,38 +25,24 @@ export class Level1 extends Scene {
     );
     this.add(tileMap);
 
-    GameService.connection.on("playerJoin", (user: IPlayer) => {
-      if (user) {
-        const interationPlayer = new InteractionPlayer(
-          user.position.x,
-          user.position.y
-        );
-        GameService.saveUser({
-          user,
-          actor: interationPlayer
-        });
-        this.add(interationPlayer);
-        this.camera.addStrategy(
-          new SuperCamera(interationPlayer, tileMapSize, 0.3, 0.9)
-        );
-      }
+    GameService.connection.on("me", (user: IPlayer) => {
+      const interationPlayer = new InteractionPlayer(
+        user.position.x,
+        user.position.y
+      );
+      GameService.saveUser({
+        user,
+        actor: interationPlayer
+      });
+      this.add(interationPlayer);
+      this.camera.addStrategy(
+        new SuperCamera(interationPlayer, tileMapSize, 0.3, 0.9)
+      );
     });
 
-    GameService.connection.on("players", (players: IPlayer[]) => {
-      const otherPlayers = players.filter(
-        p => GameService.currentUser && p.id !== GameService.currentUser.user.id
-      );
-      otherPlayers.forEach(user => {
-        if (!GameService.userInGame(user.id)) {
-          const actor = new Player(user.position.x, user.position.y);
-          this.add(actor);
-          GameService.saveOtherPlayer({
-            user,
-            actor
-          });
-        }
-      });
-    });
+    GameService.connection.on("playerJoin", (player: IPlayer) => this.joinPlayer(player));
+
+    GameService.connection.on("players", (players: IPlayer[]) => players.forEach(this.joinPlayer));
 
     GameService.connection.on("playerState", (info: IPlayer) => {
       const player = GameService.getActor(info.id) as Player;
@@ -111,5 +97,16 @@ export class Level1 extends Scene {
       }
       GameService.killFowl(fowl);
     });
+  }
+
+  private joinPlayer(player: IPlayer): void {
+    if (!GameService.userInGame(player.id)) {
+      const actor = new Player(player.position.x, player.position.y);
+      this.add(actor);
+      GameService.saveOtherPlayer({
+        user: player,
+        actor
+      });
+    }
   }
 }

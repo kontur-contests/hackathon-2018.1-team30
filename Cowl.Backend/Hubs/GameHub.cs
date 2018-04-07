@@ -31,9 +31,13 @@ namespace Cowl.Backend.Hubs
 
             _logger.LogDebug("playerJoin" + player);
 
-            await _gameService.Join(player);
-            await Clients.Caller.SendAsync("playerJoin", player);
-            await Clients.All.SendAsync("players", _gameService.GetMap().Players);
+            await Clients.Others.SendAsync("playerJoin", player);
+            await Clients.Caller.SendAsync("me", player);
+            await Clients.Caller.SendAsync("players", _gameService.GetMap().Players);
+            await Clients.Caller.SendAsync("fowls", _gameService.GetMap().Fowls);
+
+
+            _gameService.Join(player);
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
@@ -79,6 +83,7 @@ namespace Cowl.Backend.Hubs
             fowl.Position = GetRandomPosition();
             fowl.Id = Guid.NewGuid().ToString();
 
+            _gameService.GetMap().Fowls.Add(fowl);
             await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
             Console.WriteLine("SpawnFowl: " + fowl);
         }
