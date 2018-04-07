@@ -9,50 +9,49 @@ import PoopFowl from "../Chars/PoopFowl";
 const url = "http://10.33.94.6:4844/game";
 
 const connection = new signalR.HubConnection(url);
-let interactionPlayer: {
-  remoute: IPlayer;
-  player: InteractionPlayer;
-};
 
-let currentUser: IUser | null = null;
 export interface IOtherUser {
   [id: string]: IUser;
 }
 
 connection.onclose(() => {
   console.log("Пичаль");
-  // connection.start();
 });
 
 export class GameService {
+  private static currentUser: IUser | null = null;
   private static otherUsers: IOtherUser = {};
   private static fowls: IOtherUser = {};
 
-  static addFowl(fowl: IUser): void {
-    this.fowls[fowl.user.id] = fowl;
+  public static get connection(): signalR.HubConnection {
+    return connection;
   }
 
   public static start() {
     connection.start();
   }
 
+  public static getCurrentUser(): IUser | null {
+    return this.currentUser;
+  }
+
   public static saveUser(user: IUser) {
-    currentUser = user;
+    this.currentUser = user;
+  }
+
+  public static saveFowl(fowl: IUser): void {
+    this.fowls[fowl.user.id] = fowl;
   }
 
   public static saveOtherPlayer(otherPlayer: IUser) {
-    this.otherPlayers[otherPlayer.user.id] = otherPlayer;
+    this.otherUsers[otherPlayer.user.id] = otherPlayer;
   }
 
-  static get currentUser(): IUser | null {
-    return currentUser;
-  }
-
-  static getActor(id: string): Actor | null {
-    if (currentUser && currentUser.user.id === id) {
-      return currentUser.actor;
+  public static getActor(id: string): Actor | null {
+    if (this.currentUser && this.currentUser.user.id === id) {
+      return this.currentUser.actor;
     }
-    const user = this.otherPlayers[id];
+    const user = this.otherUsers[id];
     if (user) {
       return user.actor;
     }
@@ -64,24 +63,12 @@ export class GameService {
     return null;
   }
 
-  static userInGame(id: string): boolean {
-    return !!GameService.otherPlayers[id];
+  public static userInGame(id: string): boolean {
+    return !!GameService.otherUsers[id];
   }
 
-  static fowlInGame(id: string): boolean {
+  public static fowlInGame(id: string): boolean {
     return !!GameService.fowls[id];
-  }
-
-  static get otherPlayers(): IOtherUser {
-    return GameService.otherUsers;
-  }
-
-  public static join(): void {
-    connection.invoke("join").catch(c => console.log("catch: ", c));
-  }
-
-  static get connection(): signalR.HubConnection {
-    return connection;
   }
 
   public static fire(id: string, vector: Vector) {
@@ -93,8 +80,8 @@ export class GameService {
   }
 
   public static kickUser(player: IPlayer): void {
-    if (this.otherPlayers && player) {
-      delete this.otherPlayers[player.id];
+    if (this.otherUsers && player) {
+      delete this.otherUsers[player.id];
     }
   }
 
