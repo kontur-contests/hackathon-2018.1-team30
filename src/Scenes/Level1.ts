@@ -40,9 +40,20 @@ export class Level1 extends Scene {
       );
     });
 
-    GameService.connection.on("playerJoin", (player: IPlayer) => this.joinPlayer(player));
+    const joinPlayer = (player: IPlayer) => {
+      if (!GameService.userInGame(player.id)) {
+        const actor = new Player(player.position.x, player.position.y);
+        this.add(actor);
+        GameService.saveOtherPlayer({
+          user: player,
+          actor
+        });
+      }
+    }
 
-    GameService.connection.on("players", (players: IPlayer[]) => players.forEach(this.joinPlayer));
+    GameService.connection.on("playerJoin", (player: IPlayer) => joinPlayer(player));
+
+    GameService.connection.on("players", (players: IPlayer[]) => players.forEach(joinPlayer));
 
     GameService.connection.on("playerState", (info: IPlayer) => {
       const player = GameService.getActor(info.id) as Player;
@@ -101,16 +112,5 @@ export class Level1 extends Scene {
       }
       GameService.killFowl(fowl);
     });
-  }
-
-  private joinPlayer(player: IPlayer): void {
-    if (!GameService.userInGame(player.id)) {
-      const actor = new Player(player.position.x, player.position.y);
-      this.add(actor);
-      GameService.saveOtherPlayer({
-        user: player,
-        actor
-      });
-    }
   }
 }
