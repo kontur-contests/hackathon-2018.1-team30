@@ -10,7 +10,7 @@ export default class SuperCamera implements ICameraStrategy<Actor> {
      * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
      * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
      */
-    constructor(public target: Actor, public cameraElasticity: number, public cameraFriction: number) {
+    constructor(public target: Actor, public border: Vector, public cameraElasticity: number, public cameraFriction: number) {
     }
 
     public action = (target: Actor, cam: BaseCamera, engine: Engine, delta: number) => {
@@ -32,7 +32,9 @@ export default class SuperCamera implements ICameraStrategy<Actor> {
 
         // Update position by velocity deltas
         focus = focus.add(cameraVel);
+        const x = Math.min(Math.max(engine.halfDrawWidth, focus.x), this.border.x - engine.halfDrawWidth);
+        const y = Math.min(Math.max(engine.halfDrawHeight, focus.y), this.border.y - engine.halfDrawHeight);
 
-        return focus;
+        return new Vector(x, y);
     }
 }
