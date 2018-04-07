@@ -1,4 +1,13 @@
-import { Engine, Actor, Vector, Animation, Sprite, IDrawable, UIActor, Color } from 'excalibur';
+import {
+  Engine,
+  Actor,
+  Vector,
+  Animation,
+  Sprite,
+  IDrawable,
+  UIActor,
+  Color
+} from "excalibur";
 
 export interface IDirectionDraw {
   [key: string]: IDrawable;
@@ -25,8 +34,8 @@ type State = keyof IDrawState;
 
 export default abstract class DirectionActor extends Actor {
   protected direction: Vector = Vector.Zero.clone();
-  private drawDirection: Direction = 'down';
-  private drawState: State = 'idle';
+  private drawDirection: Direction = "down";
+  private drawState: State = "idle";
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
@@ -45,9 +54,9 @@ export default abstract class DirectionActor extends Actor {
 
   protected updateDirection() {
     if (this.direction.equals(Vector.Zero)) {
-      this.drawState = 'idle';
+      this.drawState = "idle";
     } else {
-      this.drawState = 'walk';
+      this.drawState = "walk";
       this.drawDirection = DirectionActor.getDrawDirection(this.direction);
     }
     this.updateDrawState();
@@ -60,28 +69,28 @@ export default abstract class DirectionActor extends Actor {
   private static getDrawDirection(vector: Vector): Direction {
     if (vector.y < 0) {
       if (vector.x === 0) {
-        return 'up';
+        return "up";
       } else if (vector.x > 0) {
-        return 'up_right';
+        return "up_right";
       } else {
-        return 'up_left';
+        return "up_left";
       }
     } else if (vector.y > 0) {
       if (vector.x === 0) {
-        return 'down';
+        return "down";
       } else if (vector.x > 0) {
-        return 'down_right';
+        return "down_right";
       } else {
-        return 'down_left';
+        return "down_left";
       }
     } else {
       if (vector.x === 0) {
         //TODO (byTimo) наверно плохо так делать
-        return 'down';
+        return "down";
       } else if (vector.x > 0) {
-        return 'right';
+        return "right";
       } else {
-        return 'left';
+        return "left";
       }
     }
   }

@@ -16,6 +16,7 @@ import { GameService } from "../GameService";
 import { IPlayer } from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
 import Fowl from "../Chars/Fowl";
+import PoopFowl from "../Chars/PoopFowl";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
@@ -63,7 +64,10 @@ export class Level1 extends Scene {
 
     const joinFowl = (fowl: IPlayer) => {
       if (!GameService.fowlInGame(fowl.id)) {
-        const actor = new Fowl(fowl.position.x, fowl.position.y);
+        const actor =
+          Math.random() > 0.5
+            ? new Fowl(fowl.position.x, fowl.position.y)
+            : new PoopFowl(fowl.position.x, fowl.position.y);
         this.add(actor);
         GameService.addFowl({
           user: fowl,
