@@ -8,19 +8,15 @@ namespace Cowl.Backend.Service
 {
     public class FowlService
     {
-        public FowlService()
+        private bool started;
+
+        public async Task Spawn()
         {
-            var connection = new HubConnectionBuilder()
-                .WithUrl("/game")
-                .WithConsoleLogger()
-                .Build();
+            if (started)
+                return;
 
-            connection.On("playerAttack", () =>
-            {
-
-            })
+            started = true;
+           
         }
-
-       
     }
 }
