@@ -2,6 +2,8 @@ import { CollisionType, Engine, Input, Vector } from "excalibur";
 import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
+import { GameConnections } from "../GameConnections";
+import { Directions } from "../models/Player";
 
 export default class Player extends DirectionActor {
   gunFire: GunFire;
@@ -31,6 +33,21 @@ export default class Player extends DirectionActor {
     this.collisionType = CollisionType.Passive;
     this.gunFire = new GunFire();
   }
+
+  private takeDirection = (key?: Input.Keys) => {
+    switch (key) {
+      case Input.Keys.A:
+        return Directions.Left;
+      case Input.Keys.W:
+        return Directions.Up;
+      case Input.Keys.D:
+        return Directions.Right;
+      case Input.Keys.S:
+        return Directions.Down;
+      default:
+        return Directions.None;
+    }
+  };
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
@@ -78,10 +95,9 @@ export default class Player extends DirectionActor {
     const direction = Player.getDirections(
       (event && event.key) || Input.Keys.Semicolon
     );
-    console.log(`${this.x}, ${this.y}`);
+    this.direction.addEqual(direction);
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
-      this.moveTo(event && event.key);
       GameConnections.move(this.takeDirection());
     }, Player.keyPressInterval);
   };
