@@ -16,7 +16,7 @@ export default class Player extends DirectionActor {
     this.collisionType = CollisionType.Active;
   }
 
-  public(engine: Engine) {
+  public onInitialize(engine: Engine) {
     super.onInitialize(engine);
     this.registerDrawing({
       idle: {

@@ -1,6 +1,5 @@
 import { CollisionType, Engine, Color, Actor, Random, Vector } from "excalibur";
 import checkenSpriteSheet from "../SpriteSheets/ChickensSpritesheet";
-import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 import {
   bloodAnimation,
