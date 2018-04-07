@@ -4,6 +4,7 @@ import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
+import Fowl from "./Fowl";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
@@ -29,8 +30,13 @@ export default class InteractionPlayer extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
-    this.on('precollision', function (ev) {
-      console.log(ev);
+    this.on("precollision", function(ev) {
+      if (ev && ev.other instanceof Fowl) {
+        ev.other.setDrawing("death");
+        setTimeout(() => {
+          ev.other.kill();
+        }, 400);
+      }
     });
   }
 
@@ -67,6 +73,8 @@ export default class InteractionPlayer extends DirectionActor {
       if (this.gunFire == null) {
         this.gunFire = new GunFire();
         this.add(this.gunFire);
+
+        this.gunFire.collisionType = CollisionType.Active;
       }
     });
     engine.input.pointers.primary.on("up", () => {
