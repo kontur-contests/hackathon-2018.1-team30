@@ -63,7 +63,7 @@ export class Level1 extends Scene {
       console.log(player);
       const actor = GameService.getActor(player.id);
       if (actor) {
-        actor.actions.moveTo(player.position.x, player.position.y, 1000);
+        actor.pos = new Vector(player.position.x, player.position.y);
       }
     });
 
