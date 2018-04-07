@@ -80,14 +80,16 @@ export default class InteractionPlayer extends DirectionActor {
     super.update(engine, delta);
     this.sendingDelta += delta;
 
-    if (this.sendingDelta > 50) {
-      const nextPosition = this.pos.add(
-        this.direction.scale(InteractionPlayer.speed)
-      );
-      GameService.move(this.num, nextPosition);
-      this.pos = nextPosition;
-      this.num++;
-      this.sendingDelta = 0;
+    if (!this.direction.equals(Vector.Zero)) {
+      if (this.sendingDelta > 50) {
+        const nextPosition = this.pos.add(
+          this.direction.scale(InteractionPlayer.speed)
+        );
+        GameService.move(this.num, nextPosition);
+        this.pos = nextPosition;
+        this.num++;
+        this.sendingDelta = 0;
+      }
     }
   }
 
