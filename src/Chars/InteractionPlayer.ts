@@ -1,5 +1,5 @@
 import { CollisionType, Engine, Input, Vector } from "excalibur";
-import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
+import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
@@ -35,6 +35,7 @@ export default class InteractionPlayer extends DirectionActor {
         ev.other.setDrawing("death");
         setTimeout(() => {
           ev.other.kill();
+          GameService.killFowl(ev.other);
         }, 400);
       }
     });
@@ -56,14 +57,14 @@ export default class InteractionPlayer extends DirectionActor {
         down_right: spriteSheet.idle.down_left()
       },
       walk: {
-        up: spriteSheet.walk.up(engine, 150),
-        up_right: spriteSheet.walk.up(engine, 150),
-        up_left: spriteSheet.walk.up(engine, 150),
-        down: spriteSheet.walk.down(engine, 150),
-        down_right: spriteSheet.walk.down(engine, 150),
-        down_left: spriteSheet.walk.down(engine, 150),
-        right: spriteSheet.walk.right(engine, 150),
-        left: spriteSheet.walk.left(engine, 150)
+        up: spriteSheet.walk.up(engine, 50),
+        up_right: spriteSheet.walk.up_right(engine, 50),
+        up_left: spriteSheet.walk.up_left(engine, 50),
+        down: spriteSheet.walk.down(engine, 50),
+        down_right: spriteSheet.walk.down_right(engine, 50),
+        down_left: spriteSheet.walk.down_left(engine, 50),
+        right: spriteSheet.walk.right(engine, 50),
+        left: spriteSheet.walk.left(engine, 50)
       }
     });
     engine.input.keyboard.on("press", this.handleKeyPress);
