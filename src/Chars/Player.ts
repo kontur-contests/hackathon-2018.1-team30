@@ -6,7 +6,6 @@ import { GameService } from '../GameService';
 import { Directions } from '../models/Player';
 
 export default class Player extends DirectionActor {
-  gunFire: GunFire;
   private static readonly speed = 5;
 
   private static readonly keyPressInterval = 100;
@@ -33,27 +32,10 @@ export default class Player extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Passive;
-    this.gunFire = new GunFire();
   }
-
-  private takeDirection = (key?: Input.Keys) => {
-    switch (key) {
-      case Input.Keys.A:
-        return Directions.Left;
-      case Input.Keys.W:
-        return Directions.Up;
-      case Input.Keys.D:
-        return Directions.Right;
-      case Input.Keys.S:
-        return Directions.Down;
-      default:
-        return Directions.None;
-    }
-  };
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.add(this.gunFire);
     this.registerDrawing({
       idle: {
         up: spriteSheet.idle.up(),
@@ -76,37 +58,5 @@ export default class Player extends DirectionActor {
         left: spriteSheet.walk.left(engine, 150)
       }
     });
-    engine.input.keyboard.on('press', this.handleKeyPress);
-    engine.input.keyboard.on('release', this.handleKeyRelease);
-
-    engine.input.pointers.primary.on('down', () => {
-      this.gunFire.isEnabled = true;
-    });
-    engine.input.pointers.primary.on('up', () => {
-      this.gunFire.isEnabled = false;
-    });
   }
-
-  public update(engine: Engine, delta: number) {
-    super.update(engine, delta);
-
-    // this.pos.addEqual(this.direction.scale(Player.speed));
-  }
-
-  private handleKeyPress = (event?: Input.KeyEvent) => {
-    clearInterval(Player.loggingTimer);
-    const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
-    this.direction.addEqual(direction);
-    Player.loggingTimer = setInterval(() => {
-      console.log(`${this.x}, ${this.y}`);
-      GameService.move(this.takeDirection(event && event.key));
-    }, Player.keyPressInterval);
-  };
-
-  private handleKeyRelease = (event?: Input.KeyEvent) => {
-    clearInterval(Player.loggingTimer);
-    const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
-    this.direction.subEqual(direction);
-    GameService.move(this.takeDirection(event && event.key));
-  };
 }
