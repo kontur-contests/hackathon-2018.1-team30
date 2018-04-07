@@ -1,15 +1,24 @@
 import { DisplayMode, Engine, Loader } from "excalibur";
 import { Level1 } from "./Scenes/Level1";
 import * as signalR from '@aspnet/signalr';
+import { IHubConnectionOptions } from "@aspnet/signalr";
+import { IPlayer } from './models/Player';
 
-let connection = new signalR.HubConnection('http://10.33.94.6:4844/chat');
+const url = 'http://10.33.94.6:4844/game';
+const connection = new signalR.HubConnection(url);
 
-connection.on('send', data => {
-  console.log(data);
+connection.on('join', (player: IPlayer) => {
+  console.log(player);
 });
 
 connection.start()
-  .then(() => connection.invoke('send', 'Hello'));
+  .then(() => connection.invoke('join'))
+  .catch(c => console.log('catch=', c));
+
+connection.onclose(() => {
+  console.log("Пичаль");
+  // connection.start();
+})
 
 export class Game extends Engine {
   constructor() {

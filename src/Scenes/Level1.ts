@@ -1,10 +1,16 @@
-import { Engine, Scene } from "excalibur";
-import { Audi } from "../Chars/Audi";
+import { Engine, Scene, Actor, Color, TileMap } from "excalibur";
+import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
-    this.add(Resources.Level1.getTileMap());
-    this.add(new Audi(100, 100));
+    const audi = new Player(0, 0);
+
+    this.camera.strategy.elasticToActor(audi, 0.3, 0.9);
+    this.add(new Actor(10, 10, 10, 10, Color.Red));
+    this.add(new Actor(-10, 10, 10, 10, Color.Red));
+    this.add(new Actor(10, -10, 10, 10, Color.Red));
+    this.add(new Actor(-10, -10, 10, 10, Color.Red));
+    this.add(audi);
   }
 }
