@@ -12,7 +12,7 @@ export default class Player extends DirectionActor {
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
-    this.collisionType = CollisionType.Passive;
+    this.collisionType = CollisionType.Active;
   }
 
   public onInitialize(engine: Engine) {

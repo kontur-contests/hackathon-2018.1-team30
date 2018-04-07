@@ -66,6 +66,10 @@ export class GameService {
     return !!GameService.otherPlayers[id];
   }
 
+  static fowlInGame(id: string): boolean {
+    return !!GameService.fowls[id];
+  }
+
   static get otherPlayers(): IOtherUser {
     return GameService.otherUsers;
   }

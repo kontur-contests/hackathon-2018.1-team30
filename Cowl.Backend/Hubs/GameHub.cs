@@ -1,25 +1,21 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
-using Cowl.Backend.Core;
 using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
 using Cowl.Backend.Service;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
 
 namespace Cowl.Backend.Hubs
 {
     public class GameHub : Hub
     {
         private readonly GameService _gameService;
-        private readonly ILogger _logger;
+        private readonly FowlService _fowlService;
 
-        public GameHub(GameService gameService, ILoggerFactory loggerFactory)
+        public GameHub(GameService gameService, FowlService fowlService)
         {
             _gameService = gameService;
-            _logger = loggerFactory.CreateLogger(nameof(GameService));
+            _fowlService = fowlService;
         }
 
         public override async Task OnConnectedAsync()
@@ -29,9 +25,6 @@ namespace Cowl.Backend.Hubs
 
             var player = new Player {Id = id, Name = name, Position = GetRandomPosition()};
 
-            _logger.LogDebug("playerJoin" + player);
-
-            
             await Clients.Caller.SendAsync("me", player);
             await Clients.Caller.SendAsync("players", _gameService.GetMap().Players);
             await Clients.Caller.SendAsync("fowls", _gameService.GetMap().Fowls);
@@ -44,8 +37,6 @@ namespace Cowl.Backend.Hubs
         {
             var player = _gameService.GetPlayer(Context.ConnectionId);
             _gameService.GetMap().Players.Remove(player);
-
-            _logger.LogDebug("Disconnect:" + player);
             await Clients.All.SendAsync("playerLeave", player);
         }
 
@@ -54,8 +45,6 @@ namespace Cowl.Backend.Hubs
             var player = _gameService.GetPlayer(Context.ConnectionId);
             player.Position = objectPosition;
 
-            _logger.LogDebug("MovePlayer" + player);
-
             await Clients.Others.SendAsync("playerState", player);
             await Clients.Caller.SendAsync("playerStateNumber", number);
         }
@@ -63,8 +52,9 @@ namespace Cowl.Backend.Hubs
         public async Task AttackPlayer(ObjectPosition objectPosition)
         {
             var player = _gameService.GetPlayer(Context.ConnectionId);
-
             await Clients.All.SendAsync("playerAttack", player, objectPosition);
+
+            _fowlService.Spawn();
         }
 
 
@@ -85,7 +75,6 @@ namespace Cowl.Backend.Hubs
 
             _gameService.GetMap().Fowls.Add(fowl);
             await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
-            Console.WriteLine("SpawnFowl: " + fowl);
         }
 
         public async Task KillFowl(string number)

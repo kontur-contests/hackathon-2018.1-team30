@@ -14,9 +14,14 @@ namespace Cowl.Backend.Service
 
         public GameService()
         {
-            _map = new Map {GameObjects = new List<GameObject>(), Players = new List<Player>()};
+            _map = new Map
+            {
+                GameObjects = new List<GameObject>(),
+                Players = new List<Player>(),
+                Fowls = new List<Fowl>()
+            };
         }
-        
+
         public void Join(Player player)
         {
             _map.Players.Add(player);
