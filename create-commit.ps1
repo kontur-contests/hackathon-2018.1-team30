@@ -11,6 +11,7 @@ rm test
 git add --all
 git commit -m "removed test"
 
+
 }
 
 git push

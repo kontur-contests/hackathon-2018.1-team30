@@ -9,5 +9,10 @@ namespace Cowl.Backend.DataModel.GameObjects
         public abstract GameObjectType Type { get; }
         public ObjectPosition Position { get; set; }
         public Size Size { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Type)}: {Type}, {nameof(Position)}: {Position}, {nameof(Size)}: {Size}";
+        }
     }
 }
