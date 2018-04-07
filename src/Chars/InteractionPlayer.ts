@@ -1,10 +1,10 @@
-import { CollisionType, Engine, Input, Vector } from "excalibur";
-import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
-import DirectionActor from "./DirectionActor";
-import { GunFire } from "./GunFire";
-import { GameService } from "../GameService";
-import { Aim } from "./Aim";
-import Fowl from "./Fowl";
+import { CollisionType, Engine, Input, Vector } from 'excalibur';
+import spriteSheet from '../SpriteSheets/SlawwanSpriteSheet';
+import DirectionActor from './DirectionActor';
+import { GunFire } from './GunFire';
+import { GameService } from '../GameService';
+import { Aim } from './Aim';
+import Fowl from './Fowl';
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
@@ -30,9 +30,9 @@ export default class InteractionPlayer extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
-    this.on("precollision", function(ev) {
+    this.on('precollision', function(ev) {
       if (ev && ev.other instanceof Fowl) {
-        ev.other.setDrawing("death");
+        ev.other.setDrawing('death');
         setTimeout(() => {
           ev.other.kill();
           GameService.killFowl(ev.other);
@@ -67,10 +67,10 @@ export default class InteractionPlayer extends DirectionActor {
         left: spriteSheet.walk.left(engine, 50)
       }
     });
-    engine.input.keyboard.on("press", this.handleKeyPress);
-    engine.input.keyboard.on("release", this.handleKeyRelease);
+    engine.input.keyboard.on('press', this.handleKeyPress);
+    engine.input.keyboard.on('release', this.handleKeyRelease);
 
-    engine.input.pointers.primary.on("down", () => {
+    engine.input.pointers.primary.on('down', () => {
       if (this.gunFire == null) {
         this.gunFire = new GunFire();
         this.add(this.gunFire);
@@ -78,7 +78,7 @@ export default class InteractionPlayer extends DirectionActor {
         this.gunFire.collisionType = CollisionType.Active;
       }
     });
-    engine.input.pointers.primary.on("up", () => {
+    engine.input.pointers.primary.on('up', () => {
       if (this.gunFire != null) {
         this.remove(this.gunFire);
         this.gunFire = null;
@@ -106,16 +106,12 @@ export default class InteractionPlayer extends DirectionActor {
   }
 
   private handleKeyPress = (event?: Input.KeyEvent) => {
-    const direction = InteractionPlayer.getDirections(
-      (event && event.key) || Input.Keys.Semicolon
-    );
+    const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.addEqual(direction);
   };
 
   private handleKeyRelease = (event?: Input.KeyEvent) => {
-    const direction = InteractionPlayer.getDirections(
-      (event && event.key) || Input.Keys.Semicolon
-    );
+    const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.subEqual(direction);
   };
 
