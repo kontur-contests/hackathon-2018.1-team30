@@ -1,16 +1,22 @@
-interface IMap {
+interface IMapDefinition {
+    cells: IMapCellDefinition[];
+    tileSheets: IMapTileSheet[];
     width: number;
     height: number;
-    tiles: Tile[];
-    junks: Junk[];
+    tileWidth: number;
+    tileHeight: number;
 }
 
-enum Tile {
-    Empty,
-    Ground
+interface IMapCellDefinition {
+    x: number;
+    y: number;
+    tileId: number;
+    sheetId: number;
 }
 
-enum Junk {
-    None,
-    Stone
+interface IMapTileSheet {
+    id: number;
+    path: string;
+    columns: number;
+    rows: number;
 }

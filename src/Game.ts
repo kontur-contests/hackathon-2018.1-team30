@@ -9,6 +9,9 @@ export class Game extends Engine {
   }
 
   public start(loader: Loader) {
+
+    // fetch Map from backend
+
     this.add("level1", new Level1());
 
     return super.start(loader).then(() => {
