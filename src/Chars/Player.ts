@@ -93,5 +93,6 @@ export default class Player extends DirectionActor {
     clearInterval(Player.loggingTimer);
     const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.subEqual(direction);
+    GameConnections.move(this.takeDirection(event && event.key));
   };
 }
