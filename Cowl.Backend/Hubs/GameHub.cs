@@ -30,7 +30,7 @@ namespace Cowl.Backend.Hubs
             var y = random.Next(0, 800);
 
 
-            var player = new Player {Id = id, Name = name, Position = new Point(x, y)};
+            var player = new Player {Id = id, Name = name, Position = new ObjectPosition{X = x, Y = y}};
 
             await _gameService.Join(player);
             await Clients.All.SendAsync("playerJoin", player);

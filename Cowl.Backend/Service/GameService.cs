@@ -10,21 +10,17 @@ namespace Cowl.Backend.Service
 {
     public class GameService
     {
-        private readonly Dictionary<Guid, Player> _players;
-
         private readonly Map _map;
 
         public GameService()
         {
-            _map = new Map();
-
-            _players = new Dictionary<Guid, Player>();
+            _map = new Map {GameObjects = new List<GameObject>(), Players = new List<Player>()};
         }
 
 
         public async Task Join(Player player)
         {
-            if (_players.Count >= 4)
+            if (_map.Players.Count >= 4)
                 throw new Exception("too many players");
 
             _map.Players.Add(player);
