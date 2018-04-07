@@ -1,21 +1,13 @@
 import * as signalR from "@aspnet/signalr";
-import { IPlayer, IUser } from "../models/Player";
+import { IPlayer, Directions, IUser } from "../models/Player";
 import { Actor } from "Actor";
-import { Vector } from "Algebra";
-import InteractionPlayer from "../Chars/InteractionPlayer";
+import { Vector } from "Index";
 
 const url = "http://10.33.94.6:4844/game";
 
 const connection = new signalR.HubConnection(url);
-let interactionPlayer: {
-  remoute: IPlayer;
-  player: InteractionPlayer;
-};
-
 let currentUser: IUser | null = null;
-export interface IOtherUser {
-  [id: string]: IUser;
-}
+let otherPlayers: Set<IUser> = new Set([]);
 
 connection.onclose(() => {
   console.log("Пичаль");
@@ -23,8 +15,6 @@ connection.onclose(() => {
 });
 
 export class GameService {
-  private static otherUsers: IOtherUser = {};
-
   public static start() {
     connection.start();
   }
@@ -34,7 +24,7 @@ export class GameService {
   }
 
   public static saveOtherPlayer(otherPlayer: IUser) {
-    this.otherPlayers[otherPlayer.user.id] = otherPlayer;
+    otherPlayers.add(otherPlayer);
   }
 
   static get currentUser(): IUser | null {
@@ -45,7 +35,7 @@ export class GameService {
     if (currentUser && currentUser.user.id === id) {
       return currentUser.actor;
     }
-    const user = this.otherPlayers[id];
+    const user = GameService.otherPlayers.find(p => p.user.id === id);
     if (user) {
       return user.actor;
     }
@@ -54,11 +44,11 @@ export class GameService {
   }
 
   static userInGame(id: string): boolean {
-    return GameService.otherPlayers[id] != null;
+    return GameService.otherPlayers.some(p => p.user.id === id);
   }
 
-  static get otherPlayers(): IOtherUser {
-    return GameService.otherUsers;
+  static get otherPlayers(): IUser[] {
+    return Array.from(otherPlayers);
   }
 
   public static join(): void {
@@ -71,5 +61,9 @@ export class GameService {
 
   public static move(num: number, nextPosition: Vector): void {
     connection.invoke("movePlayer", num, nextPosition);
+  }
+
+  public static fire(vector: Vector) {
+    connection.invoke("attackPlayer", vector);
   }
 }

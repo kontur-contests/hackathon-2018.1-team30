@@ -3,6 +3,7 @@ import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
+import { Directions } from "../models/Player";
 import { Aim } from "./Aim";
 
 export default class InteractionPlayer extends DirectionActor {
@@ -80,15 +81,18 @@ export default class InteractionPlayer extends DirectionActor {
     super.update(engine, delta);
     this.sendingDelta += delta;
 
-    if (!this.direction.equals(Vector.Zero)) {
-      if (this.sendingDelta > 50) {
-        const nextPosition = this.pos.add(
-          this.direction.scale(InteractionPlayer.speed)
-        );
-        GameService.move(this.num, nextPosition);
-        this.pos = nextPosition;
-        this.num++;
-        this.sendingDelta = 0;
+    if (this.sendingDelta > 100) {
+      GameService.move(
+        this.num,
+        this.pos.add(this.direction.scale(InteractionPlayer.speed))
+      );
+      this.num++;
+      this.sendingDelta = 0;
+    }
+
+    if (this.gunFire && this.gunFire.isEnabled) {
+      if (this.aim) {
+        GameService.fire(this.aim.pos);
       }
     }
   }
