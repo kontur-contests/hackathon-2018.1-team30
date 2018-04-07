@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using Cowl.Backend.DataModel;
+using Cowl.Backend.DataModel.GameObjects;
 using Cowl.Backend.Service;
 using Microsoft.AspNetCore.SignalR;
 
@@ -18,7 +19,7 @@ namespace Cowl.Backend.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var id = Guid.NewGuid().ToString();
+            var id = Guid.NewGuid();
             var name = Guid.NewGuid().ToString();
 
             var random = new Random();
