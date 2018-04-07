@@ -31,6 +31,9 @@ export default class InteractionPlayer extends DirectionActor {
     this.collisionType = CollisionType.Active;
     this.on('precollision', function (ev) {
       console.log(ev);
+      if (ev) {
+        ev.other.kill()
+      }
     });
   }
 
