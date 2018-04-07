@@ -15,7 +15,7 @@ namespace Cowl.Backend.Service
             {
                 GameObjects = new List<GameObject>(),
                 Players = new List<Player>(),
-                Fowls = new List<Fowl>()
+                Fowls = new Dictionary<string, Fowl>()
             };
         }
 

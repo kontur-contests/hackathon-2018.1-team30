@@ -11,7 +11,7 @@ namespace Cowl.Backend.DataModel
         public List<GameObject> GameObjects { get; set; }
 
         public List<Player> Players { get; set; }
-        public List<Fowl> Fowls { get; set; }
+        public Dictionary<string, Fowl> Fowls { get; set; }
 
         public Size Size { get; set; }
     }
