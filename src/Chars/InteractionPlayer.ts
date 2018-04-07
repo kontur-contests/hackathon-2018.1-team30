@@ -1,15 +1,12 @@
-import { CollisionType, Engine, Input, Vector } from "excalibur";
-import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
-import DirectionActor from "./DirectionActor";
-import { GunFire } from "./GunFire";
-import { GameService } from "../GameService";
-import { Aim } from "./Aim";
+import { CollisionType, Engine, Input, Vector } from 'excalibur';
+import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
+import DirectionActor from './DirectionActor';
+import { GunFire } from './GunFire';
+import { GameService } from '../GameService';
+import { Aim } from './Aim';
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
-  private static readonly keyPressInterval = 75;
-
-  private static loggingTimer = 0;
 
   private static getDirections = (key: Input.Keys) => {
     switch (key) {
@@ -62,55 +59,43 @@ export default class InteractionPlayer extends DirectionActor {
         left: spriteSheet.walk.left(engine, 150)
       }
     });
-    engine.input.keyboard.on("press", this.handleKeyPress);
-    engine.input.keyboard.on("release", this.handleKeyRelease);
+    engine.input.keyboard.on('press', this.handleKeyPress);
+    engine.input.keyboard.on('release', this.handleKeyRelease);
 
-    engine.input.pointers.primary.on("down", () => {
+    engine.input.pointers.primary.on('down', () => {
       this.gunFire != null && (this.gunFire.isEnabled = true);
     });
-    engine.input.pointers.primary.on("up", () => {
+    engine.input.pointers.primary.on('up', () => {
       this.gunFire != null && (this.gunFire.isEnabled = false);
     });
   }
 
   private sendingDelta: number = 0;
-  private num: number = 0;
+  private lastSentPosition: Vector = Vector.Zero;
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
     this.sendingDelta += delta;
+    this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
 
-    if (this.sendingDelta > 25) {
-      if (!this.direction.equals(Vector.Zero)) {
-        const nextPosition = this.pos.add(
-          this.direction.scale(InteractionPlayer.speed)
-        );
-        GameService.move(this.num, nextPosition);
-        this.pos = nextPosition;
-        this.num++;
+    if (this.sendingDelta > 15) {
+      if (!this.lastSentPosition.sub(this.pos).equals(Vector.Zero)) {
+        GameService.move(0, this.pos);
       }
-      if (this.gunFire && this.gunFire.isEnabled) {
-        if (this.aim) {
-          GameService.fire(this.aim.pos);
-        }
+      if (this.gunFire && this.gunFire.isEnabled && this.aim) {
+        GameService.fire(this.aim.pos);
       }
       this.sendingDelta = 0;
     }
   }
 
   private handleKeyPress = (event?: Input.KeyEvent) => {
-    clearInterval(InteractionPlayer.loggingTimer);
-    const direction = InteractionPlayer.getDirections(
-      (event && event.key) || Input.Keys.Semicolon
-    );
+    const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.addEqual(direction);
   };
 
   private handleKeyRelease = (event?: Input.KeyEvent) => {
-    clearInterval(InteractionPlayer.loggingTimer);
-    const direction = InteractionPlayer.getDirections(
-      (event && event.key) || Input.Keys.Semicolon
-    );
+    const direction = InteractionPlayer.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.subEqual(direction);
   };
 }

@@ -7,6 +7,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^5.1.4",
+    "gh-pages": "^1.1.0",
     "html-webpack-externals-plugin": "^3.7.0",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
@@ -28,7 +29,9 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --mode production",
     "start": "webpack-dev-server --mode development --open",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "deploy":
+      "cross-env PUBLIC_PATH=/hackathon-2018.1-team30 npm run build && gh-pages -d dist"
   },
   "lint-staged": {
     "*.{js,json,css,md,ts,html}": ["prettier --write", "git add"]

@@ -23,7 +23,6 @@ connection.onclose(() => {
 });
 
 export class GameService {
-
   private static otherUsers: IOtherUser = {};
   private static fowls: IOtherUser = {};
 
@@ -64,7 +63,13 @@ export class GameService {
   }
 
   static userInGame(id: string): boolean {
-    return GameService.otherPlayers[id] != null;
+    if (GameService.otherPlayers && GameService.otherPlayers[id] != null) {
+      return true;
+    }
+    if (GameService.currentUser && GameService.currentUser.user.id === id) {
+      return true;
+    }
+    return false;
   }
 
   static get otherPlayers(): IOtherUser {
@@ -97,5 +102,9 @@ export class GameService {
     if (this.fowls && fowl) {
       delete this.fowls[fowl.id];
     }
+  }
+
+  public static spawnFowl(fowl: IPlayer): void {
+    connection.invoke("spawnFowl");
   }
 }
