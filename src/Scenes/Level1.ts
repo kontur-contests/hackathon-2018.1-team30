@@ -68,9 +68,9 @@ export class Level1 extends Scene {
 
     GameConnections.connection.on("playerState", (player: IPlayer) => {
       console.log(player);
-      if (GameConnections.currentUser) {
-        const actor = GameConnections.currentUser.actor;
-        actor.actions.moveTo(player.position.x, player.position.y, 100);
+      const actor = GameConnections.getActor(player.id);
+      if (actor) {
+        actor.actions.moveTo(player.position.x, player.position.y, 1000);
       }
     });
 
