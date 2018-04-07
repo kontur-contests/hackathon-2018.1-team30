@@ -6,6 +6,7 @@ import {
   TileMap,
   SpriteSheet,
   TileSprite,
+  UIActor,
   Vector
 } from "excalibur";
 import Player from "../Chars/Player";
@@ -24,6 +25,15 @@ export class Level1 extends Scene {
       tileMap.cellHeight * tileMap.rows
     );
     this.add(tileMap);
+
+    const healthLine = new UIActor(30, 30, 0, 32);
+    const currentHealth = new UIActor(30, 30, 0, 32);
+    healthLine.color = Color.Orange;
+    currentHealth.color = Color.Red;
+    currentHealth.setWidth(500);
+    healthLine.setWidth(600);
+    this.add(healthLine);
+    this.add(currentHealth);
 
     GameService.connection.on("me", (user: IPlayer) => {
       const interactionPlayer = new InteractionPlayer(
