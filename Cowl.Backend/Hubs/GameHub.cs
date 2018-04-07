@@ -10,12 +10,10 @@ namespace Cowl.Backend.Hubs
     public class GameHub : Hub
     {
         private readonly GameService _gameService;
-        private readonly FowlService _fowlService;
 
-        public GameHub(GameService gameService, FowlService fowlService)
+        public GameHub(GameService gameService)
         {
             _gameService = gameService;
-            _fowlService = fowlService;
         }
 
         public override async Task OnConnectedAsync()
@@ -53,8 +51,6 @@ namespace Cowl.Backend.Hubs
         {
             var player = _gameService.GetPlayer(Context.ConnectionId);
             await Clients.All.SendAsync("playerAttack", player, objectPosition);
-
-            _fowlService.Spawn();
         }
 
 
