@@ -15,7 +15,6 @@ namespace Cowl.Backend.Schedule.Job
                 .WithConsoleLogger()
                 .Build();
 
-
             connection.InvokeAsync("SpawnFowl").GetAwaiter().GetResult();
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cowl.Backend.Core;
 using Cowl.Backend.Hubs;
+using Cowl.Backend.Schedule;
 using Cowl.Backend.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,7 @@ namespace Cowl.Backend
             services.AddSingleton<GameService>();
             services.AddSingleton<FowlService>();
 
-            services.
+            services.AddSingleton<JobFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
