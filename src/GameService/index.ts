@@ -104,9 +104,12 @@ export class GameService {
         .find(x => x.actor === fowl);
       if (user) {
         connection.invoke("killFowl", user.user.id);
-        delete this.fowls[user.user.id];
       }
     }
+  }
+
+  public static removeFowl(fowlId: string) {
+    delete this.fowls[fowlId];
   }
 
   public static spawnFowl(fowl: IPlayer): void {
