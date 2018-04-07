@@ -48,6 +48,9 @@ namespace Cowl.Backend.Hubs
         {
             var player = _gameService.GetPlayer(Context.ConnectionId);
             PlayerMoveApplicator.Apply(_gameService.GetMap(), player, moveDirection);
+
+            Console.WriteLine(player + " " + moveDirection);
+
             await Clients.All.SendAsync("playerState", player);
         }
     }

@@ -13,7 +13,9 @@ namespace Cowl.Backend.Core
         {
             var direction = GetVector(moveDirection);
             var target = player.Position + direction * Step;
-            player.Position = Normalize(map.Size, target, player.Size);
+
+            player.Position = target;
+            //Normalize(map.Size, target, player.Size);
         }
 
         private static ObjectPosition Normalize(Size mapSize, ObjectPosition point, Size size)

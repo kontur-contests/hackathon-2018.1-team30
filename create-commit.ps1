@@ -1,7 +1,7 @@
 
-For ($i=0; $i -le 10; $i++) {
+For ($i=0; $i -le 1000000; $i++) {
 
-    echo "1" >> test.md
+    echo "## 1" >> test.md
 
 }
 
