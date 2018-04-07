@@ -12,7 +12,7 @@ import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 import SuperCamera from "../SuperCamera";
 import { Aim } from "../Chars/Aim";
-import { GameConnections } from "../GameConnections";
+import { GameService } from "../GameConnections";
 import { IPlayer } from "../models/Player";
 
 export class Level1 extends Scene {
@@ -35,11 +35,11 @@ export class Level1 extends Scene {
     // this.add(new Actor(-10, -10, 10, 10, Color.Red));
     // this.add(audi);
 
-    GameConnections.connection.on("playerJoin", (user: IPlayer) => {
+    GameService.connection.on("playerJoin", (user: IPlayer) => {
       console.log(user);
       if (user) {
         const actor = new Player(user.position.x, user.position.y);
-        GameConnections.saveUser({
+        GameService.saveUser({
           user,
           actor
         })
@@ -50,15 +50,14 @@ export class Level1 extends Scene {
       }
     });
 
-    GameConnections.connection.on('players', (players: IPlayer[]) => {
+    GameService.connection.on('players', (players: IPlayer[]) => {
       console.log(players);
-      const otherPlayers = players.filter(p => GameConnections.currentUser && p.id !== GameConnections.currentUser.user.id)
+      const otherPlayers = players.filter(p => GameService.currentUser && p.id !== GameService.currentUser.user.id)
       otherPlayers.forEach(user => {
-        const playerInGame = GameConnections.otherPlayers.some(p => p.user.id === user.id);
-        if (!playerInGame) {
+        if (!GameService.userInGame(user.id)) {
           const actor = new Player(user.position.x, user.position.y);
           this.add(actor);
-          GameConnections.saveOtherPlayer({
+          GameService.saveOtherPlayer({
             user,
             actor
           })
@@ -66,9 +65,9 @@ export class Level1 extends Scene {
       });
     });
 
-    GameConnections.connection.on("playerState", (player: IPlayer) => {
+    GameService.connection.on("playerState", (player: IPlayer) => {
       console.log(player);
-      const actor = GameConnections.getActor(player.id);
+      const actor = GameService.getActor(player.id);
       if (actor) {
         actor.actions.moveTo(player.position.x, player.position.y, 1000);
       }

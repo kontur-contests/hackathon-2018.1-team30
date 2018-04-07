@@ -13,7 +13,7 @@ connection.onclose(() => {
   // connection.start();
 });
 
-export class GameConnections {
+export class GameService {
 
   public static start() {
     connection.start();
@@ -35,7 +35,7 @@ export class GameConnections {
     if (currentUser && currentUser.user.id === id) {
       return currentUser.actor;
     }
-    const user = GameConnections.otherPlayers.find(p => p.user.id === id);
+    const user = GameService.otherPlayers.find(p => p.user.id === id);
     if (user) {
       return user.actor;
     }
@@ -43,6 +43,9 @@ export class GameConnections {
     return null;
   }
 
+  static userInGame(id: string): boolean {
+    return GameService.otherPlayers.some(p => p.user.id === id);
+  }
 
   static get otherPlayers(): IUser[] {
     return Array.from(otherPlayers);

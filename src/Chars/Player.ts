@@ -2,7 +2,7 @@ import { CollisionType, Engine, Input, Vector } from 'excalibur';
 import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
 import DirectionActor from './DirectionActor';
 import { GunFire } from './GunFire';
-import { GameConnections } from '../GameConnections';
+import { GameService } from '../GameConnections';
 import { Directions } from '../models/Player';
 
 export default class Player extends DirectionActor {
@@ -99,7 +99,7 @@ export default class Player extends DirectionActor {
     this.direction.addEqual(direction);
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
-      GameConnections.move(this.takeDirection(event && event.key));
+      GameService.move(this.takeDirection(event && event.key));
     }, Player.keyPressInterval);
   };
 
@@ -107,6 +107,6 @@ export default class Player extends DirectionActor {
     clearInterval(Player.loggingTimer);
     const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
     this.direction.subEqual(direction);
-    GameConnections.move(this.takeDirection(event && event.key));
+    GameService.move(this.takeDirection(event && event.key));
   };
 }
