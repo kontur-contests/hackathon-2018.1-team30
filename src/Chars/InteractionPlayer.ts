@@ -5,6 +5,8 @@ import { GunFire } from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import Fowl from "./Fowl";
+import PoopFowl from "./PoopFowl";
+import Boom from "./Boom";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 5;
@@ -31,11 +33,16 @@ export default class InteractionPlayer extends DirectionActor {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
     this.on("precollision", function(ev) {
-      if (ev && ev.other instanceof Fowl) {
-        ev.other.setDrawing("death");
-        setTimeout(() => {
-          ev.other.kill();
-        }, 400);
+      if (ev) {
+        if (ev.other instanceof Fowl) {
+          ev.other.setDrawing("death");
+          setTimeout(() => {
+            ev.other.kill();
+          }, 400);
+        } else if (ev.other instanceof PoopFowl) {
+          const lol = ev.other as PoopFowl;
+          lol.explode();
+        }
       }
     });
   }
