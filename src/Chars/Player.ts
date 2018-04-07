@@ -4,19 +4,19 @@ import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
 
 export default class Player extends DirectionActor {
-  public gunFire: GunFire;
+  private fireTarget: Vector | null = null;
+  private gunFire: GunFire | null = null;
+  private gunFireKillInterval: number | null = null;
+
+  public nextPosition: Vector = Vector.Zero;
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Passive;
-    this.gunFire = new GunFire();
   }
-
-  public nextPosition: Vector = Vector.Zero;
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.add(this.gunFire);
     this.registerDrawing({
       idle: {
         up: spriteSheet.idle.up(),
@@ -47,6 +47,27 @@ export default class Player extends DirectionActor {
     if (!positionDifferent.equals(Vector.Zero)) {
       this.pos = this.nextPosition;
     }
-    this.direction = positionDifferent;
+    if (this.fireTarget) {
+      this.direction = positionDifferent;
+      if (this.gunFire == null) {
+        this.gunFire = new GunFire();
+        this.add(this.gunFire);
+      }
+      this.gunFire.target = this.fireTarget;
+    }
+  }
+
+  public set setFireTarget(target: Vector) {
+    if (this.gunFireKillInterval) {
+      clearInterval(this.gunFireKillInterval);
+    }
+    this.fireTarget = target;
+    this.gunFireKillInterval = setInterval(() => {
+      this.fireTarget = null;
+      if (this.gunFire) {
+        this.remove(this.gunFire);
+        this.gunFire = null;
+      }
+    }, 100);
   }
 }

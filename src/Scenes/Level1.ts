@@ -26,17 +26,17 @@ export class Level1 extends Scene {
     this.add(tileMap);
 
     GameService.connection.on("me", (user: IPlayer) => {
-      const interationPlayer = new InteractionPlayer(
+      const interactionPlayer = new InteractionPlayer(
         user.position.x,
         user.position.y
       );
       GameService.saveUser({
         user,
-        actor: interationPlayer
+        actor: interactionPlayer
       });
-      this.add(interationPlayer);
+      this.add(interactionPlayer);
       this.camera.addStrategy(
-        new SuperCamera(interationPlayer, tileMapSize, 0.3, 0.9)
+        new SuperCamera(interactionPlayer, tileMapSize, 0.3, 0.9)
       );
     });
 
@@ -76,10 +76,10 @@ export class Level1 extends Scene {
 
     GameService.connection.on(
       "playerAttack",
-      (player: IPlayer, vector: { x: number; y: number }) => {
-        const actor = GameService.getActor(player.id) as Player;
-        if (actor) {
-          actor.gunFire.target = new Vector(vector.x, vector.y);
+      (info: IPlayer, vector: { x: number; y: number }) => {
+        const player = GameService.getActor(info.id) as Player;
+        if (player) {
+          player.setFireTarget = new Vector(vector.x, vector.y);
         }
       }
     );

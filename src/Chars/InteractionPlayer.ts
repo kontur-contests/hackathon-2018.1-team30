@@ -68,8 +68,8 @@ export default class InteractionPlayer extends DirectionActor {
     });
     engine.input.pointers.primary.on("up", () => {
       if (this.gunFire != null) {
-        this.gunFire.kill();
-        this.add(this.gunFire);
+        this.remove(this.gunFire);
+        this.gunFire = null;
       }
     });
   }
@@ -79,7 +79,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   public update(engine: Engine, delta: number) {
     super.update(engine, delta);
-    const mousePos = engine.input.pointers.primary.lastScreenPos;
+    const mousePos = engine.input.pointers.primary.lastWorldPos;
     if (!mousePos) {
       return;
     }
@@ -114,7 +114,6 @@ export default class InteractionPlayer extends DirectionActor {
         GameService.move(0, this.pos);
       }
       if (this.gunFire && this.aim) {
-        console.log("lol");
         GameService.fire(this.aim.pos);
       }
       this.sendingDelta = 0;
