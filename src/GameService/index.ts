@@ -1,13 +1,21 @@
 import * as signalR from "@aspnet/signalr";
-import { IPlayer, Directions, IUser } from "../models/Player";
+import { IPlayer, IUser } from "../models/Player";
 import { Actor } from "Actor";
 import { Vector } from "Algebra";
+import InteractionPlayer from "../Chars/InteractionPlayer";
 
 const url = "http://10.33.94.6:4844/game";
 
 const connection = new signalR.HubConnection(url);
+let interactionPlayer: {
+  remoute: IPlayer;
+  player: InteractionPlayer;
+};
+
 let currentUser: IUser | null = null;
-let otherPlayers: Set<IUser> = new Set([]);
+export interface IOtherUser {
+  [id: string]: IUser;
+}
 
 connection.onclose(() => {
   console.log("Пичаль");
@@ -15,6 +23,8 @@ connection.onclose(() => {
 });
 
 export class GameService {
+  private static otherUsers: IOtherUser = {};
+
   public static start() {
     connection.start();
   }
@@ -24,7 +34,7 @@ export class GameService {
   }
 
   public static saveOtherPlayer(otherPlayer: IUser) {
-    otherPlayers.add(otherPlayer);
+    this.otherPlayers[otherPlayer.user.id] = otherPlayer;
   }
 
   static get currentUser(): IUser | null {
@@ -35,7 +45,7 @@ export class GameService {
     if (currentUser && currentUser.user.id === id) {
       return currentUser.actor;
     }
-    const user = GameService.otherPlayers.find(p => p.user.id === id);
+    const user = this.otherPlayers[id];
     if (user) {
       return user.actor;
     }
@@ -44,11 +54,11 @@ export class GameService {
   }
 
   static userInGame(id: string): boolean {
-    return GameService.otherPlayers.some(p => p.user.id === id);
+    return GameService.otherPlayers[id] != null;
   }
 
-  static get otherPlayers(): IUser[] {
-    return Array.from(otherPlayers);
+  static get otherPlayers(): IOtherUser {
+    return GameService.otherUsers;
   }
 
   public static join(): void {
