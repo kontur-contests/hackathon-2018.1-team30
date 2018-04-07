@@ -100,20 +100,16 @@ export class GameService {
 
   public static killFowl(fowl: Actor): void {
     if (this.fowls && fowl) {
-      const user = Object.keys(this.fowls)
+      const object = Object.keys(this.fowls)
         .map(x => this.fowls[x])
         .find(x => x.actor === fowl);
-      if (user) {
-        connection.invoke("killFowl", user.user.id);
+      if (object) {
+        connection.invoke("killGameObject", object.user.id);
       }
     }
   }
 
   public static removeFowl(fowlId: string) {
     delete this.fowls[fowlId];
-  }
-
-  public static spawnFowl(fowl: IPlayer): void {
-    connection.invoke("spawnFowl");
   }
 }

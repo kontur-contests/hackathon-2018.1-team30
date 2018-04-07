@@ -86,8 +86,8 @@ export class Level1 extends Scene {
       // }
     });
 
-    GameService.connection.on('gameObjectAttack', (info: IGameObject, vector: { x: number; y: number }) => {
-      const player = GameService.getActor(info.id) as Player;
+    GameService.connection.on('gameObjectAttack', (id: string, vector: { x: number; y: number }) => {
+      const player = GameService.getActor(id) as Player;
       if (player) {
         player.setFireTarget = new Vector(vector.x, vector.y);
       }
