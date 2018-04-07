@@ -1,5 +1,6 @@
 import signalR = require('@aspnet/signalr');
 import { IPlayer, Directions, IUser } from '../models/Player';
+import { Actor } from 'Actor';
 
 const url = 'http://10.33.94.6:4844/game';
 
@@ -29,6 +30,19 @@ export class GameConnections {
   static get currentUser(): IUser | null {
     return currentUser;
   }
+
+  static getActor(id: string): Actor | null {
+    if (currentUser && currentUser.user.id === id) {
+      return currentUser.actor;
+    }
+    const user = GameConnections.otherPlayers.find(p => p.user.id === id);
+    if (user) {
+      return user.actor;
+    }
+
+    return null;
+  }
+
 
   static get otherPlayers(): IUser[] {
     return Array.from(otherPlayers);
