@@ -40,6 +40,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
+    this.scale = new Vector(0.7, 0.7);
     this.aim = new Aim();
     this.add(this.aim);
     this.registerDrawing({
