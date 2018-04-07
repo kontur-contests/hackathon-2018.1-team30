@@ -32,11 +32,8 @@ export default class InteractionPlayer extends DirectionActor {
     this.collisionType = CollisionType.Active;
     this.on("precollision", function(ev) {
       if (ev && ev.other instanceof Fowl) {
-        ev.other.setDrawing("death");
-        setTimeout(() => {
-          ev.other.kill();
-          GameService.killFowl(ev.other);
-        }, 400);
+        ev.other.kill();
+        GameService.killFowl(ev.other);
       }
     });
   }
@@ -78,6 +75,7 @@ export default class InteractionPlayer extends DirectionActor {
         this.gunFire.collisionType = CollisionType.Active;
       }
     });
+
     engine.input.pointers.primary.on("up", () => {
       if (this.gunFire != null) {
         this.remove(this.gunFire);

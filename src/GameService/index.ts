@@ -99,8 +99,13 @@ export class GameService {
 
   public static killFowl(fowl: Fowl): void {
     if (this.fowls && fowl) {
-      delete this.fowls[fowl.id];
-      connection.invoke("killFowl", fowl.id);
+      const user = Object.keys(this.fowls)
+        .map(x => this.fowls[x])
+        .find(x => x.actor === fowl);
+      if (user) {
+        connection.invoke("killFowl", user.user.id);
+        delete this.fowls[user.user.id];
+      }
     }
   }
 

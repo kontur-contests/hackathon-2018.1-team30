@@ -23,4 +23,11 @@ export default class Fowl extends Actor {
     );
     this.scale = new Vector(2, 2);
   }
+
+  public kill() {
+    this.setDrawing("death");
+    setTimeout(() => {
+      super.kill();
+    }, 400);
+  }
 }
