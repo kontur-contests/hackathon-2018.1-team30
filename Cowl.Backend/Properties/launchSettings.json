@@ -3,28 +3,25 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://10.33.94.6:3985/",
+      "applicationUrl": "http://localhost:4844/",
       "sslPort": 0
     }
   },
   "profiles": {
     "IIS Express": {
-      "commandName": "Executable",
-      "launchBrowser": true,
-      "launchUrl": "api/values",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "use64Bit": true
-    },
-    "backend": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Cowl.Backend": {
+      "commandName": "Project",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:3986/"
+      "applicationUrl": "http://localhost:4845/"
     }
   }
 }
