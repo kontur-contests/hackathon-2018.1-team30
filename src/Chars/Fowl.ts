@@ -2,6 +2,7 @@ import { CollisionType, Engine, Color, Actor, Random, Vector } from "excalibur";
 import checkenSpriteSheet from "../SpriteSheets/ChickensSpritesheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
+import { bloodAnimation } from "../SpriteSheets/BloodSpriteSheet";
 
 export default class Fowl extends Actor {
   constructor(x: number, y: number) {
@@ -15,6 +16,8 @@ export default class Fowl extends Actor {
     this.addDrawing("down", checkenSpriteSheet.idle.down(engine, 150));
     this.addDrawing("left", checkenSpriteSheet.idle.left(engine, 150));
     this.addDrawing("right", checkenSpriteSheet.idle.right(engine, 150));
+    this.addDrawing("death", bloodAnimation(engine));
+
     this.setDrawing(
       ["up", "down", "left", "right"][new Random().integer(0, 3)]
     );

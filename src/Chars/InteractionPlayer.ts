@@ -29,10 +29,13 @@ export default class InteractionPlayer extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
-    this.on('precollision', function (ev) {
+    this.on("precollision", function(ev) {
       console.log(ev);
       if (ev) {
-        ev.other.kill()
+        ev.other.setDrawing("death");
+        setTimeout(() => {
+          ev.other.kill();
+        }, 400);
       }
     });
   }
