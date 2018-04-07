@@ -2,6 +2,7 @@ import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
 import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
+import { HealthLine } from "../Chars/HealthLine";
 
 export default class Player extends DirectionActor {
   private fireTarget: Vector | null = null;
@@ -40,14 +41,8 @@ export default class Player extends DirectionActor {
       }
     });
 
-    const healthLine = new UIActor(0, -40, 0, 10);
-    const currentHealth = new UIActor(0, -40, 0, 10);
-    healthLine.color = Color.Orange;
-    currentHealth.color = Color.Red;
-    currentHealth.setWidth(80);
-    healthLine.setWidth(100);
+    const healthLine = new HealthLine(0, -90, 150, 130);
     this.add(healthLine);
-    this.add(currentHealth);
   }
 
   public update(engine: Engine, delta: number) {

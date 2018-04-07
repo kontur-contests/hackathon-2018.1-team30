@@ -6,7 +6,6 @@ import {
   TileMap,
   SpriteSheet,
   TileSprite,
-  UIActor,
   Vector
 } from "excalibur";
 import Player from "../Chars/Player";
@@ -16,7 +15,6 @@ import { GameService } from "../GameService";
 import { IPlayer } from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
 import Fowl from "../Chars/Fowl";
-import PoopFowl from "../Chars/PoopFowl";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
@@ -26,15 +24,6 @@ export class Level1 extends Scene {
       tileMap.cellHeight * tileMap.rows
     );
     this.add(tileMap);
-
-    const healthLine = new UIActor(30, 30, 0, 32);
-    const currentHealth = new UIActor(30, 30, 0, 32);
-    healthLine.color = Color.Orange;
-    currentHealth.color = Color.Red;
-    currentHealth.setWidth(500);
-    healthLine.setWidth(600);
-    this.add(healthLine);
-    this.add(currentHealth);
 
     GameService.connection.on("me", (user: IPlayer) => {
       const interactionPlayer = new InteractionPlayer(
@@ -64,10 +53,7 @@ export class Level1 extends Scene {
 
     const joinFowl = (fowl: IPlayer) => {
       if (!GameService.fowlInGame(fowl.id)) {
-        const actor =
-          Math.random() > 0.5
-            ? new Fowl(fowl.position.x, fowl.position.y)
-            : new PoopFowl(fowl.position.x, fowl.position.y);
+        const actor = new Fowl(fowl.position.x, fowl.position.y);
         this.add(actor);
         GameService.addFowl({
           user: fowl,
@@ -121,18 +107,10 @@ export class Level1 extends Scene {
       GameService.kickUser(player);
     });
 
-    GameService.connection.on("fowlKill", (fowl: string) => {
-      const actor = GameService.getActor(fowl);
-      if (actor) {
-        actor.kill();
-        GameService.removeFowl(fowl);
-      }
-    });
-
-    GameService.connection.on("fowlState", (fowl: IPlayer) => {
+    GameService.connection.on("fowlKill", (fowl: IPlayer) => {
       const actor = GameService.getActor(fowl.id);
       if (actor) {
-        actor.pos = new Vector(fowl.position.x, fowl.position.y);
+        actor.kill();
       }
     });
   }

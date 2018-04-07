@@ -4,6 +4,7 @@ import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
+import { HealthLine } from "./HealthLine";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 7;
@@ -28,7 +29,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
-    this.collisionType = CollisionType.Passive;
+    this.collisionType = CollisionType.Active;
   }
 
   public onInitialize(engine: Engine) {
@@ -59,6 +60,9 @@ export default class InteractionPlayer extends DirectionActor {
     });
     engine.input.keyboard.on("press", this.handleKeyPress);
     engine.input.keyboard.on("release", this.handleKeyRelease);
+
+    const healthLine = new HealthLine(0, -90, 150, 130);
+    this.add(healthLine);
 
     engine.input.pointers.primary.on("down", () => {
       if (this.gunFire == null) {
