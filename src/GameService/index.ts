@@ -23,7 +23,6 @@ connection.onclose(() => {
 });
 
 export class GameService {
-
   private static otherUsers: IOtherUser = {};
   private static fowls: IOtherUser = {};
 
@@ -97,5 +96,9 @@ export class GameService {
     if (this.fowls && fowl) {
       delete this.fowls[fowl.id];
     }
+  }
+
+  public static spawnFowl(fowl: IPlayer): void {
+    connection.invoke("spawnFowl");
   }
 }

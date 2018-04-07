@@ -1,8 +1,8 @@
 import * as ex from "excalibur";
 import { Resources } from "../Resources";
 
-const width = 84;
-const height = 48;
+const width = 12;
+const height = 12;
 const columns = 7;
 const rows = 4;
 
