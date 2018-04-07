@@ -1,4 +1,4 @@
-import { CollisionType, Engine, Color } from "excalibur";
+import { CollisionType, Engine, Vector } from "excalibur";
 import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import { GunFire } from "./GunFire";
@@ -11,6 +11,8 @@ export default class Player extends DirectionActor {
     this.collisionType = CollisionType.Passive;
     this.gunFire = new GunFire();
   }
+
+  private nextPosition: Vector = Vector.Zero;
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
@@ -39,11 +41,15 @@ export default class Player extends DirectionActor {
     });
   }
 
-  public onUpdate() {
-    if (this.gunFire.isEnabled) {
-      this.gunFire.color = Color.Green;
-    } else {
-      this.gunFire.color = Color.Transparent;
+  public update(engine: Engine, delta: number) {
+    const positionDifferent = this.pos.sub(this.nextPosition);
+    if (!positionDifferent.equals(Vector.Zero)) {
+      this.direction = this.pos.sub(this.nextPosition);
+      this.actions.moveBy(this.nextPosition.x, this.nextPosition.y, 25);
     }
+  }
+
+  public changePosition(nextPosition: Vector) {
+    this.nextPosition = nextPosition;
   }
 }
