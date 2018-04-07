@@ -16,6 +16,7 @@ namespace Cowl.Backend
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddSignalR();
         }
 
@@ -27,7 +28,12 @@ namespace Cowl.Backend
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSignalR(configure => { configure.MapHub<ChatHub>("/chat"); });
+            app.UseCors(conf => conf.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
+            app.UseSignalR(configure =>
+            {
+                configure.MapHub<ChatHub>("/chat");
+                configure.MapHub<GameHub>("/game");
+            });
         }
     }
 }

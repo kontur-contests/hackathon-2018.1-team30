@@ -8,6 +8,7 @@ yarn-error.log*
 .vs
 bin/
 obj/
+**/*.sln.DotSettings.user
 
 # Runtime data
 pids
