@@ -1,6 +1,15 @@
-import { Engine, Scene, Actor, Color, TileMap } from "excalibur";
+import {
+  Engine,
+  Scene,
+  Actor,
+  Color,
+  TileMap,
+  SpriteSheet,
+  TileSprite
+} from "excalibur";
 import Player from "../Chars/Player";
 import { Resources } from "../Resources";
+import { spriteSheet } from "../SpriteSheets/DudeNudeSpriteSheet";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
@@ -12,5 +21,7 @@ export class Level1 extends Scene {
     this.add(new Actor(10, -10, 10, 10, Color.Red));
     this.add(new Actor(-10, -10, 10, 10, Color.Red));
     this.add(audi);
+
+    this.add(Resources.Level1.getTileMap());
   }
 }
