@@ -31,21 +31,6 @@ export default class Player extends DirectionActor {
     }
   };
 
-  private moveTo = (key?: Input.Keys) => {
-    switch (key) {
-      case Input.Keys.A:
-        return this.actions.moveTo(this.x - 30, this.y, 175);
-      case Input.Keys.W:
-        return this.actions.moveTo(this.x, this.y - 30, 175);
-      case Input.Keys.D:
-        return this.actions.moveTo(this.x + 30, this.y, 175);
-      case Input.Keys.S:
-        return this.actions.moveTo(this.x, this.y + 30, 175);
-      default:
-        return null;
-    }
-  };
-
   private takeDirection = (key?: Input.Keys) => {
     switch (key) {
       case Input.Keys.A:
@@ -97,11 +82,9 @@ export default class Player extends DirectionActor {
   private handleKeyPress = (event?: Input.KeyEvent) => {
     clearInterval(Player.loggingTimer);
     const direction = Player.getDirections((event && event.key) || Input.Keys.Semicolon);
-    this.moveTo(event && event.key);
     this.direction.addEqual(direction);
     Player.loggingTimer = setInterval(() => {
       console.log(`${this.x}, ${this.y}`);
-      this.moveTo(event && event.key);
       GameConnections.move(this.takeDirection());
     }, Player.keyPressInterval);
   };
