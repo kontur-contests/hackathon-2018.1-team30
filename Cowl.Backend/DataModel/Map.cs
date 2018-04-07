@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Cowl.Backend.DataModel.Tiles;
+using System.Drawing;
+using Cowl.Backend.DataModel.GameObjects;
 using Newtonsoft.Json;
 
 namespace Cowl.Backend.DataModel
@@ -8,5 +9,8 @@ namespace Cowl.Backend.DataModel
     public class Map
     {
         public List<GameObject> GameObjects { get; set; }
+        
+        public Size Size { get; set; }
+        
     }
 }

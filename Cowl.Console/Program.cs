@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Cowl.Backend.DataModel;
+using Cowl.Backend.DataModel.GameObjects;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Cowl.Console
@@ -23,9 +23,9 @@ namespace Cowl.Console
         private static async Task JoinLeaveCase(int delay)
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://10.33.94.6:4844/game")
-                .WithConsoleLogger()
-                .Build();
+                             .WithUrl("http://10.33.94.6:4844/game")
+                             .WithConsoleLogger()
+                             .Build();
 
             connection.On<Player>("join", data => { System.Console.WriteLine($"join: {data}"); });
             connection.On<Player>("leave", data => { System.Console.WriteLine($"leave: {data}"); });
@@ -65,7 +65,6 @@ namespace Cowl.Console
                         break;
                 }
             }
-
 
             await Task.Delay(delay).ConfigureAwait(false);
 

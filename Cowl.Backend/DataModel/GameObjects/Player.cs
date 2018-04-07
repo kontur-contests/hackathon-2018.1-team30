@@ -1,15 +1,17 @@
 ﻿using System.Drawing;
-using Cowl.Backend.DataModel.Tiles;
 using Newtonsoft.Json;
 
-namespace Cowl.Backend.DataModel
+namespace Cowl.Backend.DataModel.GameObjects
 {
     [JsonObject]
     public class Player : GameObject
     {
-        public string Id { get; set; }
-
         public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Position)}: {Position}";
+        }
 
         public void Move(MoveDirection direction)
         {
@@ -29,11 +31,6 @@ namespace Cowl.Backend.DataModel
                 deltaX--;
 
             Position = new Point(Position.X + deltaX, Position.Y + deltaY);
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Position)}: {Position}";
         }
     }
 }
