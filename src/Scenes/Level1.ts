@@ -54,7 +54,7 @@ export class Level1 extends Scene {
       console.log(players);
       const otherPlayers = players.filter(p => GameConnections.currentUser && p.id !== GameConnections.currentUser.user.id)
       otherPlayers.forEach(user => {
-        const playerInGame = GameConnections.otherPlayers.some(p => p.user.id === p.user.id);
+        const playerInGame = GameConnections.otherPlayers.some(p => p.user.id === user.id);
         if (!playerInGame) {
           const actor = new Player(user.position.x, user.position.y);
           this.add(actor);
