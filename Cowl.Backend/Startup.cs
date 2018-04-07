@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cowl.Backend.Core;
-using Cowl.Backend.Hubs;
+﻿using Cowl.Backend.Hubs;
 using Cowl.Backend.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -26,7 +20,7 @@ namespace Cowl.Backend
             services.AddLogging(builder => builder.AddConsole());
 
             services.AddSingleton<GameService>();
-            services.AddSingleton<IHostedService, FowlService>();
+            services.AddSingleton<IHostedService, GameObjectService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

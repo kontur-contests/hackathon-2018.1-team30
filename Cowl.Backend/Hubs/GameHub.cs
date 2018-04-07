@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
@@ -19,70 +18,65 @@ namespace Cowl.Backend.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var id = Context.ConnectionId;
-            var name = Guid.NewGuid().ToString();
-
-            var player = new Player {Id = id, Name = name, Position = GetRandomPosition()};
+            var player = new Player {Id = Context.ConnectionId, Position = ObjectPosition.GetRandom()};
 
             await Clients.Caller.SendAsync("me", player);
-            await Clients.Caller.SendAsync("players", _gameService.GetMap().Players);
-            await Clients.Caller.SendAsync("fowls", _gameService.GetMap().Fowls);
-            await Clients.Others.SendAsync("playerJoin", player);
+            await Clients.Caller.SendAsync("gameObjects", _gameService.AllGameObjects);
 
-            _gameService.Join(player);
+            await SpawnGameObject(player);
+            Console.WriteLine("OnConnect:    " + player);
+        }
+
+        public async Task SpawnGameObject(GameObject gameObject)
+        {
+            _gameService.AddGameObject(gameObject);
+            await Clients.All.SendAsync("gameObjectJoin", gameObject);
+            Console.WriteLine("SpawnGameObject:    " + gameObject);
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            var player = _gameService.GetPlayer(Context.ConnectionId);
-            _gameService.GetMap().Players.Remove(player);
-            await Clients.All.SendAsync("playerLeave", player);
+            await KillGameObject(Context.ConnectionId);
         }
 
-        public async Task MovePlayer(int number, ObjectPosition objectPosition)
+        public async Task MoveGameObject(string gameObjectId, ObjectPosition objectPosition)
         {
-            var player = _gameService.GetPlayer(Context.ConnectionId);
-            player.Position = objectPosition;
+            var gameObject = _gameService.GetGameObject(gameObjectId);
 
-            await Clients.Others.SendAsync("playerState", player);
-            await Clients.Caller.SendAsync("playerStateNumber", number);
+            if (gameObject is null)
+                return;
+
+            gameObject.Position = objectPosition;
+            await Clients.Others.SendAsync("gameObjectMove", gameObjectId, objectPosition);
         }
 
-        public async Task AttackPlayer(ObjectPosition objectPosition)
+        public async Task AttackGameObject(string gameObjectId, ObjectPosition objectPosition)
         {
-            var player = _gameService.GetPlayer(Context.ConnectionId);
-            await Clients.All.SendAsync("playerAttack", player, objectPosition);
+            await Clients.Others.SendAsync("gameObjectAttack", gameObjectId, objectPosition);
         }
 
-
-        private static ObjectPosition GetRandomPosition()
+        public async Task LeaveGameObject(string gameObjectId)
         {
-            var random = new Random();
-            var x = random.Next(100, 3100);
-            var y = random.Next(100, 1500);
+            var gameObject = _gameService.RemoveGameObject(gameObjectId);
+            if (gameObject is null)
+                return;
 
-            return new ObjectPosition(x, y);
+            await Clients.All.SendAsync("gameObjectLeave", gameObject);
         }
 
-        public async Task SpawnFowl()
+        public async Task KillGameObject(string gameObjectId)
         {
-            var fowl = new Fowl();
-            fowl.Position = GetRandomPosition();
-            fowl.Id = Guid.NewGuid().ToString();
+            var gameObject = _gameService.RemoveGameObject(gameObjectId);
 
-            _gameService.GetMap().Fowls.Add(fowl.Id, fowl);
-            await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
-        }
+            if (gameObject is null)
+                return;
 
-        public async Task KillFowl(string fowlId)
-        {
-            await Clients.All.SendAsync("fowlKill", fowlId).ConfigureAwait(false);
-            _gameService.GetMap().Fowls.Remove(fowlId);
+            if (!(_gameService.GetGameObject(Context.ConnectionId) is Player player))
+                return;
 
-            var player = _gameService.GetPlayer(Context.ConnectionId);
-            player.Points++;
+            player.Scores += gameObject.Cost;
 
-            await Clients.Others.SendAsync("playerState", player);
+            await LeaveGameObject(gameObjectId);
         }
     }
 }

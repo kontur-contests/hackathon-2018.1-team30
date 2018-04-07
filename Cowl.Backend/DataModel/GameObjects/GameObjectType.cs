@@ -2,8 +2,10 @@
 {
     public enum GameObjectType
     {
-        Block = 0,
-        Player = 1,
-        Fowl = 2
+        Player = 0,
+        Fowl = 1,
+        Shit = 2,
+
+        Wtf = 99
     }
 }
