@@ -48,7 +48,9 @@ export class Level1 extends Scene {
 
     GameConnections.connection.on('players', (players: IPlayer[]) => {
       players.forEach(p => {
-        if (GameConnections.me && p.id !== GameConnections.me.id) {
+        const isMe = GameConnections.me && p.id === GameConnections.me.id;
+        const playerInGame = GameConnections.players.some(p => p.id === p.id);
+        if (!isMe && !playerInGame) {
           const newPlayer = new Player(p.position.x, p.position.y);
           this.add(newPlayer);
         }
