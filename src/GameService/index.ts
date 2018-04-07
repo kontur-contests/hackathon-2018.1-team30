@@ -63,13 +63,11 @@ export class GameService {
   }
 
   static userInGame(id: string): boolean {
-    if (GameService.otherPlayers && GameService.otherPlayers[id] != null) {
-      return true;
-    }
-    if (GameService.currentUser && GameService.currentUser.user.id === id) {
-      return true;
-    }
-    return false;
+    return !!GameService.otherPlayers[id];
+  }
+
+  static fowlInGame(id: string): boolean {
+    return !!GameService.fowls[id];
   }
 
   static get otherPlayers(): IOtherUser {
