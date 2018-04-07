@@ -2,7 +2,7 @@ import { DisplayMode, Engine, Loader } from "excalibur";
 import { Level1 } from "./Scenes/Level1";
 import * as signalR from '@aspnet/signalr';
 
-let connection = new signalR.HubConnection('/chat');
+let connection = new signalR.HubConnection('http://10.33.94.6:4844/chat');
 
 connection.on('send', data => {
   console.log(data);
