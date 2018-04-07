@@ -22,8 +22,6 @@ namespace Cowl.Backend
             services.AddSignalR();
 
             services.AddSingleton<GameService>();
-            services.AddSingleton<ActionApplicator>();
-            services.AddSingleton<IActionApplicator<PlayerMove>, PlayerMoveApplicator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,10 +33,7 @@ namespace Cowl.Backend
             }
 
             app.UseCors(conf => conf.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
-            app.UseSignalR(configure =>
-            {
-                configure.MapHub<GameHub>("/game");
-            });
+            app.UseSignalR(configure => { configure.MapHub<GameHub>("/game"); });
         }
     }
 }

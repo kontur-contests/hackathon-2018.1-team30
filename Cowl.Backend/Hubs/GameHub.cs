@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using Cowl.Backend.Core;
 using Cowl.Backend.DataModel;
@@ -12,37 +13,39 @@ namespace Cowl.Backend.Hubs
     public class GameHub : Hub
     {
         private readonly GameService _gameService;
-        private readonly ActionApplicator _actionApplicator;
 
-        public GameHub(GameService gameService, ActionApplicator actionApplicator)
+        public GameHub(GameService gameService)
         {
             _gameService = gameService;
-            _actionApplicator = actionApplicator;
         }
 
         public override async Task OnConnectedAsync()
         {
-            var id = Guid.NewGuid();
+            var id = Context.ConnectionId;
             var name = Guid.NewGuid().ToString();
 
             var random = new Random();
-            var x = random.Next(0, 1200);
-            var y = random.Next(0, 800);
+            var x = random.Next(100, 1200);
+            var y = random.Next(100, 800);
 
 
-            var player = new Player {Id = id, Name = name, Position = new ObjectPosition{X = x, Y = y}};
+            var player = new Player {Id = id, Name = name, Position = new ObjectPosition {X = x, Y = y}};
 
             await _gameService.Join(player);
-            await Clients.All.SendAsync("playerJoin", player);
+            await Clients.Caller.SendAsync("playerJoin", player);
+            await Clients.All.SendAsync("players", _gameService.GetMap().Players);
         }
 
-
-        public async Task MovePlayer(PlayerMove playerMove)
+        public override async Task OnDisconnectedAsync(Exception ex)
         {
-            _actionApplicator.Apply(_gameService.GetMap(), playerMove);
+            var player = _gameService.GetMap().Players.First(p => p.Id == Context.ConnectionId);
+            _gameService.GetMap().Players.Remove(player);
+        }
 
-            var player = _gameService.GetPlayer(playerMove.PlayerId);
-
+        public async Task MovePlayer(MoveDirection moveDirection)
+        {
+            var player = _gameService.GetPlayer(Context.ConnectionId);
+            PlayerMoveApplicator.Apply(_gameService.GetMap(), player, moveDirection);
             await Clients.All.SendAsync("playerState", player);
         }
     }

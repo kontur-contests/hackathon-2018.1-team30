@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using Cowl.Backend.DataModel;
+using Cowl.Backend.DataModel.GameObjects;
 
 namespace Cowl.Backend.Core
 {
-    public class PlayerMoveApplicator : IActionApplicator<PlayerMove>
+    public class PlayerMoveApplicator
     {
         private const int Step = 5;
 
-        public void Apply(Map map, PlayerMove action)
+        public static void Apply(Map map, Player player, MoveDirection moveDirection)
         {
-            var player = map.Players.SingleOrDefault(x => x.Id == action.PlayerId);
-
-            if (player == null)
-            {
-                return;
-            }
-
-            var direction = GetVector(action.Direction);
+            var direction = GetVector(moveDirection);
             var target = player.Position + direction * Step;
             player.Position = Normalize(map.Size, target, player.Size);
         }
@@ -35,17 +28,38 @@ namespace Cowl.Backend.Core
             var x = 0;
             var y = 0;
 
-            if (direction.HasFlag(MoveDirection.Down))
-                y++;
+            switch (direction)
+            {
+                case MoveDirection.Up:
+                    y--;
+                    break;
+                case MoveDirection.Down:
+                    y++;
+                    break;
+                case MoveDirection.Left:
+                    x--;
+                    break;
+                case MoveDirection.Right:
+                    x++;
+                    break;
+                case MoveDirection.DownLeft:
+                    y++;
+                    x--;
+                    break;
+                case MoveDirection.DownRigth:
+                    y++;
+                    x++;
+                    break;
+                case MoveDirection.UpLeft:
+                    y--;
+                    x--;
+                    break;
+                case MoveDirection.UpRight:
+                    y--;
+                    x++;
+                    break;
+            }
 
-            if (direction.HasFlag(MoveDirection.Up))
-                y--;
-
-            if (direction.HasFlag(MoveDirection.Right))
-                x++;
-
-            if (direction.HasFlag(MoveDirection.Left))
-                x--;
 
             return new Vector(x, y);
         }

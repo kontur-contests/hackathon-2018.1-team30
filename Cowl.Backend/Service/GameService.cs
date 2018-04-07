@@ -20,9 +20,6 @@ namespace Cowl.Backend.Service
 
         public async Task Join(Player player)
         {
-            if (_map.Players.Count >= 4)
-                throw new Exception("too many players");
-
             _map.Players.Add(player);
         }
 
@@ -31,7 +28,7 @@ namespace Cowl.Backend.Service
             return _map;
         }
 
-        public Player GetPlayer(Guid playerId)
+        public Player GetPlayer(string playerId)
         {
             return _map.Players.First(p => p.Id == playerId);
         }
