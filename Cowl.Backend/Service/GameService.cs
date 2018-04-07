@@ -10,33 +10,28 @@ namespace Cowl.Backend.Service
 {
     public class GameService
     {
-        private readonly Dictionary<IClientProxy, Player> _players;
+        private readonly Dictionary<Guid, Player> _players;
 
         public GameService()
         {
-            _players = new Dictionary<IClientProxy, Player>();
+            _players = new Dictionary<Guid, Player>();
         }
 
 
-        public async Task Join(IClientProxy clientProxy, Player player)
+        public async Task Join(Player player)
         {
             if (_players.Count >= 4)
                 throw new Exception("too many players");
 
-            _players.Add(clientProxy, player);
+            _players.Add(player.Id, player);
         }
 
-        public async Task<Player> GetPlayer(IClientProxy clientProxy)
+        public async Task<Player> GetPlayer(Guid id)
         {
-            if (_players.ContainsKey(clientProxy))
-                return _players[clientProxy];
+            if (_players.ContainsKey(id))
+                return _players[id];
 
             throw new Exception("");
-        }
-
-        public async Task Leave(IClientProxy clientProxy)
-        {
-            _players.Remove(clientProxy);
         }
     }
 }

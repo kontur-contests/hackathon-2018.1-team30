@@ -19,6 +19,7 @@ namespace Cowl.Console
             // var p4 = JoinLeaveCase(4000);
 
             await Task.WhenAll(p1);
+            System.Console.ReadLine();
         }
 
         private static async Task JoinLeaveCase(int delay)
@@ -27,23 +28,16 @@ namespace Cowl.Console
                 .WithUrl("http://10.33.94.6:4844/game")
                 .WithConsoleLogger()
                 .Build();
-            var connection = new HubConnectionBuilder()
-                .WithUrl("http://10.33.94.6:4844/game")
-                .WithConsoleLogger()
-                .Build();
-
-            var player = new HubConnectionBuilder()
-                .WithUrl("http://10.33.94.6:4844/player")
-                .WithConsoleLogger()
-                .Build();
-
+            
 
             game.On<Player>("join", data => { System.Console.WriteLine($"join: {data}"); });
             game.On<Player>("leave", data => { System.Console.WriteLine($"leave: {data}"); });
-            player.On<Player>("state", data => { System.Console.WriteLine($"player-state: {data}"); });
+            game.On<Player>("state", data =>
+            {
+                System.Console.WriteLine($"player-state: {data}");
+            });
 
             await game.StartAsync().ConfigureAwait(false);
-            await player.StartAsync().ConfigureAwait(false);
 
             var random = new Random(111);
             for (var i = 0; i < 50; i++)
@@ -51,39 +45,35 @@ namespace Cowl.Console
                 switch (random.Next(9))
                 {
                     case 1:
-                        await player.InvokeAsync("move", JsonConvert.SerializeObject(MoveDirection.Down))
+                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Down)
                             .ConfigureAwait(false);
                         break;
                     case 2:
-                        await player.InvokeAsync("move", JsonConvert.SerializeObject(MoveDirection.Up))
+                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Up)
                             .ConfigureAwait(false);
                         break;
                     case 3:
-                        await player.InvokeAsync("move", JsonConvert.SerializeObject(MoveDirection.Left))
+                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Left)
                             .ConfigureAwait(false);
                         break;
                     case 4:
-                        await player.InvokeAsync("move", JsonConvert.SerializeObject(MoveDirection.Right))
+                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Right)
                             .ConfigureAwait(false);
                         break;
                     case 5:
-                        await player.InvokeAsync("move",
-                                JsonConvert.SerializeObject(MoveDirection.Down | MoveDirection.Left))
+                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Down | MoveDirection.Left))
                             .ConfigureAwait(false);
                         break;
                     case 6:
-                        await player.InvokeAsync("move",
-                                JsonConvert.SerializeObject(MoveDirection.Down | MoveDirection.Right))
+                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Down | MoveDirection.Right))
                             .ConfigureAwait(false);
                         break;
                     case 7:
-                        await player.InvokeAsync("move",
-                                JsonConvert.SerializeObject(MoveDirection.Up | MoveDirection.Left))
+                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Up | MoveDirection.Left))
                             .ConfigureAwait(false);
                         break;
                     case 8:
-                        await player.InvokeAsync("move",
-                                JsonConvert.SerializeObject(MoveDirection.Up | MoveDirection.Right))
+                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Up | MoveDirection.Right))
                             .ConfigureAwait(false);
                         break;
                 }

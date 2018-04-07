@@ -36,7 +36,6 @@ namespace Cowl.Backend
             {
                 configure.MapHub<ChatHub>("/chat");
                 configure.MapHub<GameHub>("/game");
-                configure.MapHub<PlayerHub>("/player");
             });
         }
     }

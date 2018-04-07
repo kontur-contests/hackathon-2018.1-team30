@@ -27,18 +27,20 @@ namespace Cowl.Backend.Hubs
             var y = random.Next(0, 800);
 
 
-            var player = new Player {Id = id, Name = name, Position = new Point(x, y)};
+            var player = new Player { Id = id, Name = name, Position = new Point(x, y) };
 
-            await _gameService.Join(Clients.Caller, player);
+            await _gameService.Join(player);
             await Clients.All.SendAsync("join", player);
         }
 
-        public override async Task OnDisconnectedAsync(Exception ex)
+        public async Task MovePlayer(Guid playerId, int flags)
         {
-            var player = await _gameService.GetPlayer(Clients.Caller);
+            var direction = (MoveDirection)flags;
 
-            await _gameService.Leave(Clients.Caller);
-            await Clients.All.SendAsync("leave", player);
+            var player = await _gameService.GetPlayer(playerId);
+            player.Move(direction);
+
+            await Clients.All.SendAsync("state", player);
         }
     }
 }
