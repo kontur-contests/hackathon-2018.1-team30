@@ -94,6 +94,10 @@ export class Level1 extends Scene {
     );
 
     GameService.connection.on("playerLeave", (player: IPlayer) => {
+      const actor = GameService.getActor(player.id);
+      if (actor) {
+        actor.kill();
+      }
       GameService.kickUser(player);
     });
   }
