@@ -13,10 +13,12 @@ namespace Cowl.Backend.Hubs
     public class GameHub : Hub
     {
         private readonly GameService _gameService;
+        private readonly ILogger _logger;
 
-        public GameHub(GameService gameService)
+        public GameHub(GameService gameService, ILoggerFactory loggerFactory)
         {
             _gameService = gameService;
+            _logger = loggerFactory.CreateLogger(nameof(GameService));
         }
 
         public override async Task OnConnectedAsync()
@@ -24,14 +26,9 @@ namespace Cowl.Backend.Hubs
             var id = Context.ConnectionId;
             var name = Guid.NewGuid().ToString();
 
-            var random = new Random();
-            var x = random.Next(100, 1200);
-            var y = random.Next(100, 800);
+            var player = new Player {Id = id, Name = name, Position = GetRandomPosition()};
 
-
-            var player = new Player {Id = id, Name = name, Position = new ObjectPosition {X = x, Y = y}};
-
-            Console.WriteLine(player);
+            _logger.LogDebug("playerJoin" + player);
 
             await _gameService.Join(player);
             await Clients.Caller.SendAsync("playerJoin", player);
@@ -40,18 +37,61 @@ namespace Cowl.Backend.Hubs
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            var player = _gameService.GetMap().Players.First(p => p.Id == Context.ConnectionId);
+            var player = _gameService.GetPlayer(Context.ConnectionId);
             _gameService.GetMap().Players.Remove(player);
+
+            _logger.LogDebug("Disconnect:" + player);
+            await Clients.All.SendAsync("playerLeave", player);
         }
 
-        public async Task MovePlayer(MoveDirection moveDirection)
+        public async Task MovePlayer(int number, ObjectPosition objectPosition)
         {
             var player = _gameService.GetPlayer(Context.ConnectionId);
-            PlayerMoveApplicator.Apply(_gameService.GetMap(), player, moveDirection);
+            player.Position = objectPosition;
 
-            Console.WriteLine(player + " " + moveDirection);
+            _logger.LogDebug("MovePlayer" + player);
 
-            await Clients.All.SendAsync("playerState", player);
+            await Clients.Others.SendAsync("playerState", player);
+            await Clients.Caller.SendAsync("playerStateNumber", number);
+        }
+
+        public async Task AttackPlayer(ObjectPosition objectPosition)
+        {
+            var player = _gameService.GetPlayer(Context.ConnectionId);
+
+#pragma warning disable 4014
+            SpawFowl();
+#pragma warning restore 4014
+
+            await Clients.All.SendAsync("playerAttack", player, objectPosition);
+        }
+
+
+        private static ObjectPosition GetRandomPosition()
+        {
+            var random = new Random();
+            var x = random.Next(100, 3100);
+            var y = random.Next(100, 1500);
+
+            return new ObjectPosition(x, y);
+        }
+
+        public async Task SpawFowl()
+        {
+            while (true)
+            {
+                var fowl = new Fowl();
+                fowl.Position = GetRandomPosition();
+                fowl.Id = Guid.NewGuid().ToString();
+                
+                await Clients.All.SendAsync("fowlJoin", fowl).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+            }
+        }
+
+        public async Task KillFowl(string number)
+        {
+            await Clients.All.SendAsync("fowlKill", number).ConfigureAwait(false);
         }
     }
 }

@@ -24,64 +24,7 @@ namespace Cowl.Console
 
         private static async Task JoinLeaveCase(int delay)
         {
-            var game = new HubConnectionBuilder()
-                .WithUrl("http://10.33.94.6:4844/game")
-                .WithConsoleLogger()
-                .Build();
-            
-
-            game.On<Player>("join", data => { System.Console.WriteLine($"join: {data}"); });
-            game.On<Player>("leave", data => { System.Console.WriteLine($"leave: {data}"); });
-            game.On<Player>("state", data =>
-            {
-                System.Console.WriteLine($"player-state: {data}");
-            });
-
-            await game.StartAsync().ConfigureAwait(false);
-
-            var random = new Random(111);
-            for (var i = 0; i < 50; i++)
-            {
-                switch (random.Next(9))
-                {
-                    case 1:
-                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Down)
-                            .ConfigureAwait(false);
-                        break;
-                    case 2:
-                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Up)
-                            .ConfigureAwait(false);
-                        break;
-                    case 3:
-                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Left)
-                            .ConfigureAwait(false);
-                        break;
-                    case 4:
-                        await game.InvokeAsync("movePlayer", (int) MoveDirection.Right)
-                            .ConfigureAwait(false);
-                        break;
-                    case 5:
-                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Down | MoveDirection.Left))
-                            .ConfigureAwait(false);
-                        break;
-                    case 6:
-                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Down | MoveDirection.Right))
-                            .ConfigureAwait(false);
-                        break;
-                    case 7:
-                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Up | MoveDirection.Left))
-                            .ConfigureAwait(false);
-                        break;
-                    case 8:
-                        await game.InvokeAsync("movePlayer", (int) (MoveDirection.Up | MoveDirection.Right))
-                            .ConfigureAwait(false);
-                        break;
-                }
-            }
-
-            await Task.Delay(delay).ConfigureAwait(false);
-
-            await game.StopAsync().ConfigureAwait(false);
+           
         }
     }
 }

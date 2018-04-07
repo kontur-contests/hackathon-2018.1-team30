@@ -36,7 +36,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.gunFire = new GunFire();
+    this.gunFire = new GunFire(true);
     this.aim = new Aim();
     this.add(this.gunFire);
     this.add(this.aim);

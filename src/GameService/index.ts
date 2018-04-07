@@ -24,6 +24,11 @@ connection.onclose(() => {
 
 export class GameService {
   private static otherUsers: IOtherUser = {};
+  private static fowls: IOtherUser = {};
+
+  static addFowl(fowl: IUser): void {
+    this.fowls[fowl.user.id] = fowl;
+  }
 
   public static start() {
     connection.start();
@@ -48,6 +53,10 @@ export class GameService {
     const user = this.otherPlayers[id];
     if (user) {
       return user.actor;
+    }
+    const fowl = this.fowls[id];
+    if (fowl) {
+      return fowl.actor;
     }
 
     return null;
@@ -80,6 +89,12 @@ export class GameService {
   public static kickUser(player: IPlayer): void {
     if (this.otherPlayers && player) {
       delete this.otherPlayers[player.id];
+    }
+  }
+
+  public static killFowl(fowl: IPlayer): void {
+    if (this.fowls && fowl) {
+      delete this.fowls[fowl.id];
     }
   }
 }
