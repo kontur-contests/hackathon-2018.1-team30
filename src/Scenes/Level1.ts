@@ -40,9 +40,13 @@ export class Level1 extends Scene {
       );
     });
 
-    GameService.connection.on("playerJoin", (player: IPlayer) => this.joinPlayer(player));
+    GameService.connection.on("playerJoin", (player: IPlayer) =>
+      this.joinPlayer(player)
+    );
 
-    GameService.connection.on("players", (players: IPlayer[]) => players.forEach(this.joinPlayer));
+    GameService.connection.on("players", (players: IPlayer[]) =>
+      players.forEach(this.joinPlayer)
+    );
 
     GameService.connection.on("playerState", (info: IPlayer) => {
       const player = GameService.getActor(info.id) as Player;
@@ -64,10 +68,6 @@ export class Level1 extends Scene {
       (player: IPlayer, vector: { x: number; y: number }) => {
         const actor = GameService.getActor(player.id) as Player;
         if (actor) {
-          if (actor.gunFire.timeout) {
-            clearTimeout(actor.gunFire.timeout);
-            actor.gunFire.timeout = null;
-          }
           actor.gunFire.target = new Vector(vector.x, vector.y);
         }
       }
