@@ -2,7 +2,7 @@ import { CollisionType, Engine, Input, Vector } from 'excalibur';
 import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
 import DirectionActor from './DirectionActor';
 import { GunFire } from './GunFire';
-import { GameService } from '../GameConnections';
+import { GameService } from '../GameService';
 import { Directions } from '../models/Player';
 
 export default class Player extends DirectionActor {

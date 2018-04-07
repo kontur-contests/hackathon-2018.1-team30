@@ -12,7 +12,7 @@ import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 import SuperCamera from "../SuperCamera";
 import { Aim } from "../Chars/Aim";
-import { GameService } from "../GameConnections";
+import { GameService } from "../GameService";
 import { IPlayer } from "../models/Player";
 
 export class Level1 extends Scene {

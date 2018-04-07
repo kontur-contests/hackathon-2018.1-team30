@@ -2,7 +2,7 @@ import { Loader } from "excalibur";
 import { Game } from "./Game";
 import { Resources } from "./Resources";
 import * as signalR from "@aspnet/signalr";
-import { GameService } from "./GameConnections";
+import { GameService } from "./GameService";
 
 const game = new Game();
 const loader = new Loader();

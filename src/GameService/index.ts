@@ -1,4 +1,4 @@
-import signalR = require('@aspnet/signalr');
+import * as signalR from '@aspnet/signalr';
 import { IPlayer, Directions, IUser } from '../models/Player';
 import { Actor } from 'Actor';
 
