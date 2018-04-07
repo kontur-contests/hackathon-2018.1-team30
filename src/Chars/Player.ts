@@ -1,15 +1,19 @@
-import { CollisionType, Engine} from 'excalibur';
-import spriteSheet from '../SpriteSheets/DudeNudeSpriteSheet';
-import DirectionActor from './DirectionActor';
+import { CollisionType, Engine, Color } from "excalibur";
+import spriteSheet from "../SpriteSheets/DudeNudeSpriteSheet";
+import DirectionActor from "./DirectionActor";
+import { GunFire } from "./GunFire";
 
 export default class Player extends DirectionActor {
+  gunFire: GunFire;
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Passive;
+    this.gunFire = new GunFire();
   }
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
+    this.add(this.gunFire);
     this.registerDrawing({
       idle: {
         up: spriteSheet.idle.up(),
@@ -32,5 +36,13 @@ export default class Player extends DirectionActor {
         left: spriteSheet.walk.left(engine, 150)
       }
     });
+  }
+
+  public onUpdate() {
+    if (this.gunFire.isEnabled) {
+      this.gunFire.color = Color.Green;
+    } else {
+      this.gunFire.color = Color.Transparent;
+    }
   }
 }

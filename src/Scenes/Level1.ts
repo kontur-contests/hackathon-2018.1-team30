@@ -25,6 +25,7 @@ export class Level1 extends Scene {
     this.add(tileMap);
 
     GameService.connection.on("playerJoin", (user: IPlayer) => {
+      console.log(user);
       if (user) {
         const interationPlayer = new InteractionPlayer(
           user.position.x,
@@ -41,8 +42,11 @@ export class Level1 extends Scene {
       }
     });
 
-    GameService.connection.on('players', (players: IPlayer[]) => {
-      const otherPlayers = players.filter(p => GameService.currentUser && p.id !== GameService.currentUser.user.id)
+    GameService.connection.on("players", (players: IPlayer[]) => {
+      console.log(players);
+      const otherPlayers = players.filter(
+        p => GameService.currentUser && p.id !== GameService.currentUser.user.id
+      );
       otherPlayers.forEach(user => {
         if (!GameService.userInGame(user.id)) {
           const actor = new Player(user.position.x, user.position.y);
@@ -56,6 +60,7 @@ export class Level1 extends Scene {
     });
 
     GameService.connection.on("playerState", (player: IPlayer) => {
+      console.log(player);
       const actor = GameService.getActor(player.id);
       if (actor) {
         actor.actions.moveTo(player.position.x, player.position.y, 1000);
@@ -69,5 +74,22 @@ export class Level1 extends Scene {
       //     actor.actions.moveTo(player.position.x, player.position.y, 1000);
       // }
     });
+    GameService.connection.on(
+      "playerAttack",
+      (player: IPlayer, vector: { x: number; y: number }) => {
+        const actor = GameService.getActor(player.id) as Player;
+        if (actor) {
+          if (actor.gunFire.timeout) {
+            clearTimeout(actor.gunFire.timeout);
+            actor.gunFire.timeout = null;
+          }
+          actor.gunFire.activate(new Vector(vector.x, vector.y));
+
+          actor.gunFire.timeout = setTimeout(() => {
+            actor.gunFire.deactivate();
+          }, 100);
+        }
+      }
+    );
   }
 }

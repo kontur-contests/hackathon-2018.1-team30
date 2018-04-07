@@ -7,6 +7,7 @@ export class GunFire extends ex.Actor {
   }
 
   public isEnabled = false;
+  public timeout: number | null = null;
 
   public update(engine: ex.Engine) {
     if (this.isEnabled) {
@@ -26,5 +27,15 @@ export class GunFire extends ex.Actor {
     const dist = Math.min(MAX_AIM_DISTANCE, relativeVec.distance());
     this.setWidth(dist);
     this.rotation = relativeVec.toAngle();
+  }
+
+  public activate(vector: ex.Vector) {
+    this.setWidth(MAX_AIM_DISTANCE);
+    this.rotation = vector.toAngle();
+    this.isEnabled = true;
+  }
+
+  public deactivate() {
+    this.isEnabled = false;
   }
 }
