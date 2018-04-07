@@ -124,5 +124,13 @@ export class Level1 extends Scene {
         GameService.removeFowl(fowl);
       }
     });
+
+    GameService.connection.on("fowlState", (fowl: IPlayer) => {
+      const actor = GameService.getActor(fowl.id);
+      console.log(actor);
+      if (actor) {
+        actor.pos = new Vector(fowl.position.x, fowl.position.y);
+      }
+    });
   }
 }
