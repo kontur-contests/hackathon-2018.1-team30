@@ -28,6 +28,7 @@ namespace Cowl.Backend
             services.AddSingleton<FowlService>();
 
             services.AddSingleton<JobFactory>();
+            services.AddSingleton<FluentScheduler.Registry, JobRegistry>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
