@@ -15,6 +15,7 @@ export class Resources {
   public static Aim = new Texture(prefix + "/assets/sprites/aim.png");
   public static Slawwan = new Texture(prefix + "/assets/sprites/slava.png");
   public static Blood1 = new Texture(prefix + "/assets/sprites/blood_1.png");
+  public static Blood2 = new Texture(prefix + "/assets/sprites/blood_2.png");
   // public static GroundTiles = new Texture("/assets/ground_tiles.png");
 
   public static values(): ILoadable[] {
