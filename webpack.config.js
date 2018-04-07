@@ -3,6 +3,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackExternalsPlugin = require("html-webpack-externals-plugin");
+const webpack = require("webpack");
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -27,6 +28,9 @@ const plugins = isDev
             global: "ex"
           }
         ]
+      }),
+      new webpack.DefinePlugin({
+        "process.env.PUBLIC_PATH": JSON.stringify(process.env.PUBLIC_PATH)
       })
     ];
 
