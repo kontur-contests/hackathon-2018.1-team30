@@ -27,19 +27,26 @@ export class Level1 extends Scene {
     GameService.connection.on("playerJoin", (user: IPlayer) => {
       console.log(user);
       if (user) {
-        const interationPlayer = new InteractionPlayer(user.position.x, user.position.y);
+        const interationPlayer = new InteractionPlayer(
+          user.position.x,
+          user.position.y
+        );
         GameService.saveUser({
           user,
           actor: interationPlayer
         });
         this.add(interationPlayer);
-        this.camera.addStrategy(new SuperCamera(interationPlayer, tileMapSize, 0.3, 0.9));
+        this.camera.addStrategy(
+          new SuperCamera(interationPlayer, tileMapSize, 0.3, 0.9)
+        );
       }
     });
 
-    GameService.connection.on('players', (players: IPlayer[]) => {
+    GameService.connection.on("players", (players: IPlayer[]) => {
       console.log(players);
-      const otherPlayers = players.filter(p => GameService.currentUser && p.id !== GameService.currentUser.user.id)
+      const otherPlayers = players.filter(
+        p => GameService.currentUser && p.id !== GameService.currentUser.user.id
+      );
       otherPlayers.forEach(user => {
         if (!GameService.userInGame(user.id)) {
           const actor = new Player(user.position.x, user.position.y);
@@ -47,7 +54,7 @@ export class Level1 extends Scene {
           GameService.saveOtherPlayer({
             user,
             actor
-          })
+          });
         }
       });
     });
@@ -60,5 +67,12 @@ export class Level1 extends Scene {
       }
     });
 
+    GameService.connection.on("playerStateNumber", (num: number) => {
+      console.log(num);
+      // const actor = GameService.getActor(player.id);
+      // if (actor) {
+      //     actor.actions.moveTo(player.position.x, player.position.y, 1000);
+      // }
+    });
   }
 }
