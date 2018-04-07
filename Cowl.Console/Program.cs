@@ -31,7 +31,41 @@ namespace Cowl.Console
             connection.On<Player>("leave", data => { System.Console.WriteLine($"leave: {data}"); });
 
             await connection.StartAsync().ConfigureAwait(false);
-            await connection.InvokeAsync("join").ConfigureAwait(false);
+
+            var random = new Random(111);
+            for (var i = 0; i < 50; i++)
+            {
+                switch (random.Next(9))
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        await connection.InvokeAsync("move", MoveDirection.Down).ConfigureAwait(false);
+                        break;
+                    case 2:
+                        await connection.InvokeAsync("move", MoveDirection.Up).ConfigureAwait(false);
+                        break;
+                    case 3:
+                        await connection.InvokeAsync("move", MoveDirection.Left).ConfigureAwait(false);
+                        break;
+                    case 4:
+                        await connection.InvokeAsync("move", MoveDirection.Right).ConfigureAwait(false);
+                        break;
+                    case 5:
+                        await connection.InvokeAsync("move", MoveDirection.Down | MoveDirection.Left).ConfigureAwait(false);
+                        break;
+                    case 6:
+                        await connection.InvokeAsync("move", MoveDirection.Down | MoveDirection.Right).ConfigureAwait(false);
+                        break;
+                    case 7:
+                        await connection.InvokeAsync("move", MoveDirection.Down).ConfigureAwait(false);
+                        break;
+                    case 8:
+                        await connection.InvokeAsync("move", MoveDirection.Down).ConfigureAwait(false);
+                        break;
+                }
+            }
+
 
             await Task.Delay(delay).ConfigureAwait(false);
 

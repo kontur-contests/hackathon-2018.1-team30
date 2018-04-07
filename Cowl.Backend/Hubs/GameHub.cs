@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
 using System.Threading.Tasks;
 using Cowl.Backend.DataModel;
 using Cowl.Backend.Service;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 
 namespace Cowl.Backend.Hubs
 {
@@ -19,16 +17,17 @@ namespace Cowl.Backend.Hubs
         }
 
 
-        public async Task Join()
-        {
-        }
-
         public override async Task OnConnectedAsync()
         {
             var id = Guid.NewGuid().ToString();
             var name = Guid.NewGuid().ToString();
 
-            var player = new Player {Id = id, Name = name,};
+            var random = new Random();
+            var x = random.Next(0, 1200);
+            var y = random.Next(0, 800);
+
+
+            var player = new Player {Id = id, Name = name, Position = new Point(x, y)};
 
             await _gameService.Join(Clients.Caller, player);
             await Clients.All.SendAsync("join", player);
