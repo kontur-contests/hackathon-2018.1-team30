@@ -14,6 +14,7 @@ import SuperCamera from "../SuperCamera";
 import { GameService } from "../GameService";
 import { IPlayer } from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
+import Fowl from "../Chars/Fowl";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
@@ -96,6 +97,23 @@ export class Level1 extends Scene {
         actor.kill();
       }
       GameService.kickUser(player);
+    });
+
+    GameService.connection.on("fowlJoin", (fowl: IPlayer) => {
+      const actor = new Fowl(fowl.position.x, fowl.position.y);
+      this.add(actor);
+      GameService.addFowl({
+        user: fowl,
+        actor
+      });
+    });
+
+    GameService.connection.on("killFowl", (fowl: IPlayer) => {
+      const actor = GameService.getActor(fowl.id);
+      if (actor) {
+        actor.kill();
+      }
+      GameService.killFowl(fowl);
     });
   }
 }
