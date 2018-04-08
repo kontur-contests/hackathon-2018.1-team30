@@ -75,9 +75,22 @@ Object.assign(allScores.style, {
   background: "rgba(255, 255, 255, 0.5)"
 });
 
+const Notifications = document.createElement("div");
+Object.assign(allScores.style, {
+  position: "fixed",
+  left: "50%",
+  top: "-300px",
+  fontSize: "20px",
+  padding: "20px",
+  background: "rgba(255, 255, 255, 0.5)",
+  transform: "translateX(-50%)",
+  transition: "top 0.2s ease-in"
+});
+
 export class GUI {
   static init() {
     document.body.appendChild(GuiWrapper);
+    document.body.appendChild(Notifications);
     return GUI;
   }
 
@@ -155,5 +168,15 @@ export class GUI {
       </table>
     `;
     return GUI;
+  }
+
+  showNotification(message: string) {
+    Notifications.innerText = message;
+    Notifications.style.top = "100px";
+  }
+
+  hideNotification() {
+    Notifications.innerText = "";
+    Notifications.style.top = "-300px";
   }
 }
