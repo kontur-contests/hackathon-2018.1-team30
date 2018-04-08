@@ -1,11 +1,12 @@
 import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
-import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
+import spriteSheetFactory from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { HealthLine } from "./HealthLine";
 import * as ex from "excalibur";
 
 export default class Player extends DirectionActor {
+  private readonly spriteSheet = spriteSheetFactory();
   private fireTarget: Vector | null = null;
   private gunFire: GunFire | null = null;
   private gunFireKillInterval: number | null = null;
@@ -13,7 +14,9 @@ export default class Player extends DirectionActor {
   public nextPosition: Vector = Vector.Zero;
 
   constructor(x: number, y: number) {
-    super(x, y, spriteSheet.width, spriteSheet.height);
+    super(x, y, 0, 0);
+    this.setWidth(this.spriteSheet.width);
+    this.setHeight(this.spriteSheet.height);
     this.collisionType = CollisionType.Active;
     const area = new ex.Actor(x, y, 20, 100).collisionArea;
     area.body = this.body;
@@ -24,24 +27,24 @@ export default class Player extends DirectionActor {
     super.onInitialize(engine);
     this.registerDrawing({
       idle: {
-        up: spriteSheet.idle.up(),
-        down: spriteSheet.idle.down(),
-        right: spriteSheet.idle.right(),
-        left: spriteSheet.idle.left(),
-        up_left: spriteSheet.idle.up_left(),
-        up_right: spriteSheet.idle.up_right(),
-        down_left: spriteSheet.idle.down_left(),
-        down_right: spriteSheet.idle.down_left()
+        up: this.spriteSheet.idle.up(),
+        down: this.spriteSheet.idle.down(),
+        right: this.spriteSheet.idle.right(),
+        left: this.spriteSheet.idle.left(),
+        up_left: this.spriteSheet.idle.up_left(),
+        up_right: this.spriteSheet.idle.up_right(),
+        down_left: this.spriteSheet.idle.down_left(),
+        down_right: this.spriteSheet.idle.down_left()
       },
       walk: {
-        up: spriteSheet.walk.up(engine, 75),
-        up_right: spriteSheet.walk.up_right(engine, 75),
-        up_left: spriteSheet.walk.up_left(engine, 75),
-        down: spriteSheet.walk.down(engine, 75),
-        down_right: spriteSheet.walk.down_right(engine, 75),
-        down_left: spriteSheet.walk.down_left(engine, 75),
-        right: spriteSheet.walk.right(engine, 75),
-        left: spriteSheet.walk.left(engine, 75)
+        up: this.spriteSheet.walk.up(engine, 75),
+        up_right: this.spriteSheet.walk.up_right(engine, 75),
+        up_left: this.spriteSheet.walk.up_left(engine, 75),
+        down: this.spriteSheet.walk.down(engine, 75),
+        down_right: this.spriteSheet.walk.down_right(engine, 75),
+        down_left: this.spriteSheet.walk.down_left(engine, 75),
+        right: this.spriteSheet.walk.right(engine, 75),
+        left: this.spriteSheet.walk.left(engine, 75)
       }
     });
 

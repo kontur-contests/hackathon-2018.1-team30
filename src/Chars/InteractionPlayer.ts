@@ -1,11 +1,13 @@
 import * as ex from "excalibur";
-import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
+import spriteSheetFactory from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import { HealthLine } from "./HealthLine";
 import SuperCamera from "../SuperCamera";
+
+const spriteSheet = spriteSheetFactory();
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 7;

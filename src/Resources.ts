@@ -14,6 +14,15 @@ export class Resources {
   public static Level1 = new TiledResource(prefix + "/assets/levels/1.json");
   public static Aim = new Texture(prefix + "/assets/sprites/aim.png");
   public static Slawwan = new Texture(prefix + "/assets/sprites/slava.png");
+  public static SlawwanGrean = new Texture(
+    prefix + "/assets/sprites/slava_green_magenta.png"
+  );
+  public static SlawwanViolet = new Texture(
+    prefix + "/assets/sprites/slava_violet_red.png"
+  );
+  public static SlawwanYellow = new Texture(
+    prefix + "/assets/sprites/slava_yellow.png"
+  );
   public static Blood1 = new Texture(prefix + "/assets/sprites/blood_1.png");
   public static Blood2 = new Texture(prefix + "/assets/sprites/blood_2.png");
   public static Boom = new Texture(prefix + "/assets/sprites/explosion.png");
