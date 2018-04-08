@@ -5,6 +5,7 @@ import { PreCollisionEvent } from "Events";
 import { GameService } from "../GameService";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
+import { Resources } from "../Resources";
 
 export default class PoopFowl extends Actor {
   private boom: Boom | null = null;
@@ -27,7 +28,8 @@ export default class PoopFowl extends Actor {
         (event.other instanceof DirectionActor ||
           event.other instanceof GunFire)
       ) {
-        GameService.killFowl(event.other);
+        GameService.killFowl(event.actor);
+        engine.currentScene.camera.shake(10, 10, 100);
         this.kill();
       }
     });
@@ -35,6 +37,7 @@ export default class PoopFowl extends Actor {
 
   public kill() {
     if (this.boom == null) {
+      Resources.Explosion.play(0.6);
       this.setDrawing("death");
       this.boom = new Boom(0, 0, () => {
         if (this.boom != null) {

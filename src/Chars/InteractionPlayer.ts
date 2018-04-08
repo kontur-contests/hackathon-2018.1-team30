@@ -1,26 +1,27 @@
-import { CollisionType, Engine, Input, Vector } from "excalibur";
+import * as ex from "excalibur";
 import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import { HealthLine } from "./HealthLine";
+import SuperCamera from "../SuperCamera";
 
 export default class InteractionPlayer extends DirectionActor {
   private static readonly speed = 7;
 
-  private static getDirections = (key: Input.Keys) => {
+  private static getDirections = (key: ex.Input.Keys) => {
     switch (key) {
-      case Input.Keys.A:
-        return Vector.Left;
-      case Input.Keys.W:
-        return Vector.Up;
-      case Input.Keys.D:
-        return Vector.Right;
-      case Input.Keys.S:
-        return Vector.Down;
+      case ex.Input.Keys.A:
+        return ex.Vector.Left;
+      case ex.Input.Keys.W:
+        return ex.Vector.Up;
+      case ex.Input.Keys.D:
+        return ex.Vector.Right;
+      case ex.Input.Keys.S:
+        return ex.Vector.Down;
       default:
-        return Vector.Zero;
+        return ex.Vector.Zero;
     }
   };
 
@@ -29,10 +30,13 @@ export default class InteractionPlayer extends DirectionActor {
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
-    this.collisionType = CollisionType.Active;
+    this.collisionType = ex.CollisionType.Active;
+    const area = new ex.Actor(x, y, 20, 60).collisionArea;
+    area.body = this.body;
+    this.collisionArea = area;
   }
 
-  public onInitialize(engine: Engine) {
+  public onInitialize(engine: ex.Engine) {
     super.onInitialize(engine);
     this.aim = new Aim();
     this.add(this.aim);
@@ -80,9 +84,9 @@ export default class InteractionPlayer extends DirectionActor {
   }
 
   private sendingDelta: number = 0;
-  private lastSentPosition: Vector = Vector.Zero;
+  private lastSentPosition: ex.Vector = ex.Vector.Zero;
 
-  public update(engine: Engine, delta: number) {
+  public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
     const mousePos = engine.input.pointers.primary.lastWorldPos;
     if (!mousePos) {
@@ -98,16 +102,16 @@ export default class InteractionPlayer extends DirectionActor {
     this.sendDataIfNeeded(delta);
   }
 
-  private handleKeyPress = (event?: Input.KeyEvent) => {
+  private handleKeyPress = (event?: ex.Input.KeyEvent) => {
     const direction = InteractionPlayer.getDirections(
-      (event && event.key) || Input.Keys.Semicolon
+      (event && event.key) || ex.Input.Keys.Semicolon
     );
     this.direction.addEqual(direction);
   };
 
-  private handleKeyRelease = (event?: Input.KeyEvent) => {
+  private handleKeyRelease = (event?: ex.Input.KeyEvent) => {
     const direction = InteractionPlayer.getDirections(
-      (event && event.key) || Input.Keys.Semicolon
+      (event && event.key) || ex.Input.Keys.Semicolon
     );
     this.direction.subEqual(direction);
   };
@@ -115,7 +119,7 @@ export default class InteractionPlayer extends DirectionActor {
   private sendDataIfNeeded(delta: number) {
     this.sendingDelta += delta;
     if (this.sendingDelta > 15) {
-      if (!this.lastSentPosition.sub(this.pos).equals(Vector.Zero)) {
+      if (!this.lastSentPosition.sub(this.pos).equals(ex.Vector.Zero)) {
         GameService.move(GameService.getCurrentUser()!.user.id, this.pos);
       }
       if (this.gunFire && this.aim) {

@@ -28,34 +28,50 @@ export class GameService {
   }
 
   public static start() {
-    connection.start();
+    connection.start().then(() => GameService.joinGame());
   }
 
   public static getCurrentUser(): IUser | null {
-    return this.currentUser;
+    return GameService.currentUser;
   }
 
   public static saveUser(user: IUser) {
-    this.currentUser = user;
+    GameService.currentUser = user;
   }
 
   public static saveFowl(fowl: IUser): void {
-    this.fowls[fowl.user.id] = fowl;
+    GameService.fowls[fowl.user.id] = fowl;
   }
 
   public static saveOtherPlayer(otherPlayer: IUser) {
-    this.otherUsers[otherPlayer.user.id] = otherPlayer;
+    GameService.otherUsers[otherPlayer.user.id] = otherPlayer;
+  }
+
+  public static getUserById(id: string): IGameObject | null {
+    if (GameService.currentUser && GameService.currentUser.user.id === id) {
+      return GameService.currentUser.user;
+    }
+    const otherUser = GameService.otherUsers[id];
+    if (otherUser) {
+      return otherUser.user;
+    }
+    const fowl = GameService.fowls[id];
+    if (fowl) {
+      return fowl.user;
+    }
+
+    return null;
   }
 
   public static getActor(id: string): Actor | null {
-    if (this.currentUser && this.currentUser.user.id === id) {
-      return this.currentUser.actor;
+    if (GameService.currentUser && GameService.currentUser.user.id === id) {
+      return GameService.currentUser.actor;
     }
-    const user = this.otherUsers[id];
+    const user = GameService.otherUsers[id];
     if (user) {
       return user.actor;
     }
-    const fowl = this.fowls[id];
+    const fowl = GameService.fowls[id];
     if (fowl) {
       return fowl.actor;
     }
@@ -64,7 +80,9 @@ export class GameService {
   }
 
   public static userInGame(id: string): boolean {
-    return !!GameService.otherUsers[id];
+    const isCurrentUserInGame =
+      GameService.currentUser && GameService.currentUser.user.id === id;
+    return isCurrentUserInGame || GameService.otherUsers[id] != null;
   }
 
   public static fowlInGame(id: string): boolean {
@@ -79,17 +97,21 @@ export class GameService {
     connection.invoke("moveGameObject", id, nextPosition);
   }
 
-  public static kickUser(player: IPlayer): void {
-    if (this.otherUsers && player) {
-      delete this.otherUsers[player.id];
+  public static kickUser(player: IGameObject): void {
+    if (GameService.otherUsers && player) {
+      delete GameService.otherUsers[player.id];
+    }
+    if (GameService.fowlInGame && player) {
+      delete GameService.fowls[player.id];
     }
   }
 
   public static killFowl(fowl: Actor): void {
-    if (this.fowls && fowl) {
-      const object = Object.keys(this.fowls)
-        .map(x => this.fowls[x])
+    if (GameService.fowls && fowl) {
+      const object = Object.keys(GameService.fowls)
+        .map(x => GameService.fowls[x])
         .find(x => x.actor === fowl);
+
       if (object) {
         connection.invoke("killGameObject", object.user.id);
       }
@@ -97,6 +119,10 @@ export class GameService {
   }
 
   public static removeFowl(fowlId: string) {
-    delete this.fowls[fowlId];
+    delete GameService.fowls[fowlId];
+  }
+
+  public static joinGame(): void {
+    connection.invoke("joinGame");
   }
 }

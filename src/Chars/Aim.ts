@@ -12,10 +12,7 @@ export class Aim extends ex.Actor {
 
   public update(engine: ex.Engine, delta: number) {
     const parentPos = this.parent.pos;
-    const relativeVec = new ex.Vector(
-      this.target.x - parentPos.x,
-      this.target.y - parentPos.y
-    );
+    const relativeVec = this.target.sub(parentPos);
     const dist = Math.min(MAX_AIM_DISTANCE, relativeVec.distance());
     this.pos = new ex.Vector(0, dist)
       .rotate(relativeVec.toAngle())
