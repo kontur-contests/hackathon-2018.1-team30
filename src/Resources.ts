@@ -8,6 +8,7 @@ const prefix = process.env.PUBLIC_PATH || "";
 export class Resources {
   public static Audi = new Texture(prefix + "/assets/sprites/audi.png");
   public static Chickens = new Texture(prefix + "/assets/sprites/chickens.png");
+  public static Chickens2 = new Texture(prefix + "/assets/sprites/jODGJn4.png");
   public static DudeNude = new Texture(
     prefix + "/assets/sprites/dude_nude.png"
   );
@@ -26,6 +27,13 @@ export class Resources {
   public static Blood1 = new Texture(prefix + "/assets/sprites/blood_1.png");
   public static Blood2 = new Texture(prefix + "/assets/sprites/blood_2.png");
   public static Boom = new Texture(prefix + "/assets/sprites/explosion.png");
+  public static Swabra = new Texture(prefix + "/assets/sprites/fusoyamop1.png");
+  public static Sword1 = new Texture(prefix + "/assets/sprites/sword1.png");
+  public static Sword2 = new Texture(prefix + "/assets/sprites/sword2.png");
+  public static Vladimir = new Texture(prefix + "/assets/sprites/Vladimir.jpg");
+  public static Extern = new Texture(
+    prefix + "/assets/sprites/logo-kontur.extern.png"
+  );
   public static Laser = new Texture(
     prefix + "/assets/sprites/Laser_Red_Thick_512.png"
   );
@@ -33,7 +41,7 @@ export class Resources {
   public static MainTheme = new Sound(prefix + "/assets/be8a7cc0fe85da.mp3");
   public static Chicken = new Sound(prefix + "/assets/chicken.mp3");
   public static Explosion = new Sound(prefix + "/assets/Explosion.mp3");
-  // public static GroundTiles = new Texture("/assets/ground_tiles.png");
+  public static LaserSable = new Sound(prefix + "/assets/05092.mp3");
 
   public static values(): ILoadable[] {
     return Object.values(Resources);

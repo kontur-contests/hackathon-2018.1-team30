@@ -1,26 +1,21 @@
 import * as ex from "excalibur";
 
 export default class Score extends ex.Label {
-  private time: number = 0;
-
-  constructor(
-    x: number,
-    y: number,
-    value: number,
-    private removeCallback: (score: Score) => void
-  ) {
-    super(`${value > 0 ? "+" : ""}${value}`, x, y, "15px Origa");
-    this.color = value > 0 ? ex.Color.Green : ex.Color.Red;
+  constructor(x: number, y: number, public value: number) {
+    super(value.toString(), x, y, "15px Origa");
   }
 
   public update(engine: ex.Engine, delta: number) {
-    this.y = this.y - delta / 1500;
-    this.scale = this.scale.scale(1.03);
-
-    this.time += delta;
-    if (this.time > 1500) {
-      this.kill();
-      //this.removeCallback(this);
+    this.text = this.value.toString();
+    this.scale = this.scale.scale(this.value / 10000 + 1);
+    if (this.value < 1000) {
+      this.color = ex.Color.White;
+    } else if (this.value < 5000) {
+      this.color = ex.Color.Yellow;
+    } else if (this.value < 10000) {
+      this.color = ex.Color.Orange;
+    } else {
+      this.color = ex.Color.Red;
     }
   }
 }

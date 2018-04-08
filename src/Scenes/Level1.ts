@@ -13,6 +13,7 @@ import InteractionPlayer from "../Chars/InteractionPlayer";
 import ChickenFowl from "../Chars/ChickenFowl";
 import PoopFowl from "../Chars/PoopFowl";
 import { GUI } from "../GUI";
+import Score from "../Chars/Score";
 
 export class Level1 extends Scene {
   public onInitialize(engine: Engine) {
@@ -22,6 +23,8 @@ export class Level1 extends Scene {
       tileMap.cellWidth * tileMap.cols,
       tileMap.cellHeight * tileMap.rows
     );
+
+    const score = new Score(100, 100, 0);
     this.add(tileMap);
 
     GameService.connection.on("me", (user: IPlayer) => {
@@ -43,6 +46,7 @@ export class Level1 extends Scene {
 
       setTimeout(() => {
         GUI.hideWelcome();
+        GUI.showScore();
       }, 7500);
     });
 
@@ -85,6 +89,17 @@ export class Level1 extends Scene {
         });
       }
     };
+
+    GameService.connection.on(
+      "scores",
+      (scores: { gameObjectId: string; scores: number }[]) => {
+        const current = GameService.getCurrentUser();
+        const gameScore = scores.find(x => x.gameObjectId === current!.user.id);
+        (current!.actor as InteractionPlayer).score = gameScore!.scores;
+        GameService.storeScores(scores);
+        GUI.updateScore(scores);
+      }
+    );
 
     GameService.connection.on("gameObjectsJoin", (players: IGameObject[]) =>
       players.forEach(joinPlayer)

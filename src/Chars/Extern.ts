@@ -1,9 +1,10 @@
 import * as ex from "excalibur";
-import { laserAnimation } from "../SpriteSheets/LazerSpriteSheet";
+import { Resources } from "../Resources";
+import Weapon from "./Weapon";
 
-export default class GunFire extends ex.Actor {
+export default class Extern extends Weapon {
   constructor(private positionProvider: () => ex.Vector) {
-    super(0, 0, 400, 50);
+    super(0, 0, 1600, 600);
     this.collisionType = ex.CollisionType.Passive;
     this.anchor = new ex.Vector(0, this.anchor.y);
   }
@@ -12,7 +13,8 @@ export default class GunFire extends ex.Actor {
 
   public onInitialize(engine: ex.Engine) {
     this.pos = this.positionProvider();
-    this.addDrawing("idle", laserAnimation(engine));
+    this.scale = this.scale.scale(2);
+    this.addDrawing("idle", Resources.Extern.asSprite());
     this.setDrawing("idle");
   }
 
@@ -21,7 +23,7 @@ export default class GunFire extends ex.Actor {
     const center = this.positionProvider();
     const direction = this.target.normalize();
 
-    this.pos = center.add(direction.scale(1));
+    this.pos = center.add(direction.scale(5));
     this.body.rotation = this.target.toAngle();
   }
 }

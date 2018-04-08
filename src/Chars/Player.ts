@@ -1,19 +1,22 @@
 import spriteSheetFactory from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
-import GunFire from "./GunFire";
+import LaserSable from "./LaserSable";
 import { HealthLine } from "./HealthLine";
 import * as ex from "excalibur";
 import ChickenFowl from "./ChickenFowl";
 import PoopFowl from "./PoopFowl";
+import Swabra from "./Swabra";
 
 export default class Player extends DirectionActor {
   private readonly spriteSheet = spriteSheetFactory();
   private fireTarget: ex.Vector | null = null;
-  private gunFire: GunFire | null = null;
+
+  private laserSalbe: Swabra | null = null;
+  private swabra: Swabra | null = null;
+
   private gunFireKillInterval: number | null = null;
 
   public nextPosition: ex.Vector = ex.Vector.Zero;
-  private readonly healthBar: HealthLine;
 
   constructor(x: number, y: number) {
     super(x, y, 0, 0);
@@ -23,7 +26,6 @@ export default class Player extends DirectionActor {
     const area = new ex.Actor(x, y, 20, 100).collisionArea;
     area.body = this.body;
     this.collisionArea = area;
-    this.healthBar = new HealthLine(-40, -100, 100, 300, 300);
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -50,18 +52,6 @@ export default class Player extends DirectionActor {
         left: this.spriteSheet.walk.left(engine, 75)
       }
     });
-    this.add(this.healthBar);
-    this.on("postcollision", (event?: ex.PostCollisionEvent) => {
-      if (event) {
-        if (event.other instanceof ChickenFowl) {
-          this.healthBar.changeHealth(30);
-        } else if (event.other instanceof PoopFowl) {
-          this.healthBar.changeHealth(-10);
-        } else if (event.other instanceof GunFire) {
-          this.healthBar.changeHealth(-1);
-        }
-      }
-    });
   }
 
   public update(engine: ex.Engine, delta: number) {
@@ -72,11 +62,11 @@ export default class Player extends DirectionActor {
     }
     if (this.fireTarget) {
       this.direction = positionDifferent;
-      if (this.gunFire == null) {
-        this.gunFire = new GunFire(() => ex.Vector.Zero);
-        this.add(this.gunFire);
+      if (this.laserSalbe == null) {
+        this.laserSalbe = new Swabra(() => ex.Vector.Zero);
+        this.add(this.laserSalbe);
       }
-      this.gunFire.target = this.fireTarget;
+      this.laserSalbe.target = this.fireTarget;
     }
   }
 
@@ -87,9 +77,9 @@ export default class Player extends DirectionActor {
     this.fireTarget = target;
     this.gunFireKillInterval = setInterval(() => {
       this.fireTarget = null;
-      if (this.gunFire) {
-        this.remove(this.gunFire);
-        this.gunFire = null;
+      if (this.laserSalbe) {
+        this.remove(this.laserSalbe);
+        this.laserSalbe = null;
       }
     }, 100);
   }
