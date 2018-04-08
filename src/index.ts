@@ -17,3 +17,5 @@ game.start(loader).then(() => {
   Resources.MainTheme.setLoop(true);
   GameService.start();
 });
+
+game.canvas.style.filter = "grayscale(60%)";
