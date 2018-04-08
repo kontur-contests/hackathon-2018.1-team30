@@ -38,11 +38,8 @@ export default class InteractionPlayer extends DirectionActor {
 
   public onInitialize(engine: ex.Engine) {
     super.onInitialize(engine);
-    this.aim = new Aim(() => this.pos);
-    engine.currentScene.add(this.aim);
-    engine.currentScene.camera.addStrategy(
-      new SuperCamera(this.aim, new ex.Vector(1000, 1000), 0.3, 0.9)
-    );
+    this.aim = new Aim();
+    this.add(this.aim);
     this.registerDrawing({
       idle: {
         up: spriteSheet.idle.up(),

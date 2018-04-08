@@ -42,7 +42,7 @@ export class Level1 extends Scene {
       });
       this.add(interactionPlayer);
       this.camera.addStrategy(
-        new SuperCamera(interactionPlayer, tileMapSize, 0.3, 0.9)
+        new SuperCamera(interactionPlayer, tileMapSize, 0.7, 0.8)
       );
     });
 
