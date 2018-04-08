@@ -7,7 +7,7 @@ import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { Resources } from "../Resources";
 import Fowl from "./Fowl";
-import Score from "./Score";
+import ScoreFly from "./ScoreFly";
 
 export default class PoopFowl extends Fowl {
   private boom: Boom | null = null;
@@ -31,10 +31,8 @@ export default class PoopFowl extends Fowl {
           event.other instanceof GunFire)
       ) {
         GameService.killFowl(event.actor);
-        engine.currentScene.camera.shake(10, 10, 100);
-        const score = new Score(this.x, this.y, -1, actor =>
-          engine.currentScene.remove(actor)
-        );
+        engine.currentScene.camera.shake(5, 5, 100);
+        const score = new ScoreFly(this.x, this.y, -1);
         engine.currentScene.add(score);
         this.kill();
       }

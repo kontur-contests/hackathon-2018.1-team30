@@ -55,6 +55,15 @@ Welcome.innerHTML = `
   </ul>
 `;
 
+const score = document.createElement("div");
+Object.assign(score.style, {
+  position: "fixed",
+  left: "100px",
+  top: "100px",
+  fontSize: "50px",
+  transition: "transform 0.2s ease-in"
+});
+
 export class GUI {
   static init() {
     document.body.appendChild(GuiWrapper);
@@ -93,6 +102,29 @@ export class GUI {
       }
     });
 
+    return GUI;
+  }
+
+  static showScore() {
+    GuiWrapper.appendChild(score);
+    return GUI;
+  }
+
+  static updateScore(value: number) {
+    if (score.innerText !== value.toString()) {
+      score.style.transform = "scale(1.2)";
+      setTimeout(() => {
+        score.style.transform = "scale(1)";
+      }, 50);
+    }
+    score.innerText = value.toString();
+    if (value > 500 && value < 1000) {
+      score.style.color = "yellow";
+    } else if (value >= 1000 && value < 2000) {
+      score.style.color = "orange";
+    } else if (value >= 2000) {
+      score.style.color = "red";
+    }
     return GUI;
   }
 }
