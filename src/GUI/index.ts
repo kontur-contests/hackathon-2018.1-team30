@@ -76,7 +76,7 @@ Object.assign(allScores.style, {
 });
 
 const Notifications = document.createElement("div");
-Object.assign(allScores.style, {
+Object.assign(Notifications.style, {
   position: "fixed",
   left: "50%",
   top: "-300px",
@@ -84,7 +84,8 @@ Object.assign(allScores.style, {
   padding: "20px",
   background: "rgba(255, 255, 255, 0.5)",
   transform: "translateX(-50%)",
-  transition: "top 0.2s ease-in"
+  transition: "top 0.2s ease-in",
+  fontFamily: "Origa"
 });
 
 export class GUI {
@@ -170,12 +171,12 @@ export class GUI {
     return GUI;
   }
 
-  showNotification(message: string) {
+  public static showNotification(message: string) {
     Notifications.innerText = message;
     Notifications.style.top = "100px";
   }
 
-  hideNotification() {
+  public static hideNotification() {
     Notifications.innerText = "";
     Notifications.style.top = "-300px";
   }
