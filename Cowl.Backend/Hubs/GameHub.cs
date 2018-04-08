@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cowl.Backend.DataModel;
 using Cowl.Backend.DataModel.GameObjects;
@@ -23,20 +24,21 @@ namespace Cowl.Backend.Hubs
             await Clients.Caller.SendAsync("me", player);
             await Clients.Caller.SendAsync("gameObjects", _gameService.AllGameObjects);
 
-            await SpawnGameObject(player);
-            Console.WriteLine("OnConnect:    " + player);
+            await SpawnGameObjects(new List<GameObject> {player});
+            Console.WriteLine("OnConnect:" + player);
         }
 
-        public async Task SpawnGameObject(GameObject gameObject)
+        public async Task SpawnGameObjects(ICollection<GameObject> gameObjects)
         {
-            _gameService.AddGameObject(gameObject);
-            await Clients.All.SendAsync("gameObjectJoin", gameObject);
-            Console.WriteLine("SpawnGameObject:    " + gameObject);
+            _gameService.AddRangeGameObject(gameObjects);
+            await Clients.All.SendAsync("gameObjectsJoin", gameObjects);
+            Console.WriteLine("SpawnGameObjects:" + gameObjects.Count);
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await KillGameObject(Context.ConnectionId);
+            await LeaveGameObject(Context.ConnectionId);
+            Console.WriteLine("Leave:" + _gameService.GetGameObject(Context.ConnectionId));
         }
 
         public async Task MoveGameObject(string gameObjectId, ObjectPosition objectPosition)

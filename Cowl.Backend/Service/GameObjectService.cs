@@ -32,27 +32,33 @@ namespace Cowl.Backend.Service
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (_gameService.AllFowls.ToArray().Length < 300)
+                var fowlsCount = _gameService.AllFowls.ToArray().Length;
+                var shitCount = _gameService.AllShits.ToArray().Length;
+
+                var gameObjects = new List<GameObject>();
+
+                for (var i = 300 - fowlsCount; i >= 0; i--)
                 {
                     var fowl = new Fowl
                     {
                         Id = Guid.NewGuid().ToString(),
                         Position = ObjectPosition.GetRandom()
                     };
-
-                    await connection.InvokeAsync("spawnGameObject", fowl, cancellationToken: cancellationToken);
+                    gameObjects.Add(fowl);
                 }
-                else if (_gameService.AllShits.ToArray().Length < 300)
+
+                for (var i = 300 - shitCount; i >= 0; i--)
                 {
                     var shit = new Shit
                     {
                         Id = Guid.NewGuid().ToString(),
                         Position = ObjectPosition.GetRandom()
                     };
-
-                    await connection.InvokeAsync("spawnGameObject", shit, cancellationToken: cancellationToken);
+                    gameObjects.Add(shit);
                 }
 
+                if (gameObjects.Count > 0)
+                    await connection.InvokeAsync("spawnGameObjects", gameObjects, cancellationToken: cancellationToken);
                 await Task.Delay(25, cancellationToken);
             }
         }
