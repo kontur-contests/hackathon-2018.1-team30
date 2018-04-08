@@ -21,14 +21,18 @@ namespace Cowl.Backend.Service
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            // Для корректной инициализации бэкенда
-            await Task.Delay(10000);
-
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://10.33.94.6:4844/game")
                 .Build();
 
             await connection.StartAsync().ConfigureAwait(false);
+            // Для корректной инициализации бэкенда
+            while (_gameService.AllPlayers.ToArray().Length < 4)
+            {
+                await Task.Delay(1000);
+            }
+
+            await connection.InvokeAsync("gameStart");
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -37,7 +41,7 @@ namespace Cowl.Backend.Service
 
                 var gameObjects = new List<GameObject>();
 
-                for (var i = 300 - fowlsCount; i >= 0; i--)
+                for (var i = 100 - fowlsCount; i >= 0; i--)
                 {
                     var fowl = new Fowl
                     {
@@ -47,7 +51,7 @@ namespace Cowl.Backend.Service
                     gameObjects.Add(fowl);
                 }
 
-                for (var i = 300 - shitCount; i >= 0; i--)
+                for (var i = 100 - shitCount; i >= 0; i--)
                 {
                     var shit = new Shit
                     {
@@ -59,10 +63,12 @@ namespace Cowl.Backend.Service
 
                 if (gameObjects.Count > 0)
                     await connection.InvokeAsync("spawnGameObjects", gameObjects, cancellationToken: cancellationToken);
-                
-                await Task.Delay(300, cancellationToken);
+
+
+                await Task.Delay(150, cancellationToken);
             }
         }
+
 
         public Task StopAsync(CancellationToken cancellationToken)
         {

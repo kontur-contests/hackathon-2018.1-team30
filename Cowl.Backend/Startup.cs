@@ -21,7 +21,8 @@ namespace Cowl.Backend
 
             services.AddSingleton<GameStorageService>();
             services.AddSingleton<IHostedService, GameObjectService>();
-            services.AddSingleton<IHostedService, BotPlayersService>();
+
+            services.AddAntiforgery();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +35,7 @@ namespace Cowl.Backend
 
             app.UseCors(conf => conf.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
             app.UseSignalR(configure => { configure.MapHub<GameHub>("/game"); });
+            
             
         }
     }

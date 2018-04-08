@@ -88,5 +88,10 @@ namespace Cowl.Backend.Hubs
 
             await LeaveGameObject(gameObjectId);
         }
+
+        public Task GameStart()
+        {
+            return Clients.All.SendAsync("gameStart");
+        }
     }
 }
