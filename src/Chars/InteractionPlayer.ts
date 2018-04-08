@@ -11,6 +11,7 @@ import ScoreFly from "./ScoreFly";
 import Sword1 from "./Sword1";
 import Sword2 from "./Sword2";
 import Extern from "./Extern";
+import Vladimir from "./Vladimir";
 
 const spriteSheet = spriteSheetFactory();
 
@@ -37,6 +38,7 @@ export default class InteractionPlayer extends DirectionActor {
   private sword1: Sword1 | null = null;
   private sword2: Sword2 | null = null;
   private extern: Extern | null = null;
+  private vladimir: Vladimir | null = null;
 
   private aim: Aim | null = null;
   private stanTime: number = 0;
@@ -102,6 +104,10 @@ export default class InteractionPlayer extends DirectionActor {
         this.extern = new Extern(() => this.pos);
         engine.currentScene.add(this.extern);
       }
+      if (this.level == 6 && this.vladimir == null) {
+        this.vladimir = new Vladimir(() => this.pos);
+        engine.currentScene.add(this.vladimir);
+      }
     });
 
     engine.input.pointers.primary.on("up", () => {
@@ -125,6 +131,10 @@ export default class InteractionPlayer extends DirectionActor {
         this.extern.kill();
         this.extern = null;
       }
+      if (this.vladimir != null) {
+        this.vladimir.kill();
+        this.vladimir = null;
+      }
     });
 
     this.on("postcollision", (event?: ex.PostCollisionEvent) => {
@@ -147,7 +157,7 @@ export default class InteractionPlayer extends DirectionActor {
   private sendingDelta: number = 0;
   private lastSentPosition: ex.Vector = ex.Vector.Zero;
 
-  private level: number = 5;
+  private level: number = 0;
 
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
@@ -179,6 +189,12 @@ export default class InteractionPlayer extends DirectionActor {
       GUI.showNotification("This is KONTUR EXTERN!!!");
       this.level = 5;
       this.speed += 5;
+      setInterval(GUI.hideNotification, 7000);
+    }
+    if (this.score >= 12000 && this.level < 6) {
+      GUI.showNotification("Derzhites tam!!!");
+      this.level = 6;
+      this.speed += 15;
       setInterval(GUI.hideNotification, 7000);
     }
 

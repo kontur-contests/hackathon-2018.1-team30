@@ -30,6 +30,7 @@ export class Resources {
   public static Swabra = new Texture(prefix + "/assets/sprites/fusoyamop1.png");
   public static Sword1 = new Texture(prefix + "/assets/sprites/sword1.png");
   public static Sword2 = new Texture(prefix + "/assets/sprites/sword2.png");
+  public static Vladimir = new Texture(prefix + "/assets/sprites/Vladimir.jpg");
   public static Extern = new Texture(
     prefix + "/assets/sprites/logo-kontur.extern.png"
   );
