@@ -34,7 +34,7 @@ namespace Cowl.Backend.Service
 
                 var gameObjects = new List<GameObject>();
 
-                for (var i = 300 - fowlsCount; i >= 0; i--)
+                for (var i = 200 - fowlsCount; i >= 0; i--)
                 {
                     var fowl = new Fowl
                     {
@@ -44,7 +44,7 @@ namespace Cowl.Backend.Service
                     gameObjects.Add(fowl);
                 }
 
-                for (var i = 150 - shitCount; i >= 0; i--)
+                for (var i = 75 - shitCount; i >= 0; i--)
                 {
                     var shit = new Shit
                     {

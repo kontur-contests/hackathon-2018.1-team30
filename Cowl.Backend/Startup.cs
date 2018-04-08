@@ -33,6 +33,7 @@ namespace Cowl.Backend
 
             app.UseCors(conf => conf.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
             app.UseSignalR(configure => { configure.MapHub<GameHub>("/game"); });
+            app.UseStaticFiles()
         }
     }
 }

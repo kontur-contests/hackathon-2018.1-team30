@@ -3,6 +3,6 @@
     public class Fowl : GameObject
     {
         public override GameObjectType Type => GameObjectType.Fowl;
-        public override int Cost => 5;
+        public override int Cost => 12;
     }
 }

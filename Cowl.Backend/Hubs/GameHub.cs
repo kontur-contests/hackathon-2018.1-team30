@@ -22,9 +22,13 @@ namespace Cowl.Backend.Hubs
             //Console.WriteLine("OnConnect:" + Context.ConnectionId);
         }
 
+        public static readonly string[] Names = {"ОлолОш", "СшвАбр", "АлЁн", "Питьр", "СлаавЯн", "КотАн", "Индуз" };
+
         public async Task JoinGame()
         {
-            var player = new Player {Id = Context.ConnectionId, Position = ObjectPosition.GetRandom()};
+            var name = Names[DateTime.Now.Ticks % Names.Length] + DateTime.Now.Ticks % 17;
+
+            var player = new Player {Id = Context.ConnectionId, Position = ObjectPosition.GetRandom(), Name = name};
 
             await Clients.Caller.SendAsync("me", player);
             await Clients.Caller.SendAsync("gameObjects", _gameService.AllGameObjects);
@@ -73,20 +77,29 @@ namespace Cowl.Backend.Hubs
             await Clients.All.SendAsync("gameObjectLeave", gameObject.Id);
         }
 
-        public async Task KillGameObject(string gameObjectId)
+        public async Task PunishGameObject(string punisherGameObjectId, string gameObjectId)
+        {
+            if (!(_gameService.GetGameObject(punisherGameObjectId) is Player punisher))
+                return;
+
+            if (!(_gameService.GetGameObject(gameObjectId) is Player gameObject))
+                return;
+
+            punisher.Scores += 100;
+            gameObject.Scores -= 100;
+        }
+
+        public async Task KillGameObject(string killerGameObjectId, string gameObjectId)
         {
             var gameObject = _gameService.RemoveGameObject(gameObjectId);
 
             if (gameObject is null)
                 return;
 
-            if (!(_gameService.GetGameObject(Context.ConnectionId) is Player player))
+            if (!(_gameService.GetGameObject(killerGameObjectId) is Player player))
                 return;
 
             player.Scores += gameObject.Cost;
-
-            //Console.WriteLine("KillObject: " + gameObject + " : " + player);
-
             await LeaveGameObject(gameObjectId);
         }
 
