@@ -6,6 +6,8 @@ import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import Swabra from "./Swabra";
 import { GUI } from "../GUI";
+import Weapon from "./Weapon";
+import ScoreFly from "./ScoreFly";
 
 const spriteSheet = spriteSheetFactory();
 
@@ -31,8 +33,10 @@ export default class InteractionPlayer extends DirectionActor {
   private swabra: Swabra | null = null;
 
   private aim: Aim | null = null;
+  private stanTime: number = 0;
 
   public score: number = 0;
+  public stanLable: ex.Label | null = null;
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
@@ -92,6 +96,22 @@ export default class InteractionPlayer extends DirectionActor {
         this.swabra = null;
       }
     });
+
+    this.on("postcollision", (event?: ex.PostCollisionEvent) => {
+      if (event && event.other instanceof Weapon) {
+        engine.currentScene.add(
+          new ScoreFly(event.actor.x, event.actor.y, -100)
+        );
+        engine.currentScene.add(
+          new ScoreFly(event.other.x, event.other.y, 100)
+        );
+        if (event.other instanceof LaserSable) {
+          this.stanTime = 3000;
+        } else if (event.other instanceof Swabra) {
+          this.stanTime = 1000;
+        }
+      }
+    });
   }
 
   private sendingDelta: number = 0;
@@ -101,10 +121,8 @@ export default class InteractionPlayer extends DirectionActor {
 
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
-
     if (this.score >= 100 && this.level < 1) {
       GUI.showNotification("You have received SWABRA");
-      console.log("swabra");
       this.level = 1;
       setInterval(GUI.hideNotification, 9000);
     }
@@ -112,6 +130,19 @@ export default class InteractionPlayer extends DirectionActor {
       GUI.showNotification("You have received LASER!!!");
       this.level = 2;
       setInterval(GUI.hideNotification, 9000);
+    }
+
+    if (this.stanTime != 0) {
+      this.stanTime -= delta;
+      if (this.stanLable == null) {
+        this.stanLable = new ex.Label("STAN", this.x, this.y + 100);
+        engine.currentScene.add(this.stanLable);
+      }
+    } else {
+      if (this.stanLable) {
+        engine.currentScene.remove(this.stanLable);
+        this.stanLable = null;
+      }
     }
 
     const mousePos = engine.input.pointers.primary.lastWorldPos;
