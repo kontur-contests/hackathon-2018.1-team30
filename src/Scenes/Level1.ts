@@ -12,7 +12,12 @@ import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 import SuperCamera from "../SuperCamera";
 import { GameService } from "../GameService";
-import { IPlayer, IGameObject, GameObjectType, IPosition } from "../models/Player";
+import {
+  IPlayer,
+  IGameObject,
+  GameObjectType,
+  IPosition
+} from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
 import Fowl from "../Chars/Fowl";
 import PoopFowl from "../Chars/PoopFowl";
@@ -42,7 +47,11 @@ export class Level1 extends Scene {
     });
 
     const joinPlayer = (player: IGameObject) => {
-      if (player && player.type === GameObjectType.Player && !GameService.userInGame(player.id!)) {
+      if (
+        player &&
+        player.type === GameObjectType.Player &&
+        !GameService.userInGame(player.id!)
+      ) {
         const actor = new Player(player.position.x, player.position.y);
         this.add(actor);
         GameService.saveOtherPlayer({
@@ -50,33 +59,48 @@ export class Level1 extends Scene {
           actor
         });
       }
-      if (player && player.type === GameObjectType.Fowl && !GameService.fowlInGame(player.id)) {
+      if (
+        player &&
+        player.type === GameObjectType.Fowl &&
+        !GameService.fowlInGame(player.id)
+      ) {
         const actor = new Fowl(player.position.x, player.position.y);
         this.add(actor);
-        GameService.addFowl({
+        GameService.saveFowl({
           user: player,
           actor
         });
       }
-      if (player && player.type === GameObjectType.Shit && !GameService.fowlInGame(player.id)) {
+      if (
+        player &&
+        player.type === GameObjectType.Shit &&
+        !GameService.fowlInGame(player.id)
+      ) {
         const actor = new PoopFowl(player.position.x, player.position.y);
         this.add(actor);
-        GameService.addFowl({
+        GameService.saveFowl({
           user: player,
           actor
         });
       }
     };
 
-    GameService.connection.on('gameObjectJoin', (player: IGameObject) => joinPlayer(player));
-    GameService.connection.on('gameObjects', (players: IGameObject[]) => players.forEach(joinPlayer));
+    GameService.connection.on("gameObjectsJoin", (players: IGameObject[]) =>
+      players.forEach(joinPlayer)
+    );
+    GameService.connection.on("gameObjects", (players: IGameObject[]) =>
+      players.forEach(joinPlayer)
+    );
 
-    GameService.connection.on("gameObjectMove", (id: string, position: IPosition) => {
-      const player = GameService.getActor(id) as Player;
-      if (player) {
-        player.nextPosition = new Vector(position.x, position.y);
+    GameService.connection.on(
+      "gameObjectMove",
+      (id: string, position: IPosition) => {
+        const player = GameService.getActor(id) as Player;
+        if (player) {
+          player.nextPosition = new Vector(position.x, position.y);
+        }
       }
-    });
+    );
 
     GameService.connection.on("playerStateNumber", (num: number) => {
       // console.log(num);
@@ -86,25 +110,24 @@ export class Level1 extends Scene {
       // }
     });
 
-    GameService.connection.on('gameObjectAttack', (info: IGameObject, vector: { x: number; y: number }) => {
-      const player = GameService.getActor(info.id) as Player;
+    GameService.connection.on(
+      "gameObjectAttack",
+      (id: string, vector: { x: number; y: number }) => {
+        const player = GameService.getActor(id) as Player;
+        if (player) {
+          player.setFireTarget = new Vector(vector.x, vector.y);
+        }
+      }
+    );
+
+    GameService.connection.on("gameObjectLeave", (id: string) => {
+      const actor = GameService.getActor(id);
+      if (actor) {
+        actor.kill();
+      }
+      const player = GameService.getUserById(id);
       if (player) {
-        player.setFireTarget = new Vector(vector.x, vector.y);
-      }
-    });
-
-    GameService.connection.on("playerLeave", (player: IPlayer) => {
-      const actor = GameService.getActor(player.id);
-      if (actor) {
-        actor.kill();
-      }
-      GameService.kickUser(player);
-    });
-
-    GameService.connection.on("fowlKill", (fowl: IPlayer) => {
-      const actor = GameService.getActor(fowl.id);
-      if (actor) {
-        actor.kill();
+        GameService.kickUser(player);
       }
     });
   }

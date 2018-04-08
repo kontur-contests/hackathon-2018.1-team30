@@ -29,6 +29,14 @@ namespace Cowl.Backend.Service
             GameObjects.TryAdd(gameObject.Id, gameObject);
         }
 
+        public void AddRangeGameObject(IEnumerable<GameObject> gameObjects)
+        {
+            foreach (var gameObject in gameObjects)
+            {
+                AddGameObject(gameObject);
+            }
+        }
+
         public GameObject RemoveGameObject(string gameObjectId)
         {
             GameObjects.TryRemove(gameObjectId, out var result);

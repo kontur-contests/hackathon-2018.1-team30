@@ -9,54 +9,69 @@ import PoopFowl from "../Chars/PoopFowl";
 const url = "http://10.33.94.6:4844/game";
 
 const connection = new signalR.HubConnection(url);
-let interactionPlayer: {
-  remoute: IPlayer;
-  player: InteractionPlayer;
-};
 
-let currentUser: IUser | null = null;
 export interface IOtherUser {
   [id: string]: IUser;
 }
 
 connection.onclose(() => {
   console.log("Пичаль");
-  // connection.start();
 });
 
 export class GameService {
+  private static currentUser: IUser | null = null;
   private static otherUsers: IOtherUser = {};
   private static fowls: IOtherUser = {};
 
-  static addFowl(fowl: IUser): void {
-    this.fowls[fowl.user.id] = fowl;
+  public static get connection(): signalR.HubConnection {
+    return connection;
   }
 
   public static start() {
     connection.start();
   }
 
+  public static getCurrentUser(): IUser | null {
+    return GameService.currentUser;
+  }
+
   public static saveUser(user: IUser) {
-    currentUser = user;
+    GameService.currentUser = user;
+  }
+
+  public static saveFowl(fowl: IUser): void {
+    GameService.fowls[fowl.user.id] = fowl;
   }
 
   public static saveOtherPlayer(otherPlayer: IUser) {
-    this.otherPlayers[otherPlayer.user.id] = otherPlayer;
+    GameService.otherUsers[otherPlayer.user.id] = otherPlayer;
   }
 
-  static get currentUser(): IUser | null {
-    return currentUser;
-  }
-
-  static getActor(id: string): Actor | null {
-    if (currentUser && currentUser.user.id === id) {
-      return currentUser.actor;
+  public static getUserById(id: string): IGameObject | null {
+    if (GameService.currentUser && GameService.currentUser.user.id === id) {
+      return GameService.currentUser.user;
     }
-    const user = this.otherPlayers[id];
+    const otherUser = GameService.otherUsers[id];
+    if (otherUser) {
+      return otherUser.user;
+    }
+    const fowl = GameService.fowls[id];
+    if (fowl) {
+      return fowl.user;
+    }
+
+    return null;
+  }
+
+  public static getActor(id: string): Actor | null {
+    if (GameService.currentUser && GameService.currentUser.user.id === id) {
+      return GameService.currentUser.actor;
+    }
+    const user = GameService.otherUsers[id];
     if (user) {
       return user.actor;
     }
-    const fowl = this.fowls[id];
+    const fowl = GameService.fowls[id];
     if (fowl) {
       return fowl.actor;
     }
@@ -64,24 +79,15 @@ export class GameService {
     return null;
   }
 
-  static userInGame(id: string): boolean {
-    return !!GameService.otherPlayers[id];
+  public static userInGame(id: string): boolean {
+    return (
+      (GameService.currentUser && GameService.currentUser.user.id === id) ||
+      !!GameService.otherUsers[id]
+    );
   }
 
-  static fowlInGame(id: string): boolean {
+  public static fowlInGame(id: string): boolean {
     return !!GameService.fowls[id];
-  }
-
-  static get otherPlayers(): IOtherUser {
-    return GameService.otherUsers;
-  }
-
-  public static join(): void {
-    connection.invoke("join").catch(c => console.log("catch: ", c));
-  }
-
-  static get connection(): signalR.HubConnection {
-    return connection;
   }
 
   public static fire(id: string, vector: Vector) {
@@ -92,28 +98,27 @@ export class GameService {
     connection.invoke("moveGameObject", id, nextPosition);
   }
 
-  public static kickUser(player: IPlayer): void {
-    if (this.otherPlayers && player) {
-      delete this.otherPlayers[player.id];
+  public static kickUser(player: IGameObject): void {
+    if (GameService.otherUsers && player) {
+      delete GameService.otherUsers[player.id];
+    }
+    if (GameService.fowlInGame && player) {
+      delete GameService.fowls[player.id];
     }
   }
 
   public static killFowl(fowl: Actor): void {
-    if (this.fowls && fowl) {
-      const user = Object.keys(this.fowls)
-        .map(x => this.fowls[x])
+    if (GameService.fowls && fowl) {
+      const object = Object.keys(GameService.fowls)
+        .map(x => GameService.fowls[x])
         .find(x => x.actor === fowl);
-      if (user) {
-        connection.invoke("killFowl", user.user.id);
+      if (object) {
+        connection.invoke("killGameObject", object.user.id);
       }
     }
   }
 
   public static removeFowl(fowlId: string) {
-    delete this.fowls[fowlId];
-  }
-
-  public static spawnFowl(fowl: IPlayer): void {
-    connection.invoke("spawnFowl");
+    delete GameService.fowls[fowlId];
   }
 }

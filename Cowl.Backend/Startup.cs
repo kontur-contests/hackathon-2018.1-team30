@@ -16,7 +16,7 @@ namespace Cowl.Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddSignalR(configure => { });
+            services.AddSignalR();
             services.AddLogging(builder => builder.AddConsole());
 
             services.AddSingleton<GameService>();

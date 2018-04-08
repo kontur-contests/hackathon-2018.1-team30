@@ -123,10 +123,10 @@ export default class InteractionPlayer extends DirectionActor {
     this.sendingDelta += delta;
     if (this.sendingDelta > 15) {
       if (!this.lastSentPosition.sub(this.pos).equals(ex.Vector.Zero)) {
-        GameService.move(GameService.currentUser!.user.id, this.pos);
+        GameService.move(GameService.getCurrentUser()!.user.id, this.pos);
       }
       if (this.gunFire && this.aim) {
-        GameService.fire(GameService.currentUser!.user.id, this.aim.pos);
+        GameService.fire(GameService.getCurrentUser()!.user.id, this.aim.pos);
       }
       this.sendingDelta = 0;
     }
