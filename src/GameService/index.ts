@@ -6,7 +6,7 @@ import InteractionPlayer from "../Chars/InteractionPlayer";
 import ChickenFowl from "../Chars/Fowl";
 import PoopFowl from "../Chars/PoopFowl";
 
-const url = "http://10.33.94.6:4844/game";
+const url = "http://localhost:4484/game";
 
 const connection = new signalR.HubConnection(url);
 

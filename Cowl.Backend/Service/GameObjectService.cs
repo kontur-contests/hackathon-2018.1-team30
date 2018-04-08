@@ -22,7 +22,7 @@ namespace Cowl.Backend.Service
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://10.33.94.6:4844/game")
+                .WithUrl("http://localhost:4484/game")
                 .Build();
 
             await connection.StartAsync().ConfigureAwait(false);
