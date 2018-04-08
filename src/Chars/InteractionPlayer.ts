@@ -8,11 +8,13 @@ import Swabra from "./Swabra";
 import { GUI } from "../GUI";
 import Weapon from "./Weapon";
 import ScoreFly from "./ScoreFly";
+import Sword1 from "./Sword1";
+import Sword2 from "./Sword2";
 
 const spriteSheet = spriteSheetFactory();
 
 export default class InteractionPlayer extends DirectionActor {
-  private static readonly speed = 7;
+  private speed = 7;
 
   private static getDirections = (key: ex.Input.Keys) => {
     switch (key) {
@@ -31,6 +33,8 @@ export default class InteractionPlayer extends DirectionActor {
 
   private laserSable: LaserSable | null = null;
   private swabra: Swabra | null = null;
+  private sword1: Sword1 | null = null;
+  private sword2: Sword2 | null = null;
 
   private aim: Aim | null = null;
   private stanTime: number = 0;
@@ -75,14 +79,22 @@ export default class InteractionPlayer extends DirectionActor {
     engine.input.keyboard.on("press", this.handleKeyPress);
     engine.input.keyboard.on("release", this.handleKeyRelease);
     engine.input.pointers.primary.on("down", () => {
-      if (this.score > 100 && this.score <= 1000 && this.swabra == null) {
+      if (this.level == 1 && this.swabra == null) {
         this.swabra = new Swabra(() => this.pos);
         engine.currentScene.add(this.swabra);
       }
 
-      if (this.score > 1000 && this.laserSable == null) {
+      if (this.level == 2 && this.laserSable == null) {
         this.laserSable = new LaserSable(() => this.pos);
         engine.currentScene.add(this.laserSable);
+      }
+      if (this.level == 3 && this.sword1 == null) {
+        this.sword1 = new Sword1(() => this.pos);
+        engine.currentScene.add(this.sword1);
+      }
+      if (this.level == 4 && this.sword2 == null) {
+        this.sword2 = new Sword2(() => this.pos);
+        engine.currentScene.add(this.sword2);
       }
     });
 
@@ -94,6 +106,14 @@ export default class InteractionPlayer extends DirectionActor {
       if (this.swabra != null) {
         this.swabra.kill();
         this.swabra = null;
+      }
+      if (this.sword1 != null) {
+        this.sword1.kill();
+        this.sword1 = null;
+      }
+      if (this.sword2 != null) {
+        this.sword2.kill();
+        this.sword2 = null;
       }
     });
 
@@ -117,18 +137,32 @@ export default class InteractionPlayer extends DirectionActor {
   private sendingDelta: number = 0;
   private lastSentPosition: ex.Vector = ex.Vector.Zero;
 
-  private level: number = 0;
+  private level: number = 3;
 
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
     if (this.score >= 100 && this.level < 1) {
       GUI.showNotification("You have received SWABRA");
       this.level = 1;
+      this.speed += 1;
       setInterval(GUI.hideNotification, 9000);
     }
-    if (this.score >= 1000 && this.level < 2) {
+    if (this.score >= 500 && this.level < 2) {
       GUI.showNotification("You have received LASER!!!");
       this.level = 2;
+      this.speed += 1;
+      setInterval(GUI.hideNotification, 9000);
+    }
+    if (this.score >= 1000 && this.level < 3) {
+      GUI.showNotification("You have received SWORD1!!!");
+      this.level = 3;
+      this.speed += 2;
+      setInterval(GUI.hideNotification, 9000);
+    }
+    if (this.score >= 2000 && this.level < 4) {
+      GUI.showNotification("You have received SWORD2!!!");
+      this.level = 4;
+      this.speed += 2;
       setInterval(GUI.hideNotification, 9000);
     }
 
@@ -155,10 +189,14 @@ export default class InteractionPlayer extends DirectionActor {
         this.laserSable.target = this.aim.pos;
       } else if (this.swabra) {
         this.swabra.target = this.aim.pos;
+      } else if (this.sword1) {
+        this.sword1.target = this.aim.pos;
+      } else if (this.sword2) {
+        this.sword2.target = this.aim.pos;
       }
     }
 
-    this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
+    this.pos.addEqual(this.direction.scale(this.speed));
     this.sendDataIfNeeded(delta);
   }
 
