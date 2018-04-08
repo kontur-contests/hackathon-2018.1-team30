@@ -138,6 +138,7 @@ export class Level1 extends Scene {
       const player = GameService.getUserById(id);
       if (player) {
         GameService.kickUser(player);
+        GUI.setPlayersCount(GameService.countPlayers());
       }
     });
   }
