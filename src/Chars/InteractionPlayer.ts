@@ -137,7 +137,7 @@ export default class InteractionPlayer extends DirectionActor {
   private sendingDelta: number = 0;
   private lastSentPosition: ex.Vector = ex.Vector.Zero;
 
-  private level: number = 3;
+  private level: number = 0;
 
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
