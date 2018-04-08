@@ -106,12 +106,12 @@ export default class InteractionPlayer extends DirectionActor {
       GUI.showNotification("You have received SWABRA");
       console.log("swabra");
       this.level = 1;
-      setInterval(GUI.hideNotification, 3000);
+      setInterval(GUI.hideNotification, 9000);
     }
     if (this.score >= 1000 && this.level < 2) {
       GUI.showNotification("You have received LASER!!!");
       this.level = 2;
-      setInterval(GUI.hideNotification, 3000);
+      setInterval(GUI.hideNotification, 9000);
     }
 
     const mousePos = engine.input.pointers.primary.lastWorldPos;
