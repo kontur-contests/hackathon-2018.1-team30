@@ -93,9 +93,9 @@ export class Level1 extends Scene {
     GameService.connection.on(
       "scores",
       (scores: [{ gameObjectId: string; scores: number }]) => {
-        const gameScore = scores.find(
-          x => x.gameObjectId === GameService.getCurrentUser()!.user.id
-        );
+        const current = GameService.getCurrentUser();
+        const gameScore = scores.find(x => x.gameObjectId === current!.user.id);
+        (current!.actor as InteractionPlayer).score = gameScore!.scores;
         GUI.updateScore(gameScore!.scores);
       }
     );

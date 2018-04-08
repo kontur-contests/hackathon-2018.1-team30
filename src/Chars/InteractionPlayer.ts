@@ -35,7 +35,7 @@ export default class InteractionPlayer extends DirectionActor {
   private aim: Aim | null = null;
   private readonly healthBar: HealthLine;
 
-  public score: number = 200;
+  public score: number = 0;
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
