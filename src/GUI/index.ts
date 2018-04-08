@@ -1,5 +1,14 @@
 const GuiWrapper = document.createElement("div");
 
+const style = document.createElement("style");
+style.innerHTML = `
+@font-face {
+  font-family: "Origa";
+  src: url("origa.ttf");
+}
+`;
+document.head.appendChild(style);
+
 Object.assign(GuiWrapper.style, {
   position: "fixed",
   width: "100vw",
@@ -7,7 +16,7 @@ Object.assign(GuiWrapper.style, {
   top: 0,
   left: 0,
   boxShadow: "inset 0 0 50px 12px rgba(0,0,0,0.3)",
-  fontFamily: "Impact"
+  fontFamily: "Origa"
 });
 
 const Loader = document.createElement("div");
@@ -31,13 +40,14 @@ Object.assign(Welcome.style, {
   boxSizing: "border-box",
   opacity: 1,
   transition: "opacity 0.2s ease-out",
-  textAlign: "center"
+  textAlign: "center",
+  color: "#333"
 });
 Welcome.innerHTML = `
-  <h1 style="text-align: center;font-size: 120px;letter-spacing: 3px;font-weight: 300;">Slawwan & Дииччь</h1>
-  <h2>Ищем игроков</h2>
-  <ul style="text-align: left; width: 200px; margin: auto;">
-    <li>Готов</li>
+  <h1 style="text-align: center;font-size: 120px;letter-spacing: 3px;font-weight: 300;">Slawwan & DICH</h1>
+  <h2 style="font-size: 60px;">Waiting for players</h2>
+  <ul style="text-align: left; width: 200px; margin: auto; font-size: 40px">
+    <li>Ready</li>
     <li>....</li>
     <li>....</li>
     <li>....</li>
@@ -76,7 +86,7 @@ export class GUI {
   static setPlayersCount(count: number) {
     Welcome.querySelectorAll("li").forEach(x => {
       if (--count > 0) {
-        x.innerText = "Готов";
+        x.innerText = "Ready";
       } else {
         x.innerText = "...";
       }
