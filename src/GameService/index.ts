@@ -19,6 +19,7 @@ connection.onclose(() => {
 });
 
 export class GameService {
+
   private static currentUser: IUser | null = null;
   private static otherUsers: IOtherUser = {};
   private static fowls: IOtherUser = {};
@@ -28,7 +29,7 @@ export class GameService {
   }
 
   public static start() {
-    connection.start();
+    connection.start().then(() => GameService.joinGame());
   }
 
   public static getCurrentUser(): IUser | null {
@@ -121,5 +122,9 @@ export class GameService {
 
   public static removeFowl(fowlId: string) {
     delete GameService.fowls[fowlId];
+  }
+
+  public static joinGame(): void {
+    connection.invoke("joinGame");
   }
 }
