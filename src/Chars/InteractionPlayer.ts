@@ -5,6 +5,7 @@ import LaserSable from "./LaserSable";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import Swabra from "./Swabra";
+import { GUI } from "../GUI";
 
 const spriteSheet = spriteSheetFactory();
 
@@ -96,8 +97,23 @@ export default class InteractionPlayer extends DirectionActor {
   private sendingDelta: number = 0;
   private lastSentPosition: ex.Vector = ex.Vector.Zero;
 
+  private level: number = 0;
+
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
+
+    if (this.score >= 100 && this.level < 1) {
+      GUI.showNotification("You have received SWABRA");
+      console.log("swabra");
+      this.level = 1;
+      setInterval(GUI.hideNotification, 3000);
+    }
+    if (this.score >= 1000 && this.level < 2) {
+      GUI.showNotification("You have received LASER!!!");
+      this.level = 2;
+      setInterval(GUI.hideNotification, 3000);
+    }
+
     const mousePos = engine.input.pointers.primary.lastWorldPos;
     if (!mousePos) {
       return;

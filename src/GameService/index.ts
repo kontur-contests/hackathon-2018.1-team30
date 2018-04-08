@@ -19,6 +19,10 @@ connection.onclose(() => {
 });
 
 export class GameService {
+  static scores: { gameObjectId: string; scores: number }[] = [];
+  static storeScores(scores: { gameObjectId: string; scores: number }[]): any {
+    this.scores = scores;
+  }
   static countPlayers(): any {
     return Object.keys(this.otherUsers).length + 2;
   }
