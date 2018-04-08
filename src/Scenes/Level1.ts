@@ -49,7 +49,10 @@ export class Level1 extends Scene {
 
       GUI.hideLoader();
       GUI.showWelcome();
-      setTimeout(GUI.hideWelcome, 3500);
+
+      GameService.connection.on("gameStart", () => {
+        GUI.hideWelcome();
+      });
     });
 
     const joinPlayer = (player: IGameObject) => {
@@ -64,6 +67,7 @@ export class Level1 extends Scene {
           user: player,
           actor
         });
+        GUI.setPlayersCount(GameService.countPlayers());
       }
       if (
         player &&

@@ -30,10 +30,18 @@ Object.assign(Welcome.style, {
   height: "100vh",
   boxSizing: "border-box",
   opacity: 1,
-  transition: "opacity 0.2s ease-out"
+  transition: "opacity 0.2s ease-out",
+  textAlign: "center"
 });
 Welcome.innerHTML = `
   <h1 style="text-align: center;font-size: 120px;letter-spacing: 3px;font-weight: 300;">Slawwan & Дииччь</h1>
+  <h2>Ищем игроков</h2>
+  <ul style="text-align: left; width: 200px; margin: auto;">
+    <li>Готов</li>
+    <li>....</li>
+    <li>....</li>
+    <li>....</li>
+  </ul>
 `;
 
 export class GUI {
@@ -62,6 +70,18 @@ export class GUI {
     setTimeout(() => {
       GuiWrapper.removeChild(Welcome);
     }, 200);
+    return GUI;
+  }
+
+  static setPlayersCount(count: number) {
+    Welcome.querySelectorAll("li").forEach(x => {
+      if (--count > 0) {
+        x.innerText = "Готов";
+      } else {
+        x.innerText = "...";
+      }
+    });
+
     return GUI;
   }
 }
