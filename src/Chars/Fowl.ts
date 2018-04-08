@@ -19,6 +19,7 @@ import { Resources } from "../Resources";
 
 export default class Fowl extends Actor {
   isDying: boolean = false;
+
   constructor(x: number, y: number) {
     super(x, y, checkenSpriteSheet.width, checkenSpriteSheet.height);
     this.collisionType = CollisionType.Passive;
@@ -43,10 +44,8 @@ export default class Fowl extends Actor {
         (event.other instanceof DirectionActor ||
           event.other instanceof GunFire)
       ) {
-        if (!Resources.Chicken.isPlaying()) {
-          Resources.Chicken.play();
-        }
         GameService.killFowl(event.actor);
+        engine.currentScene.camera.shake(10, 10, 100);
         this.kill();
       }
     });
@@ -56,6 +55,7 @@ export default class Fowl extends Actor {
     if (this.isDying) {
       return;
     }
+    Resources.Chicken.play();
     this.isDying = true;
     this.setDrawing(["death", "death2"][new Random().integer(0, 1)]);
 

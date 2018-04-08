@@ -2,7 +2,8 @@ import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
 import spriteSheet from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
-import { HealthLine } from "../Chars/HealthLine";
+import { HealthLine } from "./HealthLine";
+import * as ex from "excalibur";
 
 export default class Player extends DirectionActor {
   private fireTarget: Vector | null = null;
@@ -14,6 +15,9 @@ export default class Player extends DirectionActor {
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
     this.collisionType = CollisionType.Active;
+    const area = new ex.Actor(x, y, 20, 100).collisionArea;
+    area.body = this.body;
+    this.collisionArea = area;
   }
 
   public onInitialize(engine: Engine) {

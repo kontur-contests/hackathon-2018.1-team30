@@ -80,8 +80,10 @@ export class GameService {
   }
 
   public static userInGame(id: string): boolean {
-    const isCurrentUserInGame = GameService.currentUser && GameService.currentUser.user.id === id;
-    return isCurrentUserInGame || GameService.otherUsers[id] != null;
+    return (
+      (GameService.currentUser && GameService.currentUser.user.id === id) ||
+      !!GameService.otherUsers[id]
+    );
   }
 
   public static fowlInGame(id: string): boolean {
