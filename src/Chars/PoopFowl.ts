@@ -1,4 +1,4 @@
-import { Engine, Color, Actor, Random, Vector, CollisionType } from "excalibur";
+import { Engine, Color, Vector, CollisionType } from "excalibur";
 import poopSpriteSheet from "../SpriteSheets/PoopSpritesSheet";
 import Boom from "./Boom";
 import { PreCollisionEvent } from "Events";
@@ -6,8 +6,9 @@ import { GameService } from "../GameService";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { Resources } from "../Resources";
+import Fowl from "./Fowl";
 
-export default class PoopFowl extends Actor {
+export default class PoopFowl extends Fowl {
   private boom: Boom | null = null;
 
   constructor(x: number, y: number) {

@@ -5,7 +5,8 @@ import GunFire from "./GunFire";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import { HealthLine } from "./HealthLine";
-import SuperCamera from "../SuperCamera";
+import ChickenFowl from "./ChickenFowl";
+import PoopFowl from "./PoopFowl";
 
 const spriteSheet = spriteSheetFactory();
 
@@ -29,6 +30,7 @@ export default class InteractionPlayer extends DirectionActor {
 
   private gunFire: GunFire | null = null;
   private aim: Aim | null = null;
+  private readonly healthBar: HealthLine;
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
@@ -36,6 +38,7 @@ export default class InteractionPlayer extends DirectionActor {
     const area = new ex.Actor(x, y, 20, 60).collisionArea;
     area.body = this.body;
     this.collisionArea = area;
+    this.healthBar = new HealthLine(-40, -100, 100, 300, 300);
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -66,9 +69,7 @@ export default class InteractionPlayer extends DirectionActor {
     });
     engine.input.keyboard.on("press", this.handleKeyPress);
     engine.input.keyboard.on("release", this.handleKeyRelease);
-
-    const healthLine = new HealthLine(0, -90, 150, 130);
-    this.add(healthLine);
+    this.add(this.healthBar);
 
     engine.input.pointers.primary.on("down", () => {
       if (this.gunFire == null) {
@@ -81,6 +82,18 @@ export default class InteractionPlayer extends DirectionActor {
       if (this.gunFire != null) {
         this.gunFire.kill();
         this.gunFire = null;
+      }
+    });
+
+    this.on("collisionstart", (event?: ex.CollisionStartEvent) => {
+      if (event) {
+        if (event.other instanceof ChickenFowl) {
+          this.healthBar.changeHealth(30);
+        } else if (event.other instanceof PoopFowl) {
+          this.healthBar.changeHealth(-10);
+        } else if (event.other instanceof GunFire) {
+          this.healthBar.changeHealth(-1);
+        }
       }
     });
   }
