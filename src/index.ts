@@ -13,7 +13,7 @@ loader.addResources(Resources.values());
 
 game.start(loader).then(() => {
   console.log("Started");
-  Resources.MainTheme.play();
+  Resources.MainTheme.play(0.3);
   Resources.MainTheme.setLoop(true);
   GameService.start();
 });

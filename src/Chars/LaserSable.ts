@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { laserAnimation } from "../SpriteSheets/LazerSpriteSheet";
 import Weapon from "./Weapon";
+import { Resources } from "../Resources";
 
 export default class LaserSable extends Weapon {
   constructor(private positionProvider: () => ex.Vector) {
@@ -19,6 +20,9 @@ export default class LaserSable extends Weapon {
 
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
+    if (!Resources.LaserSable.isPlaying()) {
+      Resources.LaserSable.play();
+    }
     const center = this.positionProvider();
     const direction = this.target.normalize();
 
