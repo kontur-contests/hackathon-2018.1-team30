@@ -19,7 +19,6 @@ connection.onclose(() => {
 });
 
 export class GameService {
-
   private static currentUser: IUser | null = null;
   private static otherUsers: IOtherUser = {};
   private static fowls: IOtherUser = {};
@@ -81,7 +80,8 @@ export class GameService {
   }
 
   public static userInGame(id: string): boolean {
-    const isCurrentUserInGame = GameService.currentUser && GameService.currentUser.user.id === id;
+    const isCurrentUserInGame =
+      GameService.currentUser && GameService.currentUser.user.id === id;
     return isCurrentUserInGame || GameService.otherUsers[id] != null;
   }
 
