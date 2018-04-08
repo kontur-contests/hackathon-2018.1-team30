@@ -3,7 +3,7 @@ import { IPlayer, IUser, IGameObject, IFowl } from "../models/Player";
 import { Actor } from "Actor";
 import { Vector } from "Algebra";
 import InteractionPlayer from "../Chars/InteractionPlayer";
-import Fowl from "../Chars/Fowl";
+import ChickenFowl from "../Chars/Fowl";
 import PoopFowl from "../Chars/PoopFowl";
 
 const url = "http://10.33.94.6:4844/game";
@@ -106,6 +106,14 @@ export class GameService {
     }
     if (GameService.fowlInGame && player) {
       delete GameService.fowls[player.id];
+    }
+  }
+
+  public static kickCurrentUser(): void {
+    const currentUser = GameService.getCurrentUser();
+    const actor = currentUser!.actor;
+    if (actor) {
+      actor.kill();
     }
   }
 
