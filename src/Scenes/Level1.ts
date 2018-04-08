@@ -41,9 +41,9 @@ export class Level1 extends Scene {
       GUI.hideLoader();
       GUI.showWelcome();
 
-      GameService.connection.on("gameStart", () => {
+      setTimeout(() => {
         GUI.hideWelcome();
-      });
+      }, 7500);
     });
 
     const joinPlayer = (player: IGameObject) => {
