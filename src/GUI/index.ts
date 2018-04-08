@@ -34,7 +34,7 @@ GuiWrapper.appendChild(Loader);
 
 const Welcome = document.createElement("div");
 Object.assign(Welcome.style, {
-  padding: "180px 40px",
+  padding: "60px 40px",
   background: "rgba(255,255,255,0.7)",
   height: "100vh",
   boxSizing: "border-box",
@@ -44,7 +44,7 @@ Object.assign(Welcome.style, {
   color: "#333"
 });
 Welcome.innerHTML = `
-  <h1 style="text-align: center;font-size: 120px;letter-spacing: 3px;font-weight: 300;">Slawwan & DICH</h1>
+  <h1 style="text-align: center;font-size: 120px;letter-spacing: 3px;font-weight: 300; width: 900px; margin: auto">Slawwan & DICH</h1>
   <h2 style="font-size: 60px;">Waiting for players</h2>
   <ul style="text-align: left; width: 200px; margin: auto; font-size: 40px">
     <li>Ready</li>
