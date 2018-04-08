@@ -4,10 +4,11 @@ import Boom from "./Boom";
 import { PreCollisionEvent } from "Events";
 import { GameService } from "../GameService";
 import DirectionActor from "./DirectionActor";
-import GunFire from "./GunFire";
+import LaserSable from "./LaserSable";
 import { Resources } from "../Resources";
 import Fowl from "./Fowl";
 import ScoreFly from "./ScoreFly";
+import Weapon from "./Weapon";
 
 export default class PoopFowl extends Fowl {
   private boom: Boom | null = null;
@@ -27,8 +28,7 @@ export default class PoopFowl extends Fowl {
     this.on("precollision", (event?: PreCollisionEvent) => {
       if (
         event &&
-        (event.other instanceof DirectionActor ||
-          event.other instanceof GunFire)
+        (event.other instanceof DirectionActor || event.other instanceof Weapon)
       ) {
         GameService.killFowl(event.actor);
         engine.currentScene.camera.shake(5, 5, 100);

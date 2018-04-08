@@ -26,6 +26,7 @@ export class Resources {
   public static Blood1 = new Texture(prefix + "/assets/sprites/blood_1.png");
   public static Blood2 = new Texture(prefix + "/assets/sprites/blood_2.png");
   public static Boom = new Texture(prefix + "/assets/sprites/explosion.png");
+  public static Swabra = new Texture(prefix + "/assets/sprites/fusoyamop1.png");
   public static Laser = new Texture(
     prefix + "/assets/sprites/Laser_Red_Thick_512.png"
   );

@@ -14,10 +14,11 @@ import {
 } from "../SpriteSheets/BloodSpriteSheet";
 import { GameService } from "../GameService";
 import DirectionActor from "./DirectionActor";
-import GunFire from "./GunFire";
+import LaserSable from "./LaserSable";
 import { Resources } from "../Resources";
 import Fowl from "./Fowl";
 import ScoreFly from "./ScoreFly";
+import Weapon from "./Weapon";
 
 export default class ChickenFowl extends Fowl {
   isDying: boolean = false;
@@ -43,8 +44,7 @@ export default class ChickenFowl extends Fowl {
     this.on("precollision", (event?: Events.PreCollisionEvent) => {
       if (
         event &&
-        (event.other instanceof DirectionActor ||
-          event.other instanceof GunFire)
+        (event.other instanceof DirectionActor || event.other instanceof Weapon)
       ) {
         GameService.killFowl(event.actor);
         engine.currentScene.camera.shake(5, 5, 100);

@@ -1,12 +1,13 @@
 import * as ex from "excalibur";
 import spriteSheetFactory from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
-import GunFire from "./GunFire";
+import LaserSable from "./LaserSable";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
 import { HealthLine } from "./HealthLine";
 import ChickenFowl from "./ChickenFowl";
 import PoopFowl from "./PoopFowl";
+import Swabra from "./Swabra";
 
 const spriteSheet = spriteSheetFactory();
 
@@ -28,9 +29,13 @@ export default class InteractionPlayer extends DirectionActor {
     }
   };
 
-  private gunFire: GunFire | null = null;
+  private laserSable: LaserSable | null = null;
+  private swabra: Swabra | null = null;
+
   private aim: Aim | null = null;
   private readonly healthBar: HealthLine;
+
+  public score: number = 200;
 
   constructor(x: number, y: number) {
     super(x, y, spriteSheet.width, spriteSheet.height);
@@ -72,16 +77,25 @@ export default class InteractionPlayer extends DirectionActor {
     this.add(this.healthBar);
 
     engine.input.pointers.primary.on("down", () => {
-      if (this.gunFire == null) {
-        this.gunFire = new GunFire(() => this.pos);
-        engine.currentScene.add(this.gunFire);
+      if (this.score > 100 && this.score <= 1000 && this.swabra == null) {
+        this.swabra = new Swabra(() => this.pos);
+        engine.currentScene.add(this.swabra);
+      }
+
+      if (this.score > 1000 && this.laserSable == null) {
+        this.laserSable = new LaserSable(() => this.pos);
+        engine.currentScene.add(this.laserSable);
       }
     });
 
     engine.input.pointers.primary.on("up", () => {
-      if (this.gunFire != null) {
-        this.gunFire.kill();
-        this.gunFire = null;
+      if (this.laserSable != null) {
+        this.laserSable.kill();
+        this.laserSable = null;
+      }
+      if (this.swabra != null) {
+        this.swabra.kill();
+        this.swabra = null;
       }
     });
 
@@ -91,7 +105,7 @@ export default class InteractionPlayer extends DirectionActor {
           this.healthBar.changeHealth(30);
         } else if (event.other instanceof PoopFowl) {
           this.healthBar.changeHealth(-10);
-        } else if (event.other instanceof GunFire) {
+        } else if (event.other instanceof LaserSable) {
           this.healthBar.changeHealth(-1);
         }
       }
@@ -109,10 +123,13 @@ export default class InteractionPlayer extends DirectionActor {
     }
     if (this.aim) {
       this.aim.target = mousePos;
+      if (this.laserSable) {
+        this.laserSable.target = this.aim.pos;
+      } else if (this.swabra) {
+        this.swabra.target = this.aim.pos;
+      }
     }
-    if (this.gunFire && this.aim) {
-      this.gunFire.target = this.aim.pos;
-    }
+
     this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
     this.sendDataIfNeeded(delta);
     if (this.healthBar.getWidth() <= 0) {
@@ -140,7 +157,7 @@ export default class InteractionPlayer extends DirectionActor {
       if (!this.lastSentPosition.sub(this.pos).equals(ex.Vector.Zero)) {
         GameService.move(GameService.getCurrentUser()!.user.id, this.pos);
       }
-      if (this.gunFire && this.aim) {
+      if (this.laserSable && this.aim) {
         GameService.fire(GameService.getCurrentUser()!.user.id, this.aim.pos);
       }
       this.sendingDelta = 0;

@@ -1,15 +1,19 @@
 import spriteSheetFactory from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
-import GunFire from "./GunFire";
+import LaserSable from "./LaserSable";
 import { HealthLine } from "./HealthLine";
 import * as ex from "excalibur";
 import ChickenFowl from "./ChickenFowl";
 import PoopFowl from "./PoopFowl";
+import Swabra from "./Swabra";
 
 export default class Player extends DirectionActor {
   private readonly spriteSheet = spriteSheetFactory();
   private fireTarget: ex.Vector | null = null;
-  private gunFire: GunFire | null = null;
+
+  private laserSalbe: Swabra | null = null;
+  private swabra: Swabra | null = null;
+
   private gunFireKillInterval: number | null = null;
 
   public nextPosition: ex.Vector = ex.Vector.Zero;
@@ -57,7 +61,7 @@ export default class Player extends DirectionActor {
           this.healthBar.changeHealth(30);
         } else if (event.other instanceof PoopFowl) {
           this.healthBar.changeHealth(-10);
-        } else if (event.other instanceof GunFire) {
+        } else if (event.other instanceof LaserSable) {
           this.healthBar.changeHealth(-1);
         }
       }
@@ -72,11 +76,11 @@ export default class Player extends DirectionActor {
     }
     if (this.fireTarget) {
       this.direction = positionDifferent;
-      if (this.gunFire == null) {
-        this.gunFire = new GunFire(() => ex.Vector.Zero);
-        this.add(this.gunFire);
+      if (this.laserSalbe == null) {
+        this.laserSalbe = new Swabra(() => ex.Vector.Zero);
+        this.add(this.laserSalbe);
       }
-      this.gunFire.target = this.fireTarget;
+      this.laserSalbe.target = this.fireTarget;
     }
   }
 
@@ -87,9 +91,9 @@ export default class Player extends DirectionActor {
     this.fireTarget = target;
     this.gunFireKillInterval = setInterval(() => {
       this.fireTarget = null;
-      if (this.gunFire) {
-        this.remove(this.gunFire);
-        this.gunFire = null;
+      if (this.laserSalbe) {
+        this.remove(this.laserSalbe);
+        this.laserSalbe = null;
       }
     }, 100);
   }
