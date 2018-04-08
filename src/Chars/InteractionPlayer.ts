@@ -115,6 +115,9 @@ export default class InteractionPlayer extends DirectionActor {
     }
     this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
     this.sendDataIfNeeded(delta);
+    if (this.healthBar.getWidth() <= 0) {
+      GameService.kickCurrentUser();
+    }
   }
 
   private handleKeyPress = (event?: ex.Input.KeyEvent) => {
