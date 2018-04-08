@@ -109,6 +109,7 @@ export class GameService {
       const object = Object.keys(GameService.fowls)
         .map(x => GameService.fowls[x])
         .find(x => x.actor === fowl);
+
       if (object) {
         connection.invoke("killGameObject", object.user.id);
       }

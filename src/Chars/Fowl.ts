@@ -46,7 +46,7 @@ export default class Fowl extends Actor {
         if (!Resources.Chicken.isPlaying()) {
           Resources.Chicken.play();
         }
-        GameService.killFowl(event.other);
+        GameService.killFowl(event.actor);
         this.kill();
       }
     });

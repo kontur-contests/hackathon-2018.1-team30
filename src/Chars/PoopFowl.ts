@@ -27,7 +27,7 @@ export default class PoopFowl extends Actor {
         (event.other instanceof DirectionActor ||
           event.other instanceof GunFire)
       ) {
-        GameService.killFowl(event.other);
+        GameService.killFowl(event.actor);
         this.kill();
       }
     });
