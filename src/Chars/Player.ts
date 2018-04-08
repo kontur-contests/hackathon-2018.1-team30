@@ -1,29 +1,32 @@
-import { CollisionType, Engine, Vector, UIActor, Color } from "excalibur";
 import spriteSheetFactory from "../SpriteSheets/SlawwanSpriteSheet";
 import DirectionActor from "./DirectionActor";
 import GunFire from "./GunFire";
 import { HealthLine } from "./HealthLine";
 import * as ex from "excalibur";
+import ChickenFowl from "./ChickenFowl";
+import PoopFowl from "./PoopFowl";
 
 export default class Player extends DirectionActor {
   private readonly spriteSheet = spriteSheetFactory();
-  private fireTarget: Vector | null = null;
+  private fireTarget: ex.Vector | null = null;
   private gunFire: GunFire | null = null;
   private gunFireKillInterval: number | null = null;
 
-  public nextPosition: Vector = Vector.Zero;
+  public nextPosition: ex.Vector = ex.Vector.Zero;
+  private readonly healthBar: HealthLine;
 
   constructor(x: number, y: number) {
     super(x, y, 0, 0);
     this.setWidth(this.spriteSheet.width);
     this.setHeight(this.spriteSheet.height);
-    this.collisionType = CollisionType.Active;
+    this.collisionType = ex.CollisionType.Active;
     const area = new ex.Actor(x, y, 20, 100).collisionArea;
     area.body = this.body;
     this.collisionArea = area;
+    this.healthBar = new HealthLine(-40, -100, 100, 300, 300);
   }
 
-  public onInitialize(engine: Engine) {
+  public onInitialize(engine: ex.Engine) {
     super.onInitialize(engine);
     this.registerDrawing({
       idle: {
@@ -47,28 +50,37 @@ export default class Player extends DirectionActor {
         left: this.spriteSheet.walk.left(engine, 75)
       }
     });
-
-    const healthLine = new HealthLine(0, -90, 150, 130);
-    this.add(healthLine);
+    this.add(this.healthBar);
+    this.on("collisionstart", (event?: ex.CollisionStartEvent) => {
+      if (event) {
+        if (event.other instanceof ChickenFowl) {
+          this.healthBar.changeHealth(30);
+        } else if (event.other instanceof PoopFowl) {
+          this.healthBar.changeHealth(-10);
+        } else if (event.other instanceof GunFire) {
+          this.healthBar.changeHealth(-1);
+        }
+      }
+    });
   }
 
-  public update(engine: Engine, delta: number) {
+  public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
     const positionDifferent = this.nextPosition.sub(this.pos);
-    if (!positionDifferent.equals(Vector.Zero)) {
+    if (!positionDifferent.equals(ex.Vector.Zero)) {
       this.pos = this.nextPosition;
     }
     if (this.fireTarget) {
       this.direction = positionDifferent;
       if (this.gunFire == null) {
-        this.gunFire = new GunFire(() => Vector.Zero);
+        this.gunFire = new GunFire(() => ex.Vector.Zero);
         this.add(this.gunFire);
       }
       this.gunFire.target = this.fireTarget;
     }
   }
 
-  public set setFireTarget(target: Vector) {
+  public set setFireTarget(target: ex.Vector) {
     if (this.gunFireKillInterval) {
       clearInterval(this.gunFireKillInterval);
     }
