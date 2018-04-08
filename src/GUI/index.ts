@@ -16,7 +16,8 @@ Object.assign(GuiWrapper.style, {
   top: 0,
   left: 0,
   boxShadow: "inset 0 0 50px 12px rgba(0,0,0,0.3)",
-  fontFamily: "Origa"
+  fontFamily: "Origa",
+  cursor: "none"
 });
 
 const Loader = document.createElement("div");

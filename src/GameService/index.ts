@@ -20,7 +20,7 @@ connection.onclose(() => {
 
 export class GameService {
   static countPlayers(): any {
-    return Object.keys(this.otherUsers).length + 1;
+    return Object.keys(this.otherUsers).length + 2;
   }
   private static currentUser: IUser | null = null;
   private static otherUsers: IOtherUser = {};
