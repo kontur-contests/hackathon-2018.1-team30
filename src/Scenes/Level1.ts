@@ -53,7 +53,7 @@ export class Level1 extends Scene {
       if (player && player.type === GameObjectType.Fowl && !GameService.fowlInGame(player.id)) {
         const actor = new Fowl(player.position.x, player.position.y);
         this.add(actor);
-        GameService.addFowl({
+        GameService.saveFowl({
           user: player,
           actor
         });
@@ -61,14 +61,14 @@ export class Level1 extends Scene {
       if (player && player.type === GameObjectType.Shit && !GameService.fowlInGame(player.id)) {
         const actor = new PoopFowl(player.position.x, player.position.y);
         this.add(actor);
-        GameService.addFowl({
+        GameService.saveFowl({
           user: player,
           actor
         });
       }
     };
 
-    GameService.connection.on('gameObjectJoin', (player: IGameObject) => joinPlayer(player));
+    GameService.connection.on('gameObjectsJoin', (players: IGameObject[]) => players.forEach(joinPlayer));
     GameService.connection.on('gameObjects', (players: IGameObject[]) => players.forEach(joinPlayer));
 
     GameService.connection.on("gameObjectMove", (id: string, position: IPosition) => {
@@ -86,8 +86,8 @@ export class Level1 extends Scene {
       // }
     });
 
-    GameService.connection.on('gameObjectAttack', (info: IGameObject, vector: { x: number; y: number }) => {
-      const player = GameService.getActor(info.id) as Player;
+    GameService.connection.on('gameObjectAttack', (id: string, vector: { x: number; y: number }) => {
+      const player = GameService.getActor(id) as Player;
       if (player) {
         player.setFireTarget = new Vector(vector.x, vector.y);
       }
