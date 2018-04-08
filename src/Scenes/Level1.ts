@@ -93,18 +93,14 @@ export class Level1 extends Scene {
       }
     });
 
-    GameService.connection.on("playerLeave", (player: IPlayer) => {
-      const actor = GameService.getActor(player.id);
+    GameService.connection.on("gameObjectLeave", (id: string) => {
+      const actor = GameService.getActor(id);
       if (actor) {
         actor.kill();
       }
-      GameService.kickUser(player);
-    });
-
-    GameService.connection.on("fowlKill", (fowl: IPlayer) => {
-      const actor = GameService.getActor(fowl.id);
-      if (actor) {
-        actor.kill();
+      const player = GameService.getUserById(id);
+      if (player) {
+        GameService.kickUser(player);
       }
     });
   }

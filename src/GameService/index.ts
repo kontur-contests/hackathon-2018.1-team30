@@ -47,6 +47,22 @@ export class GameService {
     this.otherUsers[otherPlayer.user.id] = otherPlayer;
   }
 
+  public static getUserById(id: string): IGameObject | null {
+    if (this.currentUser && this.currentUser.user.id === id) {
+      return this.currentUser.user;
+    }
+    const otherUser = this.otherUsers[id];
+    if (otherUser) {
+      return otherUser.user;
+    }
+    const fowl = this.fowls[id];
+    if (fowl) {
+      return fowl.user;
+    }
+
+    return null;
+  }
+
   public static getActor(id: string): Actor | null {
     if (this.currentUser && this.currentUser.user.id === id) {
       return this.currentUser.actor;
@@ -79,9 +95,12 @@ export class GameService {
     connection.invoke("moveGameObject", id, nextPosition);
   }
 
-  public static kickUser(player: IPlayer): void {
+  public static kickUser(player: IGameObject): void {
     if (this.otherUsers && player) {
       delete this.otherUsers[player.id];
+    }
+    if (this.fowlInGame && player) {
+      delete this.fowls[player.id];
     }
   }
 
