@@ -10,6 +10,7 @@ import Weapon from "./Weapon";
 import ScoreFly from "./ScoreFly";
 import Sword1 from "./Sword1";
 import Sword2 from "./Sword2";
+import Extern from "./Extern";
 
 const spriteSheet = spriteSheetFactory();
 
@@ -35,6 +36,7 @@ export default class InteractionPlayer extends DirectionActor {
   private swabra: Swabra | null = null;
   private sword1: Sword1 | null = null;
   private sword2: Sword2 | null = null;
+  private extern: Extern | null = null;
 
   private aim: Aim | null = null;
   private stanTime: number = 0;
@@ -96,6 +98,10 @@ export default class InteractionPlayer extends DirectionActor {
         this.sword2 = new Sword2(() => this.pos);
         engine.currentScene.add(this.sword2);
       }
+      if (this.level == 5 && this.extern == null) {
+        this.extern = new Extern(() => this.pos);
+        engine.currentScene.add(this.extern);
+      }
     });
 
     engine.input.pointers.primary.on("up", () => {
@@ -114,6 +120,10 @@ export default class InteractionPlayer extends DirectionActor {
       if (this.sword2 != null) {
         this.sword2.kill();
         this.sword2 = null;
+      }
+      if (this.extern != null) {
+        this.extern.kill();
+        this.extern = null;
       }
     });
 
@@ -137,7 +147,7 @@ export default class InteractionPlayer extends DirectionActor {
   private sendingDelta: number = 0;
   private lastSentPosition: ex.Vector = ex.Vector.Zero;
 
-  private level: number = 0;
+  private level: number = 5;
 
   public update(engine: ex.Engine, delta: number) {
     super.update(engine, delta);
@@ -163,6 +173,12 @@ export default class InteractionPlayer extends DirectionActor {
       GUI.showNotification("You have received SWORD2!!!");
       this.level = 4;
       this.speed += 2;
+      setInterval(GUI.hideNotification, 7000);
+    }
+    if (this.score >= 7000 && this.level < 5) {
+      GUI.showNotification("This is KONTUR EXTERN!!!");
+      this.level = 5;
+      this.speed += 5;
       setInterval(GUI.hideNotification, 7000);
     }
 
@@ -193,6 +209,8 @@ export default class InteractionPlayer extends DirectionActor {
         this.sword1.target = this.aim.pos;
       } else if (this.sword2) {
         this.sword2.target = this.aim.pos;
+      } else if (this.extern) {
+        this.extern.target = this.aim.pos;
       }
     }
 
