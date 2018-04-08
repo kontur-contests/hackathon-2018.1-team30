@@ -10,14 +10,19 @@ namespace Cowl.Backend.Hubs
 {
     public class GameHub : Hub
     {
-        private readonly GameService _gameService;
+        private readonly GameStorageService _gameService;
 
-        public GameHub(GameService gameService)
+        public GameHub(GameStorageService gameService)
         {
             _gameService = gameService;
         }
 
         public override async Task OnConnectedAsync()
+        {
+            Console.WriteLine("OnConnect:" + Context.ConnectionId);
+        }
+
+        public async Task JoinGame()
         {
             var player = new Player {Id = Context.ConnectionId, Position = ObjectPosition.GetRandom()};
 
@@ -25,8 +30,9 @@ namespace Cowl.Backend.Hubs
             await Clients.Caller.SendAsync("gameObjects", _gameService.AllGameObjects);
 
             await SpawnGameObjects(new List<GameObject> {player});
-            Console.WriteLine("OnConnect:" + player);
+            Console.WriteLine("JoinGame:" + player);
         }
+
 
         public async Task SpawnGameObjects(ICollection<GameObject> gameObjects)
         {
@@ -63,7 +69,7 @@ namespace Cowl.Backend.Hubs
             if (gameObject is null)
                 return;
 
-            await Clients.All.SendAsync("gameObjectLeave", gameObject);
+            await Clients.All.SendAsync("gameObjectLeave", gameObject.Id);
         }
 
         public async Task KillGameObject(string gameObjectId)
@@ -77,6 +83,8 @@ namespace Cowl.Backend.Hubs
                 return;
 
             player.Scores += gameObject.Cost;
+
+            Console.WriteLine("KillObject: " + gameObject + " : " + player);
 
             await LeaveGameObject(gameObjectId);
         }

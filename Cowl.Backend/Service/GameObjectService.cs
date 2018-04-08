@@ -12,9 +12,9 @@ namespace Cowl.Backend.Service
 {
     public class GameObjectService : IHostedService
     {
-        private readonly GameService _gameService;
+        private readonly GameStorageService _gameService;
 
-        public GameObjectService(GameService gameService)
+        public GameObjectService(GameStorageService gameService)
         {
             _gameService = gameService;
         }
@@ -59,7 +59,8 @@ namespace Cowl.Backend.Service
 
                 if (gameObjects.Count > 0)
                     await connection.InvokeAsync("spawnGameObjects", gameObjects, cancellationToken: cancellationToken);
-                await Task.Delay(25, cancellationToken);
+                
+                await Task.Delay(300, cancellationToken);
             }
         }
 

@@ -6,7 +6,7 @@ using Cowl.Backend.DataModel.GameObjects;
 
 namespace Cowl.Backend.Service
 {
-    public class GameService
+    public class GameStorageService
     {
         public ConcurrentDictionary<string, Player> Players { get; } = new ConcurrentDictionary<string, Player>();
 
