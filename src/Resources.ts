@@ -35,7 +35,7 @@ export class Resources {
   public static MainTheme = new Sound(prefix + "/assets/be8a7cc0fe85da.mp3");
   public static Chicken = new Sound(prefix + "/assets/chicken.mp3");
   public static Explosion = new Sound(prefix + "/assets/Explosion.mp3");
-  // public static GroundTiles = new Texture("/assets/ground_tiles.png");
+  public static LaserSable = new Sound(prefix + "/assets/05092.mp3");
 
   public static values(): ILoadable[] {
     return Object.values(Resources);
