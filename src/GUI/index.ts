@@ -80,12 +80,13 @@ Object.assign(Notifications.style, {
   position: "fixed",
   left: "50%",
   top: "-300px",
-  fontSize: "20px",
+  fontSize: "60px",
   padding: "20px",
   background: "rgba(255, 255, 255, 0.5)",
   transform: "translateX(-50%)",
   transition: "top 0.2s ease-in",
-  fontFamily: "Origa"
+  fontFamily: "Origa",
+  textAlign: "center"
 });
 
 export class GUI {
