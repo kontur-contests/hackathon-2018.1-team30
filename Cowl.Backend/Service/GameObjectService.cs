@@ -26,8 +26,9 @@ namespace Cowl.Backend.Service
                 .Build();
 
             await connection.StartAsync().ConfigureAwait(false);
+
             // Для корректной инициализации бэкенда
-            while (_gameService.AllPlayers.ToArray().Length < 4)
+            while (_gameService.AllPlayers.ToArray().Length < 2)
             {
                 await Task.Delay(1000);
             }
@@ -62,11 +63,14 @@ namespace Cowl.Backend.Service
                 }
 
                 if (gameObjects.Count > 0)
-                    await connection.InvokeAsync("spawnGameObjects", gameObjects, cancellationToken: cancellationToken);
+                    await connection.InvokeAsync("spawnGameObjects", gameObjects,
+                        cancellationToken: cancellationToken);
 
 
                 await Task.Delay(150, cancellationToken);
             }
+
+            await connection.StopAsync();
         }
 
 
