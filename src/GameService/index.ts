@@ -109,6 +109,14 @@ export class GameService {
     }
   }
 
+  public static kickCurrentUser(): void {
+    const currentUser = GameService.getCurrentUser();
+    const actor = currentUser!.actor;
+    if (actor) {
+      actor.kill();
+    }
+  }
+
   public static killFowl(fowl: Actor): void {
     if (GameService.fowls && fowl) {
       const object = Object.keys(GameService.fowls)

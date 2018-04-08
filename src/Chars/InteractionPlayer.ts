@@ -85,7 +85,7 @@ export default class InteractionPlayer extends DirectionActor {
       }
     });
 
-    this.on("collisionstart", (event?: ex.CollisionStartEvent) => {
+    this.on("postcollision", (event?: ex.PostCollisionEvent) => {
       if (event) {
         if (event.other instanceof ChickenFowl) {
           this.healthBar.changeHealth(30);
@@ -115,6 +115,9 @@ export default class InteractionPlayer extends DirectionActor {
     }
     this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
     this.sendDataIfNeeded(delta);
+    if (this.healthBar.getWidth() <= 0) {
+      GameService.kickCurrentUser();
+    }
   }
 
   private handleKeyPress = (event?: ex.Input.KeyEvent) => {
