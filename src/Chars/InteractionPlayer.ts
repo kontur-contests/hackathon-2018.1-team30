@@ -145,25 +145,25 @@ export default class InteractionPlayer extends DirectionActor {
       GUI.showNotification("You have received SWABRA");
       this.level = 1;
       this.speed += 1;
-      setInterval(GUI.hideNotification, 9000);
+      setInterval(GUI.hideNotification, 7000);
     }
     if (this.score >= 500 && this.level < 2) {
       GUI.showNotification("You have received LASER!!!");
       this.level = 2;
       this.speed += 1;
-      setInterval(GUI.hideNotification, 9000);
+      setInterval(GUI.hideNotification, 7000);
     }
     if (this.score >= 1000 && this.level < 3) {
       GUI.showNotification("You have received SWORD1!!!");
       this.level = 3;
       this.speed += 2;
-      setInterval(GUI.hideNotification, 9000);
+      setInterval(GUI.hideNotification, 7000);
     }
     if (this.score >= 2000 && this.level < 4) {
       GUI.showNotification("You have received SWORD2!!!");
       this.level = 4;
       this.speed += 2;
-      setInterval(GUI.hideNotification, 9000);
+      setInterval(GUI.hideNotification, 7000);
     }
 
     if (this.stanTime != 0) {
