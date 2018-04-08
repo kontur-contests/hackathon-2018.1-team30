@@ -17,7 +17,6 @@ export default class Player extends DirectionActor {
   private gunFireKillInterval: number | null = null;
 
   public nextPosition: ex.Vector = ex.Vector.Zero;
-  private readonly healthBar: HealthLine;
 
   constructor(x: number, y: number) {
     super(x, y, 0, 0);
@@ -27,7 +26,6 @@ export default class Player extends DirectionActor {
     const area = new ex.Actor(x, y, 20, 100).collisionArea;
     area.body = this.body;
     this.collisionArea = area;
-    this.healthBar = new HealthLine(-40, -100, 100, 300, 300);
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -52,18 +50,6 @@ export default class Player extends DirectionActor {
         down_left: this.spriteSheet.walk.down_left(engine, 75),
         right: this.spriteSheet.walk.right(engine, 75),
         left: this.spriteSheet.walk.left(engine, 75)
-      }
-    });
-    this.add(this.healthBar);
-    this.on("postcollision", (event?: ex.PostCollisionEvent) => {
-      if (event) {
-        if (event.other instanceof ChickenFowl) {
-          this.healthBar.changeHealth(30);
-        } else if (event.other instanceof PoopFowl) {
-          this.healthBar.changeHealth(-10);
-        } else if (event.other instanceof LaserSable) {
-          this.healthBar.changeHealth(-1);
-        }
       }
     });
   }

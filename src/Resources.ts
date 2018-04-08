@@ -8,6 +8,7 @@ const prefix = process.env.PUBLIC_PATH || "";
 export class Resources {
   public static Audi = new Texture(prefix + "/assets/sprites/audi.png");
   public static Chickens = new Texture(prefix + "/assets/sprites/chickens.png");
+  public static Chickens2 = new Texture(prefix + "/assets/sprites/jODGJn4.png");
   public static DudeNude = new Texture(
     prefix + "/assets/sprites/dude_nude.png"
   );

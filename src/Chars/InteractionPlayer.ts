@@ -4,9 +4,6 @@ import DirectionActor from "./DirectionActor";
 import LaserSable from "./LaserSable";
 import { GameService } from "../GameService";
 import { Aim } from "./Aim";
-import { HealthLine } from "./HealthLine";
-import ChickenFowl from "./ChickenFowl";
-import PoopFowl from "./PoopFowl";
 import Swabra from "./Swabra";
 
 const spriteSheet = spriteSheetFactory();
@@ -33,7 +30,6 @@ export default class InteractionPlayer extends DirectionActor {
   private swabra: Swabra | null = null;
 
   private aim: Aim | null = null;
-  private readonly healthBar: HealthLine;
 
   public score: number = 0;
 
@@ -43,7 +39,6 @@ export default class InteractionPlayer extends DirectionActor {
     const area = new ex.Actor(x, y, 20, 60).collisionArea;
     area.body = this.body;
     this.collisionArea = area;
-    this.healthBar = new HealthLine(-40, -100, 100, 300, 300);
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -74,8 +69,6 @@ export default class InteractionPlayer extends DirectionActor {
     });
     engine.input.keyboard.on("press", this.handleKeyPress);
     engine.input.keyboard.on("release", this.handleKeyRelease);
-    this.add(this.healthBar);
-
     engine.input.pointers.primary.on("down", () => {
       if (this.score > 100 && this.score <= 1000 && this.swabra == null) {
         this.swabra = new Swabra(() => this.pos);
@@ -96,18 +89,6 @@ export default class InteractionPlayer extends DirectionActor {
       if (this.swabra != null) {
         this.swabra.kill();
         this.swabra = null;
-      }
-    });
-
-    this.on("postcollision", (event?: ex.PostCollisionEvent) => {
-      if (event) {
-        if (event.other instanceof ChickenFowl) {
-          this.healthBar.changeHealth(30);
-        } else if (event.other instanceof PoopFowl) {
-          this.healthBar.changeHealth(-10);
-        } else if (event.other instanceof LaserSable) {
-          this.healthBar.changeHealth(-1);
-        }
       }
     });
   }
@@ -132,9 +113,6 @@ export default class InteractionPlayer extends DirectionActor {
 
     this.pos.addEqual(this.direction.scale(InteractionPlayer.speed));
     this.sendDataIfNeeded(delta);
-    if (this.healthBar.getWidth() <= 0) {
-      GameService.kickCurrentUser();
-    }
   }
 
   private handleKeyPress = (event?: ex.Input.KeyEvent) => {

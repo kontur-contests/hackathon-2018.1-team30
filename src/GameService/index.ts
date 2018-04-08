@@ -124,7 +124,11 @@ export class GameService {
         .find(x => x.actor === fowl);
 
       if (object) {
-        connection.invoke("killGameObject", object.user.id);
+        connection.invoke(
+          "killGameObject",
+          this.currentUser!.user.id,
+          object.user.id
+        );
       }
     }
   }

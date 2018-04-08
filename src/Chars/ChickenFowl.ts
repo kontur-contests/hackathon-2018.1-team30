@@ -7,14 +7,13 @@ import {
   Vector,
   Events
 } from "excalibur";
-import checkenSpriteSheet from "../SpriteSheets/ChickensSpritesheet";
+import chickenSpritesSpritesheet from "../SpriteSheets/ChickenSpritesheet2";
 import {
   bloodAnimation,
   bloodAnimation2
 } from "../SpriteSheets/BloodSpriteSheet";
 import { GameService } from "../GameService";
 import DirectionActor from "./DirectionActor";
-import LaserSable from "./LaserSable";
 import { Resources } from "../Resources";
 import Fowl from "./Fowl";
 import ScoreFly from "./ScoreFly";
@@ -24,23 +23,27 @@ export default class ChickenFowl extends Fowl {
   isDying: boolean = false;
 
   constructor(x: number, y: number) {
-    super(x, y, checkenSpriteSheet.width, checkenSpriteSheet.height);
+    super(
+      x,
+      y,
+      chickenSpritesSpritesheet.width,
+      chickenSpritesSpritesheet.height
+    );
     this.collisionType = CollisionType.Passive;
   }
 
   public onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.addDrawing("up", checkenSpriteSheet.idle.up(engine, 150));
-    this.addDrawing("down", checkenSpriteSheet.idle.down(engine, 150));
-    this.addDrawing("left", checkenSpriteSheet.idle.left(engine, 150));
-    this.addDrawing("right", checkenSpriteSheet.idle.right(engine, 150));
+    this.addDrawing("up", chickenSpritesSpritesheet.get(engine, 150));
+    this.addDrawing("down", chickenSpritesSpritesheet.get(engine, 150));
+    this.addDrawing("left", chickenSpritesSpritesheet.get(engine, 150));
+    this.addDrawing("right", chickenSpritesSpritesheet.get(engine, 150));
     this.addDrawing("death", bloodAnimation(engine));
     this.addDrawing("death2", bloodAnimation2(engine));
 
     this.setDrawing(
       ["up", "down", "left", "right"][new Random().integer(0, 3)]
     );
-    this.scale = new Vector(2, 2);
     this.on("precollision", (event?: Events.PreCollisionEvent) => {
       if (
         event &&

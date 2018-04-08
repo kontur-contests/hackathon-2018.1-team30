@@ -16,7 +16,6 @@ export default class PoopFowl extends Fowl {
   constructor(x: number, y: number) {
     super(x, y, poopSpriteSheet.width, poopSpriteSheet.height, Color.White);
     this.collisionType = CollisionType.Passive;
-    this.scale = new Vector(0.5, 0.5);
   }
 
   public onInitialize(engine: Engine) {
