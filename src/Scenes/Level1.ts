@@ -1,13 +1,4 @@
-import {
-  Engine,
-  Scene,
-  Actor,
-  Color,
-  TileMap,
-  SpriteSheet,
-  TileSprite,
-  Vector
-} from "excalibur";
+import { Engine, Scene, TileMap, Vector } from "excalibur";
 import Player from "../Chars/Player";
 import { Resources } from "../Resources";
 import SuperCamera from "../SuperCamera";
@@ -19,7 +10,7 @@ import {
   IPosition
 } from "../models/Player";
 import InteractionPlayer from "../Chars/InteractionPlayer";
-import Fowl from "../Chars/Fowl";
+import ChickenFowl from "../Chars/ChickenFowl";
 import PoopFowl from "../Chars/PoopFowl";
 import { GUI } from "../GUI";
 
@@ -70,7 +61,7 @@ export class Level1 extends Scene {
         player.type === GameObjectType.Fowl &&
         !GameService.fowlInGame(player.id)
       ) {
-        const actor = new Fowl(player.position.x, player.position.y);
+        const actor = new ChickenFowl(player.position.x, player.position.y);
         this.add(actor);
         GameService.saveFowl({
           user: player,

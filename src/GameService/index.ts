@@ -3,7 +3,7 @@ import { IPlayer, IUser, IGameObject, IFowl } from "../models/Player";
 import { Actor } from "Actor";
 import { Vector } from "Algebra";
 import InteractionPlayer from "../Chars/InteractionPlayer";
-import Fowl from "../Chars/Fowl";
+import ChickenFowl from "../Chars/Fowl";
 import PoopFowl from "../Chars/PoopFowl";
 
 const url = "http://10.33.94.6:4844/game";

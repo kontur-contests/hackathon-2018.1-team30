@@ -1,17 +1,17 @@
-import * as ex from 'excalibur';
+import * as ex from "excalibur";
 
 export class HealthLine extends ex.Actor {
-  width: number;
-  value: number;
+  public healthLine = new ex.UIActor(0, 0, 0, 7);
+  public currentHealth = new ex.UIActor(0, 0, 0, 7);
 
-  public healthLine = new ex.UIActor(0, 0, 0, 15);
-  public currentHealth = new ex.UIActor(0, 0, 0, 15);
-
-  constructor(x: number, y: number, w: number, v: number) {
-    super(x, y);
-    this.width = w;
-    this.value = v;
-    this.collisionType = ex.CollisionType.Passive;
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    public maxHealth: number,
+    public value: number
+  ) {
+    super(x, y, width);
   }
 
   public onInitialize(engine: ex.Engine) {
@@ -19,14 +19,18 @@ export class HealthLine extends ex.Actor {
 
     this.healthLine.color = ex.Color.Orange;
     this.currentHealth.color = ex.Color.Red;
-    this.healthLine.setWidth(this.width);
-    this.currentHealth.setWidth(Math.random() * this.value);
+    this.healthLine.setWidth(this.getWidth());
+    this.currentHealth.setWidth(this.getWidth());
     this.add(this.healthLine);
     this.add(this.currentHealth);
   }
 
-  public onChangeHP(factor: number) {
-    this.value = this.value - factor;
-    this.currentHealth.setWidth(this.value);
+  public update(engine: ex.Engine, delta: number) {
+    const proportion = this.getWidth() / this.maxHealth;
+    this.currentHealth.setWidth(this.value * proportion);
+  }
+
+  public changeHealth(difference: number) {
+    this.value = Math.max(0, Math.min(this.maxHealth, this.value + difference));
   }
 }
