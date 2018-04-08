@@ -28,6 +28,7 @@ namespace Cowl.Backend.Hubs
 
             await Clients.Caller.SendAsync("me", player);
             await Clients.Caller.SendAsync("gameObjects", _gameService.AllGameObjects);
+            await Clients.Caller.SendAsync("gameStart");
 
             await SpawnGameObjects(new List<GameObject> {player});
             //Console.WriteLine("JoinGame:" + player);
@@ -97,6 +98,10 @@ namespace Cowl.Backend.Hubs
         public Task GameEnd()
         {
             return Clients.All.SendAsync("gameEnd");
+        }
+        public Task Scores(List<ScoresItem> items)
+        {
+            return Clients.All.SendAsync("scores", items);
         }
     }
 }

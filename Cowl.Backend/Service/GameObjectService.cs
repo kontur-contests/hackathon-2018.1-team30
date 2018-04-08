@@ -27,14 +27,6 @@ namespace Cowl.Backend.Service
 
             await connection.StartAsync().ConfigureAwait(false);
 
-            // Для корректной инициализации бэкенда
-            while (_gameService.AllPlayers.ToArray().Length < 2)
-            {
-                await Task.Delay(1000);
-            }
-
-            await connection.InvokeAsync("gameStart");
-
             while (!cancellationToken.IsCancellationRequested)
             {
                 var fowlsCount = _gameService.AllFowls.ToArray().Length;
@@ -42,7 +34,7 @@ namespace Cowl.Backend.Service
 
                 var gameObjects = new List<GameObject>();
 
-                for (var i = 100 - fowlsCount; i >= 0; i--)
+                for (var i = 300 - fowlsCount; i >= 0; i--)
                 {
                     var fowl = new Fowl
                     {
@@ -52,7 +44,7 @@ namespace Cowl.Backend.Service
                     gameObjects.Add(fowl);
                 }
 
-                for (var i = 100 - shitCount; i >= 0; i--)
+                for (var i = 150 - shitCount; i >= 0; i--)
                 {
                     var shit = new Shit
                     {
@@ -63,9 +55,19 @@ namespace Cowl.Backend.Service
                 }
 
                 if (gameObjects.Count > 0)
+                {
                     await connection.InvokeAsync("spawnGameObjects", gameObjects,
                         cancellationToken: cancellationToken);
 
+                    Console.WriteLine($"Respawn new {gameObjects.Count} gameObjects");
+                }
+
+
+                await connection.InvokeAsync("scores", _gameService.AllPlayers.Select(p => new ScoresItem
+                {
+                    GameObjectId = p.Id,
+                    Scores = p.Scores
+                }));
 
                 await Task.Delay(150, cancellationToken);
             }
