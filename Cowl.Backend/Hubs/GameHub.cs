@@ -19,7 +19,7 @@ namespace Cowl.Backend.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            Console.WriteLine("OnConnect:" + Context.ConnectionId);
+            //Console.WriteLine("OnConnect:" + Context.ConnectionId);
         }
 
         public async Task JoinGame()
@@ -30,7 +30,7 @@ namespace Cowl.Backend.Hubs
             await Clients.Caller.SendAsync("gameObjects", _gameService.AllGameObjects);
 
             await SpawnGameObjects(new List<GameObject> {player});
-            Console.WriteLine("JoinGame:" + player);
+            //Console.WriteLine("JoinGame:" + player);
         }
 
 
@@ -38,13 +38,13 @@ namespace Cowl.Backend.Hubs
         {
             _gameService.AddRangeGameObject(gameObjects);
             await Clients.All.SendAsync("gameObjectsJoin", gameObjects);
-            Console.WriteLine("SpawnGameObjects:" + gameObjects.Count);
+            //Console.WriteLine("SpawnGameObjects:" + gameObjects.Count);
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
             await LeaveGameObject(Context.ConnectionId);
-            Console.WriteLine("Leave:" + _gameService.GetGameObject(Context.ConnectionId));
+            //Console.WriteLine("Leave:" + _gameService.GetGameObject(Context.ConnectionId));
         }
 
         public async Task MoveGameObject(string gameObjectId, ObjectPosition objectPosition)
@@ -84,7 +84,7 @@ namespace Cowl.Backend.Hubs
 
             player.Scores += gameObject.Cost;
 
-            Console.WriteLine("KillObject: " + gameObject + " : " + player);
+            //Console.WriteLine("KillObject: " + gameObject + " : " + player);
 
             await LeaveGameObject(gameObjectId);
         }
@@ -92,6 +92,11 @@ namespace Cowl.Backend.Hubs
         public Task GameStart()
         {
             return Clients.All.SendAsync("gameStart");
+        }
+
+        public Task GameEnd()
+        {
+            return Clients.All.SendAsync("gameEnd");
         }
     }
 }
