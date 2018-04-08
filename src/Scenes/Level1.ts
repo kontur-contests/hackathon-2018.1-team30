@@ -132,5 +132,9 @@ export class Level1 extends Scene {
         GUI.setPlayersCount(GameService.countPlayers());
       }
     });
+
+    GameService.connection.on("gameEnd", () => {
+      GameService.kickCurrentUser();
+    });
   }
 }
