@@ -28,6 +28,7 @@ export default class PoopFowl extends Actor {
           event.other instanceof GunFire)
       ) {
         GameService.killFowl(event.other);
+        engine.currentScene.camera.shake(10, 10, 100);
         this.kill();
       }
     });

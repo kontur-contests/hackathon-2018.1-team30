@@ -47,6 +47,7 @@ export default class Fowl extends Actor {
           Resources.Chicken.play();
         }
         GameService.killFowl(event.other);
+        engine.currentScene.camera.shake(10, 10, 100);
         this.kill();
       }
     });
